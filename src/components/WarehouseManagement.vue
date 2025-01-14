@@ -210,6 +210,9 @@ export default {
   margin-top: 10px;
   display: flex;
   gap: 10px;
+  justify-content: center; /* Căn giữa các nút */
+  align-items: center; /* Căn giữa các nút theo chiều dọc */
+  position: relative;
 }
 
 .action-btn {
@@ -224,19 +227,21 @@ export default {
   background: radial-gradient(circle, #4CAF50, #45a049);
   border: none;
   color: white;
-  border-radius: 50%;
+  border-radius: 50%; /* Đảm bảo nút có hình tròn */
   width: 40px;
   height: 40px;
   font-size: 24px;
-  text-align: center;
-  line-height: 36px;
+  display: flex;
+  justify-content: center; /* Căn giữa theo chiều ngang */
+  align-items: center; /* Căn giữa theo chiều dọc */
   cursor: pointer;
   animation: pulse 1.5s infinite;
 }
 
+
 .status-menu {
   position: absolute;
-  top: 50px;
+  bottom: 50px; /* Đặt menu trạng thái lên phía trên nút "+" */
   left: 0;
   background: #f4f4f4;
   border-radius: 6px;
@@ -244,7 +249,6 @@ export default {
   padding: 10px;
   z-index: 10;
 }
-
 .sub-btn {
   display: block;
   margin: 8px 0;

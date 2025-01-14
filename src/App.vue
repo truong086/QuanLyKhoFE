@@ -1,16 +1,15 @@
 <template>
   <div id="app">
-    <WarehouseManagement />
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-import WarehouseManagement from "./components/WarehouseManagement.vue";
 
 export default {
   name: "App",
   components: {
-    WarehouseManagement,
+
   },
 };
 </script>
