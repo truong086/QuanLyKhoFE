@@ -1,5 +1,5 @@
 import {createRouter, createWebHistory} from 'vue-router'
-import DangkyPager from './components/HelloWorld.vue'
+import DangkyPager from './components/WarehouseManagement.vue'
 import {useCounterStore} from './store'
 const routes = [
     {

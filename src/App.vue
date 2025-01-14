@@ -1,8 +1,19 @@
 <template>
-  <router-view></router-view>
+  <div id="app">
+    <WarehouseManagement />
+  </div>
 </template>
 
+<script>
+import WarehouseManagement from "./components/WarehouseManagement.vue";
 
+export default {
+  name: "App",
+  components: {
+    WarehouseManagement,
+  },
+};
+</script>
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
