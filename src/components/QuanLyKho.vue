@@ -78,7 +78,7 @@ const warehouses = ref(
 }
 
 .frame {
-  width: 120%;
+  width: 100%;
   max-width: 1500px;
   padding: 20px;
   box-sizing: border-box;
@@ -128,6 +128,7 @@ const warehouses = ref(
   display: flex;
   flex-direction: column;
   gap: 10px;
+
 }
 
 .grid-item {

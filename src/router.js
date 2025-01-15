@@ -10,12 +10,12 @@ const routes = [
   {
     path: "/Ware",
     name: "Ware",
-    component: DangkyPager, // Đăng ký trang đăng nhập
+    component: DangkyPager,
   },
   {
     path: "/getotp",
     name: "GetOTP",
-    component: GetOTP, // Đăng ký trang đăng nhập
+    component: GetOTP, 
   },
   {
     path: "/login",
@@ -25,23 +25,24 @@ const routes = [
       requiresAuth: false,
       css: ["https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css",
             "https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap",
-           "/loginTemplate/css/style.css"],
+            "/loginTemplate/css/style.css"],
       js: ["/loginTemplate/js/jquery.min.js",
           "/loginTemplate/js/popper.js",
           "/loginTemplate/js/bootstrap.min.js",
-        "/loginTemplate/js/main.js"],
+          "/loginTemplate/js/main.js"],
     },
   },
   {
     path: "/register",
-    name: "Register",
-    component: RegisterPage, // Đăng ký trang đăng nhập
+    name: "Register", 
+    component: RegisterPage,
     meta: {
       requiresAuth: false,
-      css: ["/fonts/material-design-iconic-font/css/material-design-iconic-font.min.css",
-           "/RegisterTemplate/css/style.css"],
-      js: ["/RegisterTemplate/js/jquery-3.3.1.min.js",
-        "/RegisterTemplate/js/main.js"],
+      css: ["/RegisterPageTemplate/css/style.css",
+            "/RegisterPageTemplate/fonts/material-design-iconic-font/css/material-design-iconic-font.min.css",
+          ],
+      js: ["/RegisterPageTemplate/js/jquery-3.3.1.min.js",
+           "/RegisterPageTemplate/js/main.js"],
     },
   },  
   {

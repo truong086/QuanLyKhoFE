@@ -2,7 +2,7 @@
     <div class="wrapper">
       <div class="inner">
         <form action="">
-          <h3>Set The Event</h3>
+          <h3>RegisterPage</h3>
           <div class="form-wrapper form-price">
             <label for="">Price</label>
             <span>$270</span>
@@ -44,7 +44,7 @@
           <button>Send your booking</button>
         </form>
         <div class="image-holder">
-          <img src="images/anh-cute-pho-mai-que-con-gai-1.jpg" alt="" />
+          <img src="/RegisterPageTemplate/images/anh-cute-pho-mai-que-con-gai-1.jpg" alt="" />
         </div>
       </div>
     </div>
@@ -57,7 +57,6 @@
   </script>
   
   <style scoped>
-  /* CSS nếu cần */
-  </style>
   
+  </style>
   
