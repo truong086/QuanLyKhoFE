@@ -154,8 +154,8 @@ export default {
   align-items: center; /* Căn giữa theo chiều ngang */
   justify-content: flex-start;
   gap: 20px;
-  width: 100%;
-  max-width: 900px;
+  width: 150%;
+  max-width: 1200px;
   max-height: 600px;
   overflow-y: auto;
   margin: 0 auto;

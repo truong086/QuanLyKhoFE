@@ -1,20 +1,55 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import DangkyPager from './components/WarehouseManagement.vue';  // Vẫn giữ nguyên WarehouseManagement.vue
 import QuanLyKho from './components/QuanLyKho.vue';  // Import thêm QuanLyKho.vue
+import LoginPage from './components/loginPage.vue';
+import RegisterPage from './components/RegisterPage.vue';
+import GetOTP from './components/GetOTP.vue';
 import { useCounterStore } from './store';
 
 const routes = [
   {
-    path: "/",
-    name: "Login",
+    path: "/Ware",
+    name: "Ware",
     component: DangkyPager, // Đăng ký trang đăng nhập
   },
+  {
+    path: "/getotp",
+    name: "GetOTP",
+    component: GetOTP, // Đăng ký trang đăng nhập
+  },
+  {
+    path: "/login",
+    name: "Login",
+    component: LoginPage, // Đăng ký trang đăng nhập
+    meta: {
+      requiresAuth: false,
+      css: ["https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css",
+            "https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap",
+           "/loginTemplate/css/style.css"],
+      js: ["/loginTemplate/js/jquery.min.js",
+          "/loginTemplate/js/popper.js",
+          "/loginTemplate/js/bootstrap.min.js",
+        "/loginTemplate/js/main.js"],
+    },
+  },
+  {
+    path: "/register",
+    name: "Register",
+    component: RegisterPage, // Đăng ký trang đăng nhập
+    meta: {
+      requiresAuth: false,
+      css: ["/fonts/material-design-iconic-font/css/material-design-iconic-font.min.css",
+           "/RegisterTemplate/css/style.css"],
+      js: ["/RegisterTemplate/js/jquery-3.3.1.min.js",
+        "/RegisterTemplate/js/main.js"],
+    },
+  },  
   {
     path: "/warehouse",  // Thêm route cho QuanLyKho.vue
     name: "QuanLyKho",
     component: QuanLyKho, // Sử dụng component QuanLyKho.vue
     meta: {
-      requiresAuth: true,
+      requiresAuth: false,
       css: ["/path/to/custom.css"],
       js: ["/path/to/custom.js"],
     },
@@ -57,7 +92,7 @@ router.afterEach((to) => {
 router.beforeEach((to, from, next) => {
   loadBootstrap(to);
   const counter = useCounterStore();
-  const paths = [ "/", "/kho", "/warehouse"];
+  const paths = [ "/", "/ware", "/warehouse","/login","/register","/getotp"];
 
   const checkPaths = !paths.includes(to.path);
 
@@ -66,22 +101,22 @@ router.beforeEach((to, from, next) => {
   const token = counter.getToken;
   const role = counter.getRole(0);
 
-  if (checkPaths && !token) {
-    next("/login");
+  if (checkPaths) {
+    next();
   }
   if (auth && !token) {
-    next("/login");
+    next("/warehouse");
   } else if (auth && token) {
     if (!roles || roles.includes(role)) {
       next();
     } else {
-      next("/login");
+      next("/warehouse");
     }
   } else {
     next();
   }
   if (paths) {
-    next("/login");
+    next("/warehouse");
   } else {
     next();
   }
