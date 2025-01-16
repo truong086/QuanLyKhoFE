@@ -100,7 +100,7 @@ router.afterEach((to) => {
 router.beforeEach((to, from, next) => {
   loadBootstrap(to);
   const counter = useCounterStore();
-  const paths = [ "/", "/ware", "/warehouse","/login","/register","/getotp","/Add"];
+  const paths = [ "/", "/ware", "/warehouse","/login","/register","/getotp","/Add","/"];
 
   const checkPaths = !paths.includes(to.path);
 
