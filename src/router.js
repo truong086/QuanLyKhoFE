@@ -5,6 +5,9 @@ import LoginPage from './components/loginPage.vue';
 import RegisterPage from './components/RegisterPage.vue';
 import GetOTP from './components/GetOTP.vue';
 import AddorEdit from './components/AddorEdit.vue';
+import AdminPage from './components/AdminTemplate/IndexPage.vue';
+import dassboadPage from './components/AdminTemplate/DashboadPage.vue';
+import TableAdmin from './components/AdminTemplate/TablePage.vue';
 
 import { useCounterStore } from './store';
 
@@ -23,6 +26,40 @@ const routes = [
     path: "/getotp",
     name: "GetOTP",
     component: GetOTP, 
+  },
+  {
+    path: "/admin",
+    name: "admin",
+    component: AdminPage, 
+    meta: {
+      css: [
+        "/AdminTemplatePage/assets/images/favicon.png",
+        "/AdminTemplatePage/assets/node_modules/bootstrap/css/bootstrap.min.css",
+        "/AdminTemplatePage/assets/node_modules/perfect-scrollbar/css/perfect-scrollbar.css",
+        "/AdminTemplatePage/assets/node_modules/morrisjs/morris.css",
+        "/AdminTemplatePage/assets/node_modules/c3-master/c3.min.css",
+        "/AdminTemplatePage/css/style.css",
+        "/AdminTemplatePage/css/pages/dashboard1.css",
+        "/AdminTemplatePage/css/colors/default.css",
+        
+      ],
+      js: [
+        "/AdminTemplatePage/js/perfect-scrollbar.jquery.min.js",
+        "/AdminTemplatePage/js/waves.js"
+      ]
+    },
+    children: [
+      {
+        path: "dasboad",
+        name: "das",
+        component: dassboadPage,
+      },
+      {
+        path: "table",
+        name: "table",
+        component: TableAdmin,
+      }
+    ]
   },
   {
     path: "/login",
