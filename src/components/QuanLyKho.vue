@@ -2,19 +2,32 @@
   <div class="warehouse-management">
     <div class="scroll-container">
       <div class="warehouse-container">
+        <!-- Vòng lặp qua các khu trong tầng -->
         <div
-          v-for="(warehouse, warehouseIndex) in warehouses"
-          :key="warehouseIndex"
+          v-for="(area, areaIndex) in floors[currentFloor - 1]"
+          :key="areaIndex"
           class="frame"
         >
-          <!-- Tiêu đề khu vực -->
+          <!-- Container tiêu đề và chọn tầng -->
           <div class="header-container">
-            <h2 class="warehouse-title">A{{ warehouseIndex + 1 }}區</h2>
-            <div class="floor-title">倉庫，一樓</div>
+            <div class="header-title">
+              <h2 class="warehouse-title">
+                Tầng {{ currentFloor }} - Khu {{ areaPrefixes[currentFloor - 1] }}{{ areaIndex + 1 }}
+              </h2>
+            </div>
+            <div class="floor-select-container">
+              <label for="floor-select" class="floor-label">Chọn tầng:</label>
+              <select id="floor-select" v-model="currentFloor">
+                <option v-for="floor in totalFloors" :key="floor" :value="floor">
+                  Tầng {{ floor }}
+                </option>
+              </select>
+            </div>
           </div>
+
           <!-- Lưới dữ liệu -->
           <div class="grid-wrapper">
-            <div v-for="(row, rowIndex) in warehouse" :key="rowIndex" class="grid-item">
+            <div v-for="(row, rowIndex) in area" :key="rowIndex" class="grid-item">
               <div class="row-container">
                 <div class="row-header">
                   <h3>排 {{ rowIndex + 1 }}</h3>
@@ -37,23 +50,40 @@
   </div>
 </template>
 
+
+
 <script setup>
 import { ref } from "vue";
 
-// Tạo dữ liệu cho nhiều kho
-const warehouses = ref(
-  Array.from({ length: 5 }, (_, warehouseIndex) =>
-    Array.from({ length: 10 }, (_, rowIndex) =>
-      Array.from({ length: 20 }, (_, colIndex) => {
-        const id = `${String(warehouseIndex + 1).padStart(2, "0")}-${String(rowIndex + 1).padStart(2, "0")}-${colIndex + 1}`;
-        return {
-          id,
-          occupied: Math.random() > 0.7, // Random trạng thái ô kho
-        };
-      })
+// Số lượng tầng và khu
+const totalFloors = 5; // Tổng số tầng
+const totalAreasPerFloor = 10; // Số khu mỗi tầng
+
+// Tiền tố khu vực cho mỗi tầng
+const areaPrefixes = ["A", "B", "C", "D", "E"]; // Tầng 1: A, Tầng 2: B, ...
+
+// Tầng hiện tại
+const currentFloor = ref(1);
+
+// Dữ liệu cho các tầng và khu
+const floors = ref(
+  Array.from({ length: totalFloors }, (_, floorIndex) =>
+    Array.from({ length: totalAreasPerFloor }, (_, areaIndex) =>
+      Array.from({ length: 10 }, (_, rowIndex) =>
+        Array.from({ length: 20 }, (_, colIndex) => {
+          const id = `${areaPrefixes[floorIndex]}${areaIndex + 1}-${String(rowIndex + 1).padStart(2, "0")}-${colIndex + 1}`;
+          return {
+            id,
+            occupied: Math.random() > 0.7, // Random trạng thái ô kho
+          };
+        })
+      )
     )
   )
 );
+
+
+
 </script>
 
 <style scoped>
@@ -88,19 +118,26 @@ const warehouses = ref(
   align-items: center;
   margin: 20px auto;
   padding-left: 200px;
+  margin-bottom: 40px;
+
 }
 
 .header-container {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between; /* Cách đều tiêu đề và nút chọn tầng */
   width: 100%;
-  padding: 0 20px;
+  margin-bottom: 20px;
+}
+
+.header-title {
+  flex: 1; /* Tiêu đề chiếm không gian lớn nhất */
 }
 
 .warehouse-title {
   font-size: 25px;
   margin-bottom: 20px;
+  margin-left: 200px; /* Push the title to the right */
   padding: 10px 20px;
   border: 2px solid #007bff;
   border-radius: 10px;
@@ -109,6 +146,8 @@ const warehouses = ref(
   color: #007bff;
   text-align: center;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-size: 22px;
+  padding: 8px 15px;
 }
 
 .floor-title {
@@ -180,6 +219,43 @@ const warehouses = ref(
 .cell.occupied {
   background-color: #ff4d4d;
   color: white;
+}
+
+.floor-select-container {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Khoảng cách giữa label và select */
+}
+
+.floor-label {
+  font-size: 16px;
+  color: #007bff; 
+  font-weight: bold;
+}
+
+select {
+  font-size: 16px;
+  padding: 5px 10px;
+  border: 2px solid #007bff;
+  border-radius: 5px;
+  background-color: #f0f8ff;
+  color: #007bff;
+  cursor: pointer;
+}
+#floor-select {
+  font-size: 16px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+  color: #333;
+  outline: none;
+  margin-left: 10px;
+}
+
+#floor-select:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
 
 

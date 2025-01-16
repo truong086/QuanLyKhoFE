@@ -1,16 +1,23 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import DangkyPager from './components/WarehouseManagement.vue';  // Vẫn giữ nguyên WarehouseManagement.vue
+import WarehouseManagement from './components/WarehouseManagement.vue';  // Vẫn giữ nguyên WarehouseManagement.vue
 import QuanLyKho from './components/QuanLyKho.vue';  // Import thêm QuanLyKho.vue
 import LoginPage from './components/loginPage.vue';
 import RegisterPage from './components/RegisterPage.vue';
 import GetOTP from './components/GetOTP.vue';
+import AddorEdit from './components/AddorEdit.vue';
+
 import { useCounterStore } from './store';
 
 const routes = [
   {
     path: "/Ware",
     name: "Ware",
-    component: DangkyPager,
+    component: WarehouseManagement,
+  },
+  {
+    path: "/AddorEdit",
+    name: "AddorEdit",
+    component: AddorEdit,
   },
   {
     path: "/getotp",
@@ -93,7 +100,7 @@ router.afterEach((to) => {
 router.beforeEach((to, from, next) => {
   loadBootstrap(to);
   const counter = useCounterStore();
-  const paths = [ "/", "/ware", "/warehouse","/login","/register","/getotp"];
+  const paths = [ "/", "/ware", "/warehouse","/login","/register","/getotp","/Add"];
 
   const checkPaths = !paths.includes(to.path);
 
