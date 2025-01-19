@@ -9,11 +9,12 @@ import AdminPage from './components/AdminTemplate/IndexPage.vue';
 import dassboadPage from './components/AdminTemplate/DashboadPage.vue';
 import TableAdmin from './components/AdminTemplate/TablePage.vue';
 
+
 import { useCounterStore } from './store';
 
 const routes = [
   {
-    path: "/Ware",
+    path: "/",
     name: "Ware",
     component: WarehouseManagement,
   },

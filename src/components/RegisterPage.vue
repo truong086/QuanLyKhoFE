@@ -2,7 +2,8 @@
     <div class="wrapper">
       <div class="inner">
         <form action="">
-          <h3>RegisterPage</h3>
+          <!-- Tiêu đề -->
+          <h3>Đăng kí mới tài khoản</h3>
           <div class="form-wrapper form-price">
             <label for="">Price</label>
             <span>$270</span>

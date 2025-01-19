@@ -1,32 +1,37 @@
-import { createApp } from 'vue'
-import App from './App.vue'
-import router from './router'
-import axios from 'axios'
-import VueAxios from 'vue-axios'
-import store from './store'
-import "bootstrap"
-import "bootstrap/dist/css/bootstrap.min.css"
-import { Chart, registerables } from 'chart.js'
-import Vue3Notification from '@kyvg/vue3-notification'
+import { createApp } from 'vue';
+import App from './App.vue';
+import router from './router';
+import store from './store';
+import axiosInstance from './axiosInstance'; // Import Axios đã cấu hình
+import VueAxios from 'vue-axios';
+import "bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { Chart, registerables } from 'chart.js';
+import Vue3Notification from '@kyvg/vue3-notification';
 import { createPinia } from 'pinia';
-import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
-import  Toast  from 'vue-toastification'
-import 'vue-toastification/dist/index.css'
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
+import Toast from 'vue-toastification';
+import 'vue-toastification/dist/index.css';
 
-Chart.register(...registerables)
+Chart.register(...registerables);
+
 const app = createApp(App);
-app.config.globalProperties.hostname = "https://localhost:44378" 
+
+app.config.globalProperties.hostname = "https://localhost:44378"; // Hostname gốc
+
+// Gắn Axios toàn cục
+app.config.globalProperties.$axios = axiosInstance;
 
 // Tạo instance Pinia
 const pinia = createPinia();
-pinia.use(piniaPluginPersistedstate)
-// Sử dụng Pinia trong ứng dụng
+pinia.use(piniaPluginPersistedstate);
+
+// Sử dụng các plugin
 app.use(pinia);
-// app.use(createPinia())
-app.use(router)
-app.use(store)
-app.use(Toast)
-app.use(VueAxios, axios)
-app.use(Vue3Notification)
+app.use(router);
+app.use(store);
+app.use(Toast);
+app.use(VueAxios, axiosInstance);
+app.use(Vue3Notification);
 
 app.mount('#app');
