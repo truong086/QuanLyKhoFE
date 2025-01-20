@@ -8,10 +8,16 @@ import AddorEdit from './components/AddorEdit.vue';
 import AdminPage from './components/AdminTemplate/IndexPage.vue';
 import dassboadPage from './components/AdminTemplate/DashboadPage.vue';
 import TableAdmin from './components/AdminTemplate/TablePage.vue';
+import TablePage from './components/TablePage.vue';
 
 import { useCounterStore } from './store';
 
 const routes = [
+  {
+    path: "/tablepage",
+    name: "tablepage",
+    component: TablePage,
+  },
   {
     path: "/Ware",
     name: "Ware",
@@ -49,10 +55,21 @@ const routes = [
       ]
     },
     children: [
+      
       {
-        path: "dasboad",
+        path: "tablepage",
+        name: "tablepage",
+        component: TablePage,
+      },
+      {
+        path: "Ware",
+        name: "Ware",
+        component: WarehouseManagement,
+      },
+      {
+        path: "dasboad", 
         name: "das",
-        component: dassboadPage,
+        component: dassboadPage, 
       },
       {
         path: "table",
@@ -137,7 +154,7 @@ router.afterEach((to) => {
 router.beforeEach((to, from, next) => {
   loadBootstrap(to);
   const counter = useCounterStore();
-  const paths = [ "/", "/ware", "/warehouse","/login","/register","/getotp","/Add","/"];
+  const paths = [ "/", "/ware", "/warehouse","/login","/register","/getotp","/Add","/tablepage"];
 
   const checkPaths = !paths.includes(to.path);
 

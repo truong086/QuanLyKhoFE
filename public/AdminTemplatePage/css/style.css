@@ -1212,7 +1212,8 @@ File: scss
   width: 100%;
 }
 .fix-header .page-wrapper {
-  padding-top: 70px;
+  padding-top: 10px;
+  padding-left: 10px;
 }
 .fix-header .right-side-panel {
   top: 70px;
@@ -1230,6 +1231,8 @@ File: scss
 .topbar .top-navbar {
   min-height: 70px;
   padding: 0px;
+  margin-bottom: 0;
+
 }
 .topbar .top-navbar .dropdown-toggle::after {
   display: none;
@@ -1237,7 +1240,7 @@ File: scss
 .topbar .top-navbar .navbar-header {
   line-height: 72px;
   padding-left: 10px;
-  border-right: 1px solid rgba(120, 130, 140, 0.13);
+  border-right: 1px solid rgba(13, 232, 152, 0.13);
 }
 .topbar .top-navbar .navbar-header .navbar-brand {
   margin-right: 0px;
@@ -4799,7 +4802,7 @@ table.dataTable thead .sorting:after {
   text-align: center;
   text-decoration: none;
   cursor: pointer;
-  *cursor: hand;
+  cursor: hand;
   color: #67757c;
   border: 1px solid #ddd;
 }

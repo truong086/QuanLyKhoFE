@@ -132,8 +132,8 @@ export default {
   gap: 20px;
   width: 100%;
   max-width: 1100px;
-  margin: 80px auto 0; /* Push content down */
-  padding-left: 200px; /* Shift content to the right */
+  /*margin: 80px auto 0; /* Push content down */
+  /* padding-left: 200px; /* Shift content to the right */
 }
 
 .shipment-wrapper {

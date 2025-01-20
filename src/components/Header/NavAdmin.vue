@@ -20,12 +20,21 @@
                         <li> <a class="waves-effect waves-dark" href="map-google.html" aria-expanded="false"><i
                                     class="fa fa-globe"></i><span class="hide-menu">Map</span></a>
                         </li>
-                        <li> <a class="waves-effect waves-dark" href="pages-blank.html" aria-expanded="false"><i
-                                    class="fa fa-bookmark-o"></i><span class="hide-menu">Blank</span></a>
+                        <li>
+                        <router-link to="/admin/ware" class="waves-effect waves-dark" aria-expanded="false">
+                            <i class="fa fa-bookmark-o"></i>
+                            <span class="hide-menu">Blank</span>
+                        </router-link>
                         </li>
-                        <li> <a class="waves-effect waves-dark" href="pages-error-404.html" aria-expanded="false"><i
+                        <li>
+                        <router-link to="/admin/tablepage" class="waves-effect waves-dark" aria-expanded="false">
+                            <i class="fa fa-info-circle"></i>
+                            <span class="hide-menu">Index</span>
+                        </router-link>
+                        </li>
+                        <!----<li> <a class="waves-effect waves-dark" href="pages-error-404.html" aria-expanded="false"><i
                                     class="fa fa-question-circle"></i><span class="hide-menu">404</span></a>
-                        </li>
+                        </li> ---->
                     </ul>
                     <div class="text-center mt-4">
                         <a href="https://www.wrappixel.com/templates/adminwrap/"
