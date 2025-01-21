@@ -1,11 +1,10 @@
 <template>
   <div class="warehouse-management">
-    <div class="scroll-container">
-      <div class="warehouse-container">
-        <div
-          v-for="(area, areaIndex) in currentWarehouseData[currentFloor - 1]"
-          :key="areaIndex"
-          class="frame"
+    <div class="warehouse-container">
+      <div
+        v-for="(area, areaIndex) in currentWarehouseData[currentFloor - 1]"
+        :key="areaIndex"
+        class="frame"
         >
           <div class="header-container">
             <div class="header-title">
@@ -50,35 +49,48 @@
                     v-for="(cell, cellIndex) in row"
                     :key="cellIndex"
                     :class="['cell', { occupied: cell.occupied }]"
-                    @click="openFrame(cell, rowIndex, cellIndex)"
+                    @click="(event) => openFrame(cell, rowIndex, cellIndex, event)"
                   >
                     {{ cell.id }}
                   </button>
+
                 </div>
               </div>
             </div>
           </div>
 
           <!-- Frame Popup -->
-          <div
-  v-if="frameVisible"
-  class="frame-popup"
-  :style="{ top: popupPosition.top + 'px', left: popupPosition.left + 'px' }"
-  @click="closeFrame"
->
+          <div v-if="frameVisible" class="frame-popup" :style="{ top: popupPosition.top + 'px', left: popupPosition.left + 'px' }" @click="closeFrame">
   <div class="frame-content" @click.stop>
-    <h3>{{ frameData?.title }}</h3>
-    <img :src="frameData?.image" alt="Image" class="frame-image" />
-    <p class="frame-description">{{ frameData?.description }}</p>
-    <button @click="goToNextPage" class="navigate-btn">Xem Chi Tiết</button>
-    <button @click="closeFrame" class="close-btn">Đóng</button>
-  </div>
-</div>
+    <div class="frame-main">
+      <h3>{{ frameData?.title }}</h3>
+      <img :src="frameData?.image" alt="Image" class="frame-image" />
+    </div>
+
+    <div class="frame-info">
+      <div class="info-line">
+        <span class="info-title">Giá:</span>
+        <span class="info-content">{{ frameData?.content1 }}</span>
+      </div>
+      <div class="info-line">
+        <span class="info-title">Số Lượng:</span>
+        <span class="info-content">{{ frameData?.content2 }}</span>
+      </div>
+      <div class="info-line">
+        <span class="info-title">Tồn kho:</span>
+        <span class="info-content">{{ frameData?.content3 }}</span>
+      </div>
+
+      <button @click="goToNextPage" class="navigate-btn">Update</button>
+      <button @click="closeFrame" class="close-btn">Đóng</button>
+    </div>
+  </div> <!-- Đóng div .frame-content ở đây -->
+</div> <!-- Đóng div .frame-popup ở đây -->
+
 
         </div>
       </div>
     </div>
-  </div>
 </template>
 
 
@@ -134,27 +146,39 @@ const frameData = ref(null);
 const popupPosition = ref({ top: 0, left: 0 });
 
 // Hàm mở frame với dữ liệu của ô được nhấn
-function openFrame(cell, rowIndex, cellIndex) {
-  frameData.value = {
-  title: cell.id,
-  image: "https://via.placeholder.com/150", // Thay thế với đường dẫn thực tế của ảnh
-  description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent mauris. Fusce nec tellus sed augue semper porta. Mauris massa. Vestibulum lacinia arcu eget nulla. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.",
-};
+function openFrame(cell, rowIndex, cellIndex, event) {
+  console.log("Row:", rowIndex, "Cell:", cellIndex, "Data:", cell);
 
-  
-  // Lấy vị trí của ô grid
-  const gridButton = document.querySelectorAll('.grid button')[rowIndex * 20 + cellIndex]; // Tính toán vị trí của ô
-  const rect = gridButton.getBoundingClientRect();
-  
-  // Cập nhật vị trí của popup
-  popupPosition.value = {
-    top: rect.top + window.scrollY + 10, // Thêm khoảng cách từ trên xuống
-    left: rect.left + window.scrollX + 10, // Thêm khoảng cách từ bên trái
+  frameData.value = {
+    title: cell.id,
+    image: "https://img.pikbest.com/ai/illus_our/20230418/64e0e89c52dec903ce07bb1821b4bcc8.jpg!w700wp",
+    content1: "1200$",
+    content2: "20",
+    content3: "200",
   };
 
-  // Hiển thị frame popup
+  const gridButton = event.target;
+  const rect = gridButton.getBoundingClientRect();
+
+  const screenWidth = window.innerWidth;
+  const screenHeight = window.innerHeight;
+
+  let top = rect.top + window.scrollY;
+  let left = rect.left + window.scrollX + rect.width + 10;
+
+  // Điều chỉnh nếu vượt quá giới hạn màn hình
+  if (left + 300 > screenWidth) {
+    left = rect.left + window.scrollX - 300 - 10;
+  }
+  if (top + 200 > screenHeight) {
+    top = rect.top + window.scrollY - 200 - 10;
+  }
+
+  popupPosition.value = { top, left };
   frameVisible.value = true;
 }
+
+
 
 // Hàm đóng frame
 function closeFrame() {
@@ -172,6 +196,7 @@ function goToNextPage() {
   }
   closeFrame();
 }
+
 </script>
 
 
@@ -182,49 +207,130 @@ function goToNextPage() {
 
 
 <style scoped>
-/* Style cho frame popup */
-.frame-popup {
-  position: fixed;
-  background-color: rgba(0, 0, 0, 0.3);
+.info-line {
+  display: flex;
+  margin: 5px 0;
+}
+
+.info-title {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.info-content {
+  flex: 1;
+  text-align: left;
+}
+
+/* Style cho frame popup */.frame-popup {
+  position: absolute; /* Định vị so với container cha */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Căn giữa theo cả chiều ngang và dọc */
+  background-color: rgba(0, 0, 0, 0.3); /* Làm mờ phần còn lại của giao diện */
   padding: 10px;
   border-radius: 5px;
   z-index: 1000;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
   display: flex;
   justify-content: center;
   align-items: center;
   max-width: 90%;
-  max-height: 90%; /* Đảm bảo nội dung không vượt quá màn hình */
-  overflow-y: auto; /* Thêm thanh cuộn nếu nội dung quá lớn */
+  width: auto;
+  border: 2px solid #333;
+  animation: fadeIn 0.3s ease-out, scaleIn 0.3s ease-out;
 }
 
+
+
+/* Nội dung của popup */
 .frame-content {
   background-color: white;
-  padding: 15px;
+  padding: 20px;
   border-radius: 10px;
-  text-align: center;
+  display: flex; /* Sắp xếp ngang */
+  align-items: flex-start; /* Căn chỉnh theo chiều dọc */
+  gap: 20px; /* Khoảng cách giữa các phần */
+  max-width: 100%;
+  animation: fadeInContent 0.3s ease-in-out;
+  flex: 1;
+}
+
+.frame-main {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
-  max-width: 600px; /* Giới hạn chiều rộng tối đa */
-  box-sizing: border-box;
+  text-align: center;
+  gap: 10px;
 }
 
-.frame-description {
-  margin: 10px 0;
+.frame-info {
+  display: flex;
+  flex-direction: column; /* Các dòng thông tin xếp dọc */
+  justify-content: flex-start;
+  gap: 10px;
   text-align: left;
-  font-size: 14px;
-  line-height: 1.5;
 }
-
 
 .frame-image {
-  max-width: 100%;
-  height: auto;
-  margin: 10px 0;
+  max-width: 150px;
+  max-height: 150px;
+  border-radius: 5px;
 }
 
+.info-line {
+  display: flex;
+  gap: 10px; /* Khoảng cách giữa tiêu đề và nội dung */
+}
+
+.info-title {
+  font-weight: bold;
+  color: #333;
+  min-width: 80px; /* Đảm bảo các tiêu đề có kích thước đồng đều */
+}
+
+.info-content {
+  flex: 1;
+  color: #555;
+}
+
+/* Điều chỉnh các nút trong popup */
+.close-btn, .navigate-btn {
+  width: 100px;
+  margin-top: 10px;
+}
+
+
+/* Thêm các hiệu ứng animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: translate(-50%, -50%) scale(0.8);
+  }
+  to {
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes fadeInContent {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Nút đóng và nút điều hướng */
 .close-btn, .navigate-btn {
   padding: 10px 20px;
   background-color: #007bff;
@@ -233,6 +339,7 @@ function goToNextPage() {
   border-radius: 5px;
   cursor: pointer;
   margin-top: 10px;
+  transition: background-color 0.2s ease;
 }
 
 .close-btn:hover, .navigate-btn:hover {
@@ -241,24 +348,27 @@ function goToNextPage() {
 
 /* Các kiểu trước đó giữ nguyên */
 .warehouse-management {
-  padding: 20px;
+  transform: scale(0.9); /* Shrinks the whole page to 90% */
+  transform-origin: top center; /* Keeps the scaling anchored from the top center */
+  width: 100%;
+  padding: 0; /* Loại bỏ padding */
   font-family: Arial, sans-serif;
-  align-items: center;
-}
-
-.scroll-container {
-  overflow-y: auto;
-  max-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: flex-start; /* Căn chỉnh từ trên cùng */
+  min-height: 100vh; /* Đảm bảo chiều cao của body chiếm toàn bộ chiều cao màn hình */
+
 }
 
 .warehouse-container {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  width: 100%; /* Đảm bảo container chiếm toàn bộ chiều rộng */
+  position: relative; /* Cần thiết để .frame-popup định vị chính xác */
 }
+
 
 .frame {
   width: 100%;
@@ -270,7 +380,7 @@ function goToNextPage() {
   flex-direction: column;
   align-items: center;
   margin: 20px auto;
-  padding-left: 200px;
+  padding-left: 0; /* Loại bỏ padding-left để không còn khoảng trống bên trái */
   margin-bottom: 40px;
 }
 
@@ -345,7 +455,7 @@ function goToNextPage() {
 }
 
 .cell {
-  width: 90px;
+  width: 95px;
   height: 40px;
   background-color: #eee;
   border: 1px solid #ccc;

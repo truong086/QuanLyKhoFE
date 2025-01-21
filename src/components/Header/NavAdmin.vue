@@ -5,8 +5,14 @@
                 <!-- Sidebar navigation-->
                 <nav class="sidebar-nav">
                     <ul id="sidebarnav">
-                        <li> <a class="waves-effect waves-dark" href="index.html" aria-expanded="false"><i
+                        <!-- <li> <a class="waves-effect waves-dark" href="index.html" aria-expanded="false"><i
                                     class="fa fa-tachometer"></i><span class="hide-menu">Dashboard</span></a>
+                        </li> -->
+                        <li>
+                        <router-link to="/admin/warehouse" class="waves-effect waves-dark" aria-expanded="false">
+                            <i class="fa fa-tachometer"></i>
+                            <span class="hide-menu">Dashboard</span>
+                        </router-link>
                         </li>
                         <li> <a class="waves-effect waves-dark" href="pages-profile.html" aria-expanded="false"><i
                                     class="fa fa-user-circle-o"></i><span class="hide-menu">Profile</span></a>

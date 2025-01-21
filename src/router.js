@@ -9,10 +9,17 @@ import AdminPage from './components/AdminTemplate/IndexPage.vue';
 import dassboadPage from './components/AdminTemplate/DashboadPage.vue';
 import TableAdmin from './components/AdminTemplate/TablePage.vue';
 import TablePage from './components/TablePage.vue';
+import DetailsPage from './components/DetailsPage.vue';
+
 
 import { useCounterStore } from './store';
 
 const routes = [
+  {
+    path: "/DetailsPage",
+    name: "DetailsPage",
+    component: DetailsPage,
+  },
   {
     path: "/tablepage",
     name: "tablepage",
@@ -55,7 +62,11 @@ const routes = [
       ]
     },
     children: [
-      
+      {
+        path: "warehouse",  // Thêm route cho QuanLyKho.vue
+        name: "QuanLyKho",
+        component: QuanLyKho, // Sử dụng component QuanLyKho.vue
+      },
       {
         path: "tablepage",
         name: "tablepage",
@@ -106,16 +117,16 @@ const routes = [
            "/RegisterPageTemplate/js/main.js"],
     },
   },  
-  {
-    path: "/warehouse",  // Thêm route cho QuanLyKho.vue
-    name: "QuanLyKho",
-    component: QuanLyKho, // Sử dụng component QuanLyKho.vue
-    meta: {
-      requiresAuth: false,
-      css: ["/path/to/custom.css"],
-      js: ["/path/to/custom.js"],
-    },
-  },
+  // {
+  //   path: "/warehouse",  // Thêm route cho QuanLyKho.vue
+  //   name: "QuanLyKho",
+  //   component: QuanLyKho, // Sử dụng component QuanLyKho.vue
+  //   meta: {
+  //     requiresAuth: false,
+  //     css: ["/path/to/custom.css"],
+  //     js: ["/path/to/custom.js"],
+  //   },
+  // },
 ];
 
 const router = createRouter({

@@ -14,32 +14,33 @@
               <button class="action-btn" @click="updateShipment(shipment.id)">Update</button>
               <button class="action-btn" @click="selectShipment(shipment.id)">Select</button>
               
-             <!-- Status Menu Section Update -->
-            <div v-if="statusMenuVisible[index]" class="status-menu">
-              <button class="sub-btn" @click="addStatus(shipment.id)">Add Status</button>
-              <button class="sub-btn" @click="showList(shipment.id)">List Icon</button>
-              <div v-if="iconListVisible[shipment.id]" class="icon-list">
-                <button class="icon-btn"><i class="fas fa-box"></i></button>
-                <button class="icon-btn"><i class="fas fa-cogs"></i></button>
-                <button class="icon-btn"><i class="fas fa-truck"></i></button>
-                <button class="icon-btn"><i class="fas fa-warehouse"></i></button>
-                <button class="icon-btn"><i class="fas fa-shipping-fast"></i></button>
+              <!-- Status Menu Section Update -->
+              <div v-if="statusMenuVisible[index]" class="status-menu">
+                <input type="text" v-model="newStatus[shipment.id]" placeholder="Enter Status" class="status-input" />
+                <button class="sub-btn" @click="addStatus(shipment.id)">Add Status</button>
+                <button class="sub-btn" @click="showList(shipment.id)">List Icon</button>
+                <div v-if="iconListVisible[shipment.id]" class="icon-list">
+                  <button class="icon-btn"><i class="fas fa-box"></i></button>
+                  <button class="icon-btn"><i class="fas fa-cogs"></i></button>
+                  <button class="icon-btn"><i class="fas fa-truck"></i></button>
+                  <button class="icon-btn"><i class="fas fa-warehouse"></i></button>
+                  <button class="icon-btn"><i class="fas fa-shipping-fast"></i></button>
+                </div>
               </div>
-            </div>
-
             </div>
           </div>
           <div class="shipment-status">
             <p><strong>Shipment status:</strong></p>
-            <ul>
-              <li>Created</li>
-              <li>Packed</li>
-              <li>In Transit</li>
-              <li>Received/Stocked</li>
-              <li>Shipped/Dispatched</li>
-            </ul>
+            <div class="status-list">
+              <div class="status-item">Created</div>
+              <div class="status-item">Packed</div>
+              <div class="status-item">In Transit</div>
+              <div class="status-item">Received/Stocked</div>
+              <div class="status-item">Shipped/Dispatched</div>
+            </div>
             <p><strong>Total Price:</strong> {{ shipment.price }}</p>
           </div>
+
           <div class="shipper-info">
             <div class="delivery-man-image">
               <img :src="shipment.deliveryManImage || 'default-image-path.jpg'" alt="Delivery Man" class="delivery-man-img" />
@@ -56,7 +57,6 @@
   </div>
 </template>
 
-
 <script>
 export default {
   data() {
@@ -69,6 +69,7 @@ export default {
       ],
       statusMenuVisible: {},
       iconListVisible: {},
+      newStatus: {},  // Object lưu trạng thái mới cho mỗi lô hàng
     };
   },
   computed: {
@@ -78,14 +79,16 @@ export default {
   },
   methods: {
     toggleStatusMenu(index) {
-      // Toggle the visibility of the status menu when clicking "+"
+      // Chuyển đổi trạng thái hiển thị menu trạng thái khi nhấn "+"
       this.statusMenuVisible[index] = !this.statusMenuVisible[index];
     },
     addStatus(shipmentId) {
-      alert(`Adding status to shipment ID: ${shipmentId}`);
+      // Thêm trạng thái cho lô hàng, sau khi nhấn "Add Status"
+      alert(`Adding status to shipment ID: ${shipmentId} - Status: ${this.newStatus[shipmentId]}`);
+      this.newStatus[shipmentId] = '';  // Reset ô nhập sau khi thêm trạng thái
     },
     showList(shipmentId) {
-      // Toggle the visibility of the list of icons when clicking "List Icon"
+      // Chuyển đổi trạng thái hiển thị danh sách icon khi nhấn "List Icon"
       this.iconListVisible[shipmentId] = !this.iconListVisible[shipmentId];
     },
     updateShipment(shipmentId) {
@@ -96,10 +99,10 @@ export default {
     },
   },
 };
-
 </script>
 
 <style scoped>
+/* Tối ưu hóa giao diện cho sự đồng nhất và đẹp mắt */
 
 .app-wrapper {
   display: flex;
@@ -107,7 +110,7 @@ export default {
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background: linear-gradient(to bottom, #dbeafe, #e0e7ff);
+  background: linear-gradient(to bottom, #f0f8ff, #e6e6fa);
   font-family: 'Arial', sans-serif;
   color: #333;
   padding: 20px;
@@ -119,11 +122,12 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: linear-gradient(to bottom, #f0f8ff, #e6e6fa);
   padding: 20px;
   max-width: 100%;
   width: 100%;
-  overflow-x: hidden;
+  background: linear-gradient(to bottom, #f0f8ff, #ffffff);
+  border-radius: 15px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
 }
 
 .shipment-frame {
@@ -132,27 +136,25 @@ export default {
   gap: 20px;
   width: 100%;
   max-width: 1100px;
-  /*margin: 80px auto 0; /* Push content down */
-  /* padding-left: 200px; /* Shift content to the right */
 }
 
 .shipment-wrapper {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: stretch;
   gap: 15px;
   width: 100%;
   padding: 20px;
   border-radius: 12px;
-  background: linear-gradient(to right, #ffffff, #dfe9f3);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2); /* Increased shadow intensity */
+  background: #fff;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease-in-out;
 }
 
 .shipment-wrapper:hover {
-  transform: scale(1.03); /* Make the shipment cards zoom slightly on hover */
+  transform: scale(1.03); /* Hiệu ứng phóng to khi di chuột qua */
 }
+
 .shipment-info,
 .shipment-status,
 .shipper-info {
@@ -164,13 +166,13 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Adding shadow to each section */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .actions {
   margin-top: 10px;
   display: flex;
-  gap: 10px;
+  gap: 15px;
   justify-content: center;
   align-items: center;
   position: relative;
@@ -189,15 +191,25 @@ export default {
   align-items: center;
   cursor: pointer;
   animation: pulse 1.5s infinite;
-  box-shadow: 0 0 8px rgba(72, 239, 128, 0.7); /* Added a shadow to the main button */
+  box-shadow: 0 0 8px rgba(72, 239, 128, 0.7);
+}
+
+.main-btn:hover {
+  box-shadow: 0 0 12px rgba(72, 239, 128, 0.9);
 }
 
 .action-btn {
-  background: #d0d0d0;
+  background: #4CAF50;
   border: none;
   padding: 8px 12px;
   border-radius: 4px;
+  color: white;
   cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.action-btn:hover {
+  background-color: #45a049;
 }
 
 .status-menu {
@@ -209,6 +221,14 @@ export default {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
   padding: 10px;
   z-index: 10;
+}
+
+.status-input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
 }
 
 .sub-btn {
@@ -231,8 +251,8 @@ export default {
 .icon-list {
   display: flex;
   gap: 10px;
-  flex-wrap: wrap;
 }
+
 .icon-btn {
   background: #e0e0e0;
   border: none;
@@ -245,7 +265,7 @@ export default {
 
 .icon-btn:hover {
   background-color: #d5d5d5;
-  transform: scale(1.1); /* Icon hover effect */
+  transform: scale(1.1);
 }
 
 .delivery-man-image {
@@ -262,41 +282,14 @@ export default {
 .total-price-container {
   margin-top: 20px;
   text-align: left;
-padding-left: 200px;}
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  padding-left: 200px;
+  background: #e6e6fa;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
 }
 
-@keyframes pulse {
-  0% {
-    box-shadow: 0 0 5px rgba(72, 239, 128, 0.9);
-  }
-  50% {
-    box-shadow: 0 0 15px rgba(72, 239, 128, 0.9);
-  }
-  100% {
-    box-shadow: 0 0 5px rgba(72, 239, 128, 0.9);
-  }
-}
-
-@media screen and (max-width: 1024px) {
-  .shipment-wrapper {
-    flex-direction: column; /* Chuyển từ row sang column khi màn hình nhỏ */
-    align-items: stretch;
-    width: 100%;
-    max-width: 100%;
-  }
-
-  .shipment-info,
-  .shipment-status,
-  .shipper-info {
-    max-width: 100%; /* Chiếm toàn bộ chiều rộng */
-  }
+.total-price-container h3 {
+  color: #333;
 }
 </style>
-

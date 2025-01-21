@@ -1183,9 +1183,13 @@ File: scss
 
 .page-wrapper {
   background: #f6f9fa;
-  padding-bottom: 60px;
-  position: relative;
+  /* padding-top: 10px; */
+  /* padding-bottom: 10px;  */
+  position: relative; /* Để các phần tử con dùng position: absolute căn cứ */
+  overflow-y: auto; /* Cuộn dọc nếu cần */
+  flex-grow: 1;
 }
+
 
 .container-fluid {
   padding: 25px 25px;
@@ -1751,10 +1755,14 @@ ul#themecolors li a.working:before {
   color: #67757c;
   left: 0px;
   padding: 17px 15px;
-  position: absolute;
+  position: sticky;
   right: 0;
   border-top: 1px solid rgba(120, 130, 140, 0.13);
   background: #ffffff;
+  position: sticky; bottom: 0;
+  margin-top: auto; /* Đảm bảo footer được đẩy xuống cuối cùng */
+
+  
 }
 
 /*******************
