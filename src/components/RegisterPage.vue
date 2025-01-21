@@ -1,63 +1,129 @@
 <template>
-    <div class="wrapper">
-      <div class="inner">
-        <form action="">
-          <!-- Tiêu đề -->
-          <h3>Đăng kí mới tài khoản</h3>
-          <div class="form-wrapper form-price">
-            <label for="">Price</label>
-            <span>$270</span>
-          </div>
-          <div class="form-wrapper form-select">
-            <label for="">People</label>
-            <div class="form-holder">
-              <select name="" id="" class="form-control">
-                <option value="1" class="option">1</option>
-                <option value="2" class="option">2</option>
-                <option value="3" class="option">3</option>
-                <option value="4" class="option">4</option>
-                <option value="5" class="option">5</option>
-                <option value="6" class="option">6</option>
-                <option value="7" class="option">7</option>
-                <option value="8" class="option">8</option>
-                <option value="9" class="option">9</option>
-                <option value="10" class="option">10</option>
-              </select>
-              <i class="zmdi zmdi-chevron-down"></i>
-            </div>
-          </div>
-          <div class="form-wrapper">
-            <label for="" class="label-input">Name</label>
-            <input type="text" class="form-control" />
-          </div>
-          <div class="form-wrapper">
-            <label for="" class="label-input">Mail</label>
-            <input type="text" class="form-control" />
-          </div>
-          <div class="form-wrapper">
-            <label for="" class="label-input">Phone</label>
-            <input type="text" class="form-control" />
-          </div>
-          <div class="form-wrapper">
-            <label for="" class="label-comment">Comment</label>
-            <textarea name="" id="" class="form-control" style="height: 69px"></textarea>
-          </div>
-          <button>Send your booking</button>
-        </form>
-        <div class="image-holder">
-          <img src="/RegisterPageTemplate/images/anh-cute-pho-mai-que-con-gai-1.jpg" alt="" />
-        </div>
+  <div class="register-page">
+    <h2>Đăng ký tài khoản</h2>
+    <form @submit.prevent="handleRegister">
+      <div class="form-group">
+        <label for="username">Tên đăng nhập</label>
+        <input v-model="username" type="text" id="username" required />
       </div>
-    </div>
-  </template>
-  
-  <script>
-  export default {
-    name: "RegisterPage",
-  };
-  </script>
-  
-  <style scoped>
-  
-  </style>
-  
+      
+      <div class="form-group">
+        <label for="password">Mật khẩu</label>
+        <input v-model="password" type="password" id="password" required />
+      </div>
+      
+      <div class="form-group">
+        <label for="image">Hình ảnh</label>
+        <input @change="handleImageChange" type="file" id="image" />
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input v-model="email" type="email" id="email" required />
+      </div>
+
+      <div class="form-group">
+        <label for="phone">Số điện thoại</label>
+        <input v-model="phone" type="text" id="phone" required />
+      </div>
+
+      <div class="form-group">
+        <label for="address">Địa chỉ</label>
+        <input v-model="address" type="text" id="address" required />
+      </div>
+
+      <button type="submit">Đăng ký</button>
+    </form>
+  </div>
+</template>
+
+<script>
+
+export default {
+  data() {
+    return {
+      username: '',
+      password: '',
+      image: null,
+      email: '',
+      phone: '',
+      address: '',
+    };
+  },
+  methods: {
+    handleImageChange(event) {
+      this.image = event.target.files[0];
+    },
+    async handleRegister() {
+      if (!this.image) {
+        this.$toast.error('Vui lòng chọn ảnh trước khi đăng ký');
+        return;
+      }
+      try {
+        // Tạo FormData
+        const formData = new FormData();
+        formData.append('username', this.username);
+        formData.append('password', this.password);
+        formData.append('image', this.image);
+        formData.append('email', this.email);
+        formData.append('phone', this.phone);
+        formData.append('address', this.address);
+
+        // Gửi yêu cầu đăng ký
+        const response = await this.$axios.post('/api/Account/add', formData);
+
+        // Nếu đăng ký thành công
+        if (response.status === 200) {
+          this.$toast.success('Yêu cầu đã được gửi');
+        }
+      } catch (error) {
+        // Nếu có lỗi khi gửi yêu cầu
+        this.$toast.error('Có lỗi xảy ra. Vui lòng thử lại!');
+        console.error('Đăng ký thất bại:', error);
+      }
+    },
+  },
+};
+</script>
+
+<style scoped>
+.register-page {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f4f4f4;
+  border-radius: 10px;
+  box-shadow: 5px 5px rgba(112, 117, 117, 0.1)   ;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #218838;
+}
+</style>

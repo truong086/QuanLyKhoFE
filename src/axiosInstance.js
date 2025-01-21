@@ -3,7 +3,12 @@ import axios from 'axios';
 
 const axiosInstance = axios.create({
   baseURL: 'https://localhost:44376', // Đường dẫn API cơ bản giúp khi dùng đến phương thức get,post của thàng Api ngắn gọn hơn như: axiosInstance.get('/api/user',..,)
-  timeout: 5000, // Thời gian chờ tối đa
+  timeout: 5000, // Thời gian chờ tối đa,
+  headers: {
+    'Content-Type': 'application/json',
+    // Thêm các header khác nếu cần, ví dụ như authorization token
+    // 'Authorization': `Bearer ${token}`,
+  },
 });
 
 axiosInstance.interceptors.request.use(

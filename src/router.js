@@ -80,15 +80,7 @@ const routes = [
   {
     path: "/register",
     name: "Register", 
-    component: RegisterPage,
-    meta: {
-      requiresAuth: false,
-      css: ["/RegisterPageTemplate/css/style.css",
-            "/RegisterPageTemplate/fonts/material-design-iconic-font/css/material-design-iconic-font.min.css",
-          ],
-      js: ["/RegisterPageTemplate/js/jquery-3.3.1.min.js",
-           "/RegisterPageTemplate/js/main.js"],
-    },
+    component: RegisterPage,    
   },  
   {
     path: "/warehouse",  // Thêm route cho QuanLyKho.vue

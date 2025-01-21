@@ -10,14 +10,15 @@ import { Chart, registerables } from 'chart.js';
 import Vue3Notification from '@kyvg/vue3-notification';
 import { createPinia } from 'pinia';
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
-import Toast from 'vue-toastification';
+
+import Toast, {POSITION}from 'vue-toastification';
 import 'vue-toastification/dist/index.css';
 
 Chart.register(...registerables);
 
 const app = createApp(App);
 
-app.config.globalProperties.hostname = "https://localhost:44378"; // Hostname gốc
+app.config.globalProperties.hostname = "https://localhost:44376"; // Hostname gốc
 
 // Gắn Axios toàn cục
 app.config.globalProperties.$axios = axiosInstance;
@@ -30,7 +31,10 @@ pinia.use(piniaPluginPersistedstate);
 app.use(pinia);
 app.use(router);
 app.use(store);
-app.use(Toast);
+app.use(Toast, {
+    position: POSITION.TOP_RIGHT, // Vị trí thông báo (có thể thay đổi)
+    timeout: 5000, // Thời gian hiển thị (ms)
+  });
 app.use(VueAxios, axiosInstance);
 app.use(Vue3Notification);
 
