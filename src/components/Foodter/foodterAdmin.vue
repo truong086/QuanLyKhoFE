@@ -1,3 +1,3 @@
 <template>
-     <footer class="footer"> © 2021 Adminwrap by <a href="https://www.wrappixel.com/">wrappixel.com</a> </footer>
+     <footer class="footer"> © 2025 Design by <a href="https://www.facebook.com/nguyen.hau.576600/">VanHauNguyen.com</a> </footer>
 </template>

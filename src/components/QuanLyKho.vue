@@ -155,7 +155,7 @@ function openFrame(cell, rowIndex, cellIndex, event) {
 
   frameData.value = {
     title: cell.id,
-    image: "https://img.pikbest.com/ai/illus_our/20230418/64e0e89c52dec903ce07bb1821b4bcc8.jpg!w700wp",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRPjVjuhd5m-dXPSvTua4ApUesQ7RreOtWXw&s",
     content1: "1200$",
     content2: "20",
     content3: "200",
@@ -231,7 +231,7 @@ function goToNextPage() {
   position: absolute; /* Hoặc `fixed` nếu bạn muốn nó luôn giữ vị trí */
   top: 0;
   left: 0;
-  padding-right: 10px;
+  padding-right: 100px;
   width: 110%;
   height: 100vh; /* Chiều cao 100% màn hình */
   overflow-y: auto; /* Đảm bảo có thể cuộn theo chiều dọc */
@@ -493,11 +493,11 @@ function goToNextPage() {
 }
 
 .warehouse-select-container,
-.area-select-container {
+/* .area-select-container {
   display: flex;
   align-items: center;
   gap: 10px;
-}
+} */
 
 .warehouse-label,
 .area-label {
@@ -515,18 +515,22 @@ select {
   color: #007bff;
   cursor: pointer;
 }
+.floor-label {
+  font-size: 16px;
+  color: #007bff;
+  font-weight: bold;
+}
 
 #warehouse-select,
 #area-select,
 #floor-select {
-  font-size: 16px;
+  font-size: 17px;
   padding: 5px 10px;
+  border: 2px solid #007bff;
   border-radius: 5px;
-  border: 1px solid #ccc;
-  background-color: #f9f9f9;
-  color: #333;
-  outline: none;
-  margin-left: 10px;
+  background-color: #f0f8ff;
+  color: #007bff;
+  cursor: pointer;
 }
 
 #warehouse-select:focus,
