@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import WarehouseManagement from './components/WarehouseManagement.vue';  // Vẫn giữ nguyên WarehouseManagement.vue
 import QuanLyKho from './components/QuanLyKho.vue';  // Import thêm QuanLyKho.vue
-import LoginPage from './components/loginPage.vue';
+import LoginPage from './components/LoginPage.vue';
 import RegisterPage from './components/RegisterPage.vue';
 import GetOTP from './components/GetOTP.vue';
 import AddorEdit from './components/AddorEdit.vue';

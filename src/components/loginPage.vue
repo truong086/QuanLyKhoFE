@@ -1,64 +1,130 @@
 <template>
-    <body class="img js-fullheight">
     <section class="ftco-section">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-md-6 text-center mb-5">
-                    <h2 class="heading-section">Login to Warehouse</h2>
-                </div>
-            </div>
-            <div class="row justify-content-center">
-                <div class="col-md-6 col-lg-4">
-                    <div class="login-wrap p-0">
-                <h3 class="mb-4 text-center">Have an account?</h3>
-                <form action="#" class="signin-form">
-                    <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Username" required>
-                    </div>
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-6 text-center mb-5">
+            <h2 class="heading-section">Login to Warehouse</h2>
+          </div>
+        </div>
+        <div class="row justify-content-center">
+          <div class="col-md-6 col-lg-4">
+            <div class="login-wrap p-0">
+              <h3 class="mb-4 text-center">Have an account?</h3>
+              <form class="signin-form">
                 <div class="form-group">
-                  <input id="password-field" type="password" class="form-control" placeholder="Password" required>
-                  <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span>
+                  <input type="text" class="form-control" v-model="username" placeholder="Username" required />
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="form-control btn btn-primary submit px-3">Sign In</button>
+                  <input type="password" class="form-control" v-model="password" placeholder="Password" required />
                 </div>
-                <div class="form-group d-md-flex">
-                    <div class="w-50">
-                        <label class="checkbox-wrap checkbox-primary">Remember Me
-                                      <input type="checkbox" checked>
-                                      <span class="checkmark"></span>
-                                    </label>
-                                </div>
-                                <div class="w-50 text-md-right">
-                                    <a href="#" style="color: #fff">Forgot Password</a>
-                                </div>
+                <!-- remember and forgot passw section -->
+                 <div class="remeber_forgotPassw" style="display: flex; justify-content: space-around;">
+                  <div class="remember">
+                    <input type="checkbox" id="remember" v-model="rememberMe" class="form-check-input"> 
+                    <label for="remember">Remember me?</label>
+                  </div>
+                  <div><a href="#">Forgot password ? </a></div>
+                 </div>
+
+                <div class="form-group">
+                  <button type="button" class="form-control btn btn-primary submit px-3" @click="handleLogin">
+                    Sign In
+                  </button>
                 </div>
               </form>
-              <p class="w-100 text-center">&mdash; Or Sign In With &mdash;</p>
-              <div class="social d-flex text-center">
-                <a href="#" class="px-2 py-2 mr-md-1 rounded"><span class="ion-logo-facebook mr-2"></span> Facebook</a>
-                <a href="#" class="px-2 py-2 ml-md-1 rounded"><span class="ion-logo-twitter mr-2"></span> Twitter</a>
-              </div>
-              </div>
-                </div>
             </div>
+          </div>
         </div>
+      </div>
     </section>
-
-
-
-    </body>
-
-</template>
-
-<style scoped>
-    body{
-        background-image: url(../assets/loginTemplate/images/bg.jpg);
-        width: 100vw;
-        height: 100vh; /* Đảm bảo phần tử chiếm toàn bộ chiều cao màn hình */
-        margin: 0; /* Loại bỏ khoảng cách mặc định */
-        background-size: cover; /* Làm cho ảnh phủ toàn bộ màn hình */
-        background-position: center center; /* Căn giữa ảnh */
-        background-attachment: fixed; /* Ảnh nền cố định khi cuộn trang */
+  </template>
+  
+  <script>
+  import axiosInstance from '../axiosInstance';
+  import { useToast } from 'vue-toastification';
+  
+  export default {
+    data() {
+      return {
+        username: '',
+        password: '',
+      };
+    },
+    methods: {
+        async handleLogin() {
+            const toast = useToast();
+  
+            // Kiểm tra input
+            if (!this.username || !this.password) {
+                toast.error("Username and password are required!");
+                return;
+            }
+  
+            try {
+                const payload = { username: this.username, password: this.password };
+                 // Log dữ liệu payload trước khi gửi
+                 console.log('Payload:', payload);
+                const response = await axiosInstance.post('/api/Account/LoginData', payload);
+              
+                // Log dữ liệu trả về từ API để kiểm tra
+                 console.log('API Response:', response);
+  
+                // Kiểm tra phản hồi từ API
+                // Kiểm tra nếu response và response.data tồn tại
+                    if (response.success) {
+                        toast.success("Login successful!");
+    
+                        // Lưu token nếu có
+                        if (response.data.content.token) {
+                            localStorage.setItem("accessToken", response.data.token);
+                        }
+                    } else {
+                        // Nếu không thành công, hiển thị thông báo lỗi từ response.data.message
+                        toast.error(response.data.message || "Login failed. Please check your credentials.");
+                    }
+  
+            } catch (error) {
+                // Xử lý lỗi khi không thể kết nối hoặc lỗi máy chủ
+  
+                // Kiểm tra lỗi trả về từ server (nếu có)
+                if (error.response) {
+                    // Log lỗi response (phản hồi lỗi từ API)
+                    console.log('Error Response:', error.response);
+                    console.log('Error Response Data:', error.response.data);
+                    console.log('Error Response Status:', error.response.status);
+                    console.log('Error Response Headers:', error.response.headers);
+                    
+                    toast.error(error.response.data.message || "Server error.");
+                } 
+                // Nếu không có phản hồi từ server (không kết nối được)
+                else if (error.request) {
+                    console.log('Error Request:', error.request);
+                    toast.error("Unable to connect to the server.");
+                } 
+                // Xử lý lỗi khác (có thể lỗi không xác định)
+                else {
+                    console.log('Error:', error);
+                    toast.error("An unexpected error occurred.");
+                }
+            }
+        }
+    },
+  };
+  </script>
+  
+  <style scoped>
+    section {
+      background-image: url('../assets/loginTemplate/images/bg.jpg');
+      background-size: cover;
+      background-position: center center;
+      background-attachment: fixed;
+      height: 100vh;
+      margin: 0;
     }
-</style>
+    form {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 20px 10px;  
+      border-radius: 10px; 
+    }
+  </style>
+  

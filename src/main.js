@@ -1,21 +1,19 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
-import axios from 'axios'
-import VueAxios from 'vue-axios'
 import store from './store'
-import "bootstrap"
-import "bootstrap/dist/css/bootstrap.min.css"
 import { Chart, registerables } from 'chart.js'
 import Vue3Notification from '@kyvg/vue3-notification'
 import { createPinia } from 'pinia';
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 import  Toast  from 'vue-toastification'
 import 'vue-toastification/dist/index.css'
+import axios from 'axios'
+import VueAxios from 'vue-axios'
 
 Chart.register(...registerables)
 const app = createApp(App);
-app.config.globalProperties.hostname = "https://localhost:44378" 
+app.config.globalProperties.hostname = "https://localhost:44376" 
 
 // Tạo instance Pinia
 const pinia = createPinia();
