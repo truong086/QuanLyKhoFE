@@ -1,10 +1,12 @@
 <template>
   <div class="warehouse-management">
-    <div class="warehouse-container">
-      <div
-        v-for="(area, areaIndex) in currentWarehouseData[currentFloor - 1]"
-        :key="areaIndex"
-        class="frame"
+    <!-- Khung cuộn -->
+    <div class="scrollable-container">
+      <div class="warehouse-container">
+        <div
+          v-for="(area, areaIndex) in currentWarehouseData[currentFloor - 1]"
+          :key="areaIndex"
+          class="frame"
         >
           <div class="header-container">
             <div class="header-title">
@@ -53,45 +55,48 @@
                   >
                     {{ cell.id }}
                   </button>
-
                 </div>
               </div>
             </div>
           </div>
-
-          <!-- Frame Popup -->
-          <div v-if="frameVisible" class="frame-popup" :style="{ top: popupPosition.top + 'px', left: popupPosition.left + 'px' }" @click="closeFrame">
-  <div class="frame-content" @click.stop>
-    <div class="frame-main">
-      <h3>{{ frameData?.title }}</h3>
-      <img :src="frameData?.image" alt="Image" class="frame-image" />
-    </div>
-
-    <div class="frame-info">
-      <div class="info-line">
-        <span class="info-title">Giá:</span>
-        <span class="info-content">{{ frameData?.content1 }}</span>
+        </div>
       </div>
-      <div class="info-line">
-        <span class="info-title">Số Lượng:</span>
-        <span class="info-content">{{ frameData?.content2 }}</span>
-      </div>
-      <div class="info-line">
-        <span class="info-title">Tồn kho:</span>
-        <span class="info-content">{{ frameData?.content3 }}</span>
-      </div>
+      <!-- Frame Popup -->
+      <div
+        v-if="frameVisible"
+        class="frame-popup"
+        :style="{ top: popupPosition.top + 'px', left: popupPosition.left + 'px' }"
+        @click="closeFrame"
+      >
+        <div class="frame-content" @click.stop>
+          <div class="frame-main">
+            <h3>{{ frameData?.title }}</h3>
+            <img :src="frameData?.image" alt="Image" class="frame-image" />
+          </div>
 
-      <button @click="goToNextPage" class="navigate-btn">Update</button>
-      <button @click="closeFrame" class="close-btn">Đóng</button>
-    </div>
-  </div> <!-- Đóng div .frame-content ở đây -->
-</div> <!-- Đóng div .frame-popup ở đây -->
+          <div class="frame-info">
+            <div class="info-line">
+              <span class="info-title">Giá:</span>
+              <span class="info-content">{{ frameData?.content1 }}</span>
+            </div>
+            <div class="info-line">
+              <span class="info-title">Số Lượng:</span>
+              <span class="info-content">{{ frameData?.content2 }}</span>
+            </div>
+            <div class="info-line">
+              <span class="info-title">Tồn kho:</span>
+              <span class="info-content">{{ frameData?.content3 }}</span>
+            </div>
 
-
+            <button @click="goToNextPage" class="navigate-btn">Update</button>
+            <button @click="closeFrame" class="close-btn">Đóng</button>
+          </div>
         </div>
       </div>
     </div>
+  </div>
 </template>
+
 
 
 
@@ -129,7 +134,6 @@ function generateWarehouseData(warehouseName) {
     )
   );
 }
-
 // Trạng thái hiện tại
 const currentWarehouse = ref("Kho 1");
 const currentFloor = ref(1);
@@ -222,22 +226,36 @@ function goToNextPage() {
   text-align: left;
 }
 
-/* Style cho frame popup */.frame-popup {
-  position: absolute; /* Định vị so với container cha */
+/* Style cho frame popup */
+.scrollable-container {
+  position: absolute; /* Hoặc `fixed` nếu bạn muốn nó luôn giữ vị trí */
+  top: 0;
+  left: 0;
+  padding-right: 10px;
+  width: 110%;
+  height: 100vh; /* Chiều cao 100% màn hình */
+  overflow-y: auto; /* Đảm bảo có thể cuộn theo chiều dọc */
+  overflow-x: hidden; /* Ẩn cuộn ngang nếu không cần */
+  display: flex;
+  flex-direction: column; /* Sắp xếp các phần tử theo chiều dọc */
+  justify-content: flex-start; /* Bắt đầu căn từ trên */
+  align-items: center;
+}
+
+
+.frame-popup {
+  position: fixed; /* Giữ cố định trong màn hình */
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%); /* Căn giữa theo cả chiều ngang và dọc */
-  background-color: rgba(0, 0, 0, 0.3); /* Làm mờ phần còn lại của giao diện */
-  padding: 10px;
-  border-radius: 5px;
-  z-index: 1000;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  max-width: 90%;
-  width: auto;
-  border: 2px solid #333;
-  animation: fadeIn 0.3s ease-out, scaleIn 0.3s ease-out;
+  transform: translate(-50%, -50%);
+  z-index: 1000; /* Đảm bảo popup luôn nổi trên */
+  max-height: 90%; /* Giới hạn chiều cao để không vượt màn hình */
+  overflow-y: auto; /* Kích hoạt cuộn dọc nếu nội dung quá lớn */
+}
+
+
+.frame-content {
+  width: 100%;
 }
 
 

@@ -35,8 +35,8 @@
               <div class="status-item">Created</div>
               <div class="status-item">Packed</div>
               <div class="status-item">In Transit</div>
-              <div class="status-item">Received/Stocked</div>
-              <div class="status-item">Shipped/Dispatched</div>
+              <div class="status-item">Stocked</div>
+              <div class="status-item">Dispatched</div>
             </div>
             <p><strong>Total Price:</strong> {{ shipment.price }}</p>
           </div>
