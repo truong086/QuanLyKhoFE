@@ -121,7 +121,7 @@ h1 {
 }
 
 .empty-frame {
-  width: 50%; /* Khung cũng căn giữa như bảng */
+  width: 100%; /* Khung cũng căn giữa như bảng */
   height: 300px; /* Chiều cao của khung trống */
   background-color: #e0e0e0; /* Màu nền cho khung */
   border: 1px solid #ccc; /* Đường viền cho khung */

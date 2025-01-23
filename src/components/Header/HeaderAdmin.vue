@@ -44,7 +44,6 @@
                 <i class="fa fa-times"></i>
               </a>
             </form>
-            <!-- Thêm ô input mới -->
             <input 
               type="text" 
               class="additional-input" 
@@ -53,7 +52,6 @@
           </li>
         </ul>
         <ul class="navbar-nav my-lg-0">
-          <!-- Hình ảnh người dùng với trạng thái -->
           <li class="nav-item d-flex align-items-center">
             <div class="profile-container">
               <div 
@@ -71,7 +69,6 @@
               </div>
             </div>
           </li>
-          <!-- Biểu tượng thông báo -->
           <li class="nav-item dropdown me-3">
             <a 
               class="nav-link dropdown-toggle waves-effect waves-dark" 
@@ -89,7 +86,6 @@
               <li><a class="dropdown-item" href="#">Thông báo 3</a></li>
             </ul>
           </li>
-          <!-- Hồ sơ -->
           <li class="nav-item dropdown u-pro">
             <a 
               class="nav-link dropdown-toggle waves-effect waves-dark profile-pic" 
@@ -121,32 +117,66 @@
     </nav>
   </header>
 
-  <!-- Hộp Chat (Ẩn mặc định) -->
   <div v-if="chatBoxVisible" class="chat-box">
-    <div class="chat-box-header">
-      <h5>Chat với {{ activeProfile }}</h5>
-      <button @click="closeChatBox">Đóng</button>
-    </div>
-    <div class="chat-box-content">
-      <!-- Tin nhắn chat sẽ xuất hiện ở đây -->
-      <p>Thông điệp chat...</p>
+  <div class="chat-box-header">
+    <div class="profile-info">
+      <img :src="activeProfileImage" alt="Profile" class="profile-img" />
+      <h5>Chat With {{ activeProfile }}</h5>
+    </div >
+    <button  @click="closeChatBox"  >X</button>
+  </div>
+  <div class="chat-box-content">
+    <div class="messages" ref="messageContainer">
+      <div v-for="(message, index) in messages" :key="index" class="message">
+        <div class="message-author">{{ message.author }}</div>
+        <div class="message-text">{{ message.text }}</div>
+      </div>
     </div>
   </div>
+  <div class="chat-box-footer">
+      <input
+        v-model="messageInput"
+        type="text"
+        class="chat-input"
+        placeholder="Nhập tin nhắn..."
+        @keydown="sendMessage"
+        @keydown.enter="sendMessage"
+      />
+
+      <label for="file-upload" class="send-file-btn">
+        <i class="fa fa-paperclip"></i>
+      </label>
+      <input
+        id="file-upload"
+        type="file"
+        @change="addFile"
+        style="display: none;"
+      />
+      <button class="send-btn" @click="sendMessage">Gửi</button>
+</div>
+
+</div>
+
 </template>
+
+
 
 <script>
 export default {
   data() {
     return {
       profiles: [
-        { name: 'Người dùng 1', image: 'https://via.placeholder.com/50', status: 'online' },
-        { name: 'Người dùng 2', image: 'https://via.placeholder.com/50', status: 'offline' },
-        { name: 'Người dùng 3', image: 'https://via.placeholder.com/50', status: 'online' },
-        { name: 'Người dùng 4', image: 'https://via.placeholder.com/50', status: 'offline' },
-        { name: 'Người dùng 5', image: 'https://via.placeholder.com/50', status: 'online' }
+        { name: 'User 1', image: 'https://scontent.fkhh2-2.fna.fbcdn.net/v/t39.30808-6/473256450_122168331770279858_1233402960530596024_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=127cfc&_nc_ohc=ztOl6zdgjmsQ7kNvgF_Bibs&_nc_zt=23&_nc_ht=scontent.fkhh2-2.fna&_nc_gid=AtNs9twimqxmIRKQNl3MYoe&oh=00_AYCL6FRqrOFH_B3gTMkOHp5U_yxY3LA6vqLTT3zDdAw91A&oe=6797C813', status: 'online' },
+        { name: 'User 2', image: 'https://scontent.fkhh2-1.fna.fbcdn.net/v/t39.30808-6/473169881_122168331704279858_1128085097387166884_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=127cfc&_nc_ohc=r87rt8AONNYQ7kNvgGo3Jh1&_nc_zt=23&_nc_ht=scontent.fkhh2-1.fna&_nc_gid=ARhIqKJPXYLGLhBh_QDyJul&oh=00_AYALLQpbwkjELBViTDvHWYumkO6CPLy1Je2udzHYTl6c6w&oe=6797A61B ', status: 'offline' },
+        { name: 'User 3', image: 'https://scontent.fkhh2-1.fna.fbcdn.net/v/t39.30808-6/473113411_122168331614279858_4841002852087880734_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=127cfc&_nc_ohc=1ZmvyTiJOiYQ7kNvgFzyFFP&_nc_zt=23&_nc_ht=scontent.fkhh2-1.fna&_nc_gid=ANUYoqaPSKWQp4HeWD2nFc8&oh=00_AYBaFTv-ZwFifmUzBqgESF3exjY_XRkzKBwdvCJlTp9eOA&oe=6797AD9D', status: 'online' },
+        { name: 'User 4', image: 'https://scontent.fkhh2-1.fna.fbcdn.net/v/t39.30808-6/472425730_122166648422279858_6731797195696114475_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=127cfc&_nc_ohc=2wlCkigHM2UQ7kNvgHumm3D&_nc_zt=23&_nc_ht=scontent.fkhh2-1.fna&_nc_gid=AStWUKv443VBqjPP5xFKhUe&oh=00_AYAvB_-hEXNBCCv2sI2wt_G3FTK3mh3So7ueN-uPLdJyIw&oe=6797CFDB', status: 'offline' },
+        { name: 'User 5', image: 'https://scontent.fkhh2-1.fna.fbcdn.net/v/t39.30808-6/472760492_122167839842279858_8147298907144507792_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=127cfc&_nc_ohc=yD1V0Pj_es4Q7kNvgGqGpMs&_nc_zt=23&_nc_ht=scontent.fkhh2-1.fna&_nc_gid=AAKrg5UqVG1puiBRAiV757J&oh=00_AYAcnstT1KI0ohXUGz_BrTHxYsGfrNc1JahWO6w5QgDTsQ&oe=6797D5C7', status: 'online' }
       ],
       chatBoxVisible: false,
-      activeProfile: ''
+      activeProfile: '',
+      activeProfileImage: '',
+      messages: [],
+      messageInput: '',
     };
   },
   methods: {
@@ -155,11 +185,37 @@ export default {
     },
     openChatBox(profileName) {
       this.activeProfile = profileName;
+      const profile = this.profiles.find(p => p.name === profileName);
+      this.activeProfileImage = profile.image;
       this.chatBoxVisible = true;
     },
     closeChatBox() {
       this.chatBoxVisible = false;
       this.activeProfile = '';
+      this.activeProfileImage = '';
+    },
+    sendMessage(event) {
+  if (event && event.shiftKey) {
+    // Nếu người dùng nhấn Shift + Enter, không gửi tin nhắn mà xuống dòng
+    return;
+  }
+  if (this.messageInput.trim()) {
+    this.messages.push({
+      author: 'You',
+      text: this.messageInput
+    });
+    this.messageInput = '';
+    this.scrollToBottom();
+  }
+},
+
+    addFile(event) {
+      // Handle file addition
+      alert('File added: ' + event.target.files[0].name);
+    },
+    scrollToBottom() {
+      const messageContainer = this.$refs.messageContainer;
+      messageContainer.scrollTop = messageContainer.scrollHeight;
     }
   }
 };
@@ -278,6 +334,7 @@ export default {
 }
 
 /* CSS mới cho hình ảnh người dùng và trạng thái */
+/* Container cho các profile */
 .profile-container {
   display: flex;
   gap: 10px;
@@ -289,8 +346,8 @@ export default {
 }
 
 .profile-img {
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   object-fit: cover;
 }
@@ -303,35 +360,193 @@ export default {
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background-color: green; /* Mặc định là online */
+  background-color: rgb(40, 190, 40); /* Mặc định là online */
 }
 
 .status-offline {
   background-color: red;
 }
 
+/* Hộp chat */
+/* Thêm CSS mới cho chat box */
+
+/* Increase the height of the chat box */
 .chat-box {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  background-color: white;
+  background-color: #fff;
   border: 1px solid #ddd;
-  padding: 20px;
+  padding: 15px;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  width: 300px;
-  display: none;
+  width: 350px;
+  z-index: 20;
+  max-height: 600px; /* Increased height */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Make the content section scrollable */
+/* Hộp chat */
+.chat-box {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 350px;
+  z-index: 20;
+  max-height: 500px; /* Giới hạn chiều cao tổng của chat box */
+  display: flex;
+  flex-direction: column;
 }
 
 .chat-box-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  font-size: 16px;
+  justify-content: space-between;
+  margin-bottom: 10px;
 }
 
 .chat-box-content {
-  margin-top: 10px;
+  flex-grow: 1;
+  overflow-y: auto; /* Chỉ cuộn dọc khi nội dung vượt quá chiều cao */
+  height: 300px; /* Đặt chiều cao cố định */
+  padding: 10px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.messages {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Tin nhắn */
+.message {
+  background-color: #e1f3ff;
+  padding: 10px;
+  border-radius: 4px;
   font-size: 14px;
+  word-wrap: break-word; /* Tự động xuống dòng nếu quá dài */
+  max-width: 80%;
+}
+
+/* Tin nhắn của bạn */
+/* Tin nhắn của bạn */
+.message.you {
+  align-self: flex-start; /* Giữ nguyên căn lề trái */
+  background-color: #d4edda;
+  text-align: left; /* Căn text về trái */
+}
+
+/* Tin nhắn từ người khác */
+.message.other {
+  align-self: flex-end; /* Giữ nguyên căn lề phải */
+  background-color: #f8d7da;
+  text-align: left; /* Căn text về trái */
+}
+
+
+
+.message-text {
+  color: #333;
+  text-align: left;
+}
+
+/* Footer */
+.chat-box-footer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.chat-input {
+  flex-grow: 1;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.send-btn {
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.send-btn:hover {
+  background-color: #0056b3;
+}
+/* Nút gửi file */
+.send-file-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 35px;
+  height: 35px;
+  background-color: #f1f1f1;
+  border: 1px solid #ddd;
+  border-radius: 50%;
+  cursor: pointer;
+  color: #333;
+}
+
+.send-file-btn:hover {
+  background-color: #e1e1e1;
+}
+
+.send-file-btn i {
+  font-size: 18px;
+}
+
+.chat-box-header button {
+  font-size: 18px; /* Phóng to chữ */
+  font-weight: bold;
+  color: red; /* Màu chữ */
+  background-color: white; /* Màu nền */
+  border: 2px solid red; /* Đường viền */
+  border-radius: 50%; /* Tạo nút tròn */
+  width: 35px; /* Đặt chiều rộng */
+  height: 35px; /* Đặt chiều cao */
+  cursor: pointer; /* Thay đổi con trỏ khi hover */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease-in-out; /* Hiệu ứng chuyển đổi */
+}
+
+.chat-box-header button:hover {
+  background-color: red; /* Màu nền khi hover */
+  color: white; /* Màu chữ khi hover */
+  transform: scale(1.1); /* Phóng to nút khi hover */
+}
+
+.chat-box-header button:active {
+  background-color: #ffcccc; /* Màu nền khi click */
+  color: #cc0000; /* Màu chữ khi click */
+}
+
+
+
+
+/* Overlay để đóng tất cả chat */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 10;
 }
 </style>

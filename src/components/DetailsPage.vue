@@ -1,165 +1,123 @@
 <template>
-    <div class="warehouse-container">
-      <h2>🏢 Warehouses</h2>
-      <p>Select a warehouse to view its items!</p>
-  
-      <form class="add-warehouse-form">
-        <input type="text" required placeholder="New Warehouse Name" />
-        <button type="submit" class="add-button">Add Warehouse</button>
-      </form>
-  
-      <ul class="warehouse-list">
-        <li class="warehouse-item">
-          <span>Warehouse 1</span>
-          <button class="add-ware-button">Add Ware</button>
-        </li>
-        <li class="warehouse-item">
-          <span>Warehouse 2</span>
-          <button class="add-ware-button">Add Ware</button>
-        </li>
-      </ul>
-  
-      <div class="wares-section">
-        <h3>📦 Items in Warehouse 1</h3>
-        <ul class="ware-list">
-          <li class="ware-item">
-            Ware 1 - Cost Method: <strong>Method A</strong>
-          </li>
-          <li class="ware-item">
-            Ware 2 - Cost Method: <strong>Method B</strong>
-          </li>
+    <div class="container my-5">
+        <h2 class="text-center mb-4">Quản Lý Phiếu Nhập và Xuất Hàng</h2>
+
+        <!-- Tabs -->
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="phieuNhap-tab" data-bs-toggle="tab" data-bs-target="#phieuNhap" type="button" role="tab" aria-controls="phieuNhap" aria-selected="true">Phiếu Nhập</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="phieuXuat-tab" data-bs-toggle="tab" data-bs-target="#phieuXuat" type="button" role="tab" aria-controls="phieuXuat" aria-selected="false">Phiếu Xuất</button>
+            </li>
         </ul>
-      </div>
-  
-      <div class="error-message" v-if="errorMessage">
-        {{ errorMessage }}
-      </div>
-  
-      <!-- Modal for adding ware -->
-      <div class="modal-overlay" v-if="isModalOpen">
-        <div class="modal-content">
-          <h3>Add New Ware</h3>
-          <form>
-            <input type="text" required placeholder="Ware Name" />
-            <input type="text" required placeholder="Cost Method" />
-            <input type="number" required placeholder="Price" />
-            <input type="number" required placeholder="Stock" />
-            <input type="text" required placeholder="Description" />
-  
-            <button type="submit">Add Ware</button>
-            <button type="button">Cancel</button>
-          </form>
+
+        <div class="tab-content mt-4" id="myTabContent">
+            <!-- Phiếu Nhập -->
+            <div class="tab-pane fade show active" id="phieuNhap" role="tabpanel" aria-labelledby="phieuNhap-tab">
+                <h3 class="mb-4">Phiếu Nhập Hàng</h3>
+                <form>
+                    <!-- Thông tin chung -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="maPhieuNhap" class="form-label">Mã Phiếu</label>
+                            <input type="text" class="form-control" id="maPhieuNhap" placeholder="Nhập mã phiếu">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="ngayNhap" class="form-label">Ngày Nhập</label>
+                            <input type="date" class="form-control" id="ngayNhap">
+                        </div>
+                    </div>
+                    <!-- Danh sách sản phẩm -->
+                    <h4 class="my-4">Danh Sách Sản Phẩm</h4>
+                    <div class="table-responsive">
+                        <table class="table table-bordered text-center">
+                            <thead class="table-primary">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Tên Sản Phẩm</th>
+                                    <th>Số Lượng</th>
+                                    <th>Đơn Giá</th>
+                                    <th>Thành Tiền</th>
+                                    <th>Thao Tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td><input type="text" class="form-control" placeholder="Tên sản phẩm"></td>
+                                    <td><input type="number" class="form-control" placeholder="0"></td>
+                                    <td><input type="number" class="form-control" placeholder="0"></td>
+                                    <td>0</td>
+                                    <td><button type="button" class="btn btn-danger btn-sm">Xóa</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="mb-3">
+                        <button type="button" class="btn btn-success">Thêm Sản Phẩm</button>
+                    </div>
+                    <div class="text-end">
+                        <h5>Tổng Cộng: <span id="tongCongNhap">0</span> VND</h5>
+                    </div>
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-primary px-5">Lưu Phiếu Nhập</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Phiếu Xuất -->
+            <div class="tab-pane fade" id="phieuXuat" role="tabpanel" aria-labelledby="phieuXuat-tab">
+                <h3 class="mb-4">Phiếu Xuất Hàng</h3>
+                <form>
+                    <!-- Thông tin chung -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="maPhieuXuat" class="form-label">Mã Phiếu</label>
+                            <input type="text" class="form-control" id="maPhieuXuat" placeholder="Nhập mã phiếu">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="ngayXuat" class="form-label">Ngày Xuất</label>
+                            <input type="date" class="form-control" id="ngayXuat">
+                        </div>
+                    </div>
+                    <!-- Danh sách sản phẩm -->
+                    <h4 class="my-4">Danh Sách Sản Phẩm</h4>
+                    <div class="table-responsive">
+                        <table class="table table-bordered text-center">
+                            <thead class="table-warning">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Tên Sản Phẩm</th>
+                                    <th>Số Lượng</th>
+                                    <th>Đơn Giá</th>
+                                    <th>Thành Tiền</th>
+                                    <th>Thao Tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td><input type="text" class="form-control" placeholder="Tên sản phẩm"></td>
+                                    <td><input type="number" class="form-control" placeholder="0"></td>
+                                    <td><input type="number" class="form-control" placeholder="0"></td>
+                                    <td>0</td>
+                                    <td><button type="button" class="btn btn-danger btn-sm">Xóa</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="mb-3">
+                        <button type="button" class="btn btn-success">Thêm Sản Phẩm</button>
+                    </div>
+                    <div class="text-end">
+                        <h5>Tổng Cộng: <span id="tongCongXuat">0</span> VND</h5>
+                    </div>
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-primary px-5">Lưu Phiếu Xuất</button>
+                    </div>
+                </form>
+            </div>
         </div>
-      </div>
     </div>
-  </template>
-  
-  <script>
-  export default {
-    name: 'WarehousePage',
-    data() {
-      return {
-        isModalOpen: false,
-        errorMessage: '',
-      };
-    },
-  };
-  </script>
-  
-  <style scoped>
-  .warehouse-container {
-    max-width: 600px;
-    margin: auto;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background-color: #f9f9f9;
-    font-family: Arial, sans-serif;
-  }
-  
-  .add-warehouse-form {
-    margin-bottom: 20px;
-    display: flex; /* Align items horizontally */
-  }
-  
-  .add-warehouse-form input {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    flex: 1; /* Take up remaining space */
-  }
-  
-  .add-button {
-    padding: 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    margin-left: 10px; /* Space between input and button */
-    cursor: pointer;
-  }
-  
-  .warehouse-list {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  .warehouse-item {
-    display: flex; /* Align items horizontally */
-    justify-content: space-between; /* Space between name and button */
-    padding: 10px;
-    border-bottom: 1px solid #ccc;
-    transition: background-color 0.3s;
-  }
-  
-  .warehouse-item:hover {
-    background-color: #e0f7fa;
-  }
-  
-  .add-ware-button {
-    padding: 5px 10px;
-    border: 1px solid #ccc;
-    background-color: transparent;
-    cursor: pointer;
-  }
-  
-  .ware-list {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  .ware-item {
-    margin-left: 20px;
-  }
-  
-  .error-message {
-    color: red;
-    margin-top: 20px;
-  }
-  
-  .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-  }
-  
-  .modal-content {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    width: 300px;
-  }
-  
-  .modal-content input {
-    margin-bottom: 10px;
-  }
-  </style>
-  
+</template>
