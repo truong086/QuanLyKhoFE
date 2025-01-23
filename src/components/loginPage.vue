@@ -11,21 +11,27 @@
             <div class="login-wrap p-0">
               <h3 class="mb-4 text-center">Have an account?</h3>
               <form class="signin-form">
+
                 <div class="form-group">
                   <input type="text" class="form-control" v-model="username" placeholder="Username" required />
                 </div>
                 <div class="form-group">
                   <input type="password" class="form-control" v-model="password" placeholder="Password" required />
                 </div>
+
                 <!-- remember and forgot passw section -->
-                 <div class="remeber_forgotPassw" style="display: flex; justify-content: space-around;">
+                 <div class="remeber_forgotPassw" style="display: flex;margin:auto 5px; justify-content:space-around;">
+                  
                   <div class="remember">
                     <input type="checkbox" id="remember" v-model="rememberMe" class="form-check-input"> 
-                    <label for="remember">Remember me?</label>
+                    <label for="remember">Remember me</label>
+                 
                   </div>
-                  <div><a href="#">Forgot password ? </a></div>
-                 </div>
+                  <div><a href="#" class="forgot_passw">Forgot password ? </a></div>
 
+                 </div>
+                 
+                 <!--button Login  -->
                 <div class="form-group">
                   <button type="button" class="form-control btn btn-primary submit px-3" @click="handleLogin">
                     Sign In
@@ -123,8 +129,20 @@
     }
     form {
       background: rgba(0, 0, 0, 0.3);
-      padding: 20px 10px;  
+      padding: 20px;  
       border-radius: 10px; 
     }
+    .remember label{
+      color: #FBCEB5;
+    }
+    .forgot_passw{
+      color: white; font-size: 14px; margin-left: 10px;  
+    }
+    .forgot_passw:hover {
+      color: blue;
+    }
+    .remember input{
+      padding-right: -20px;
+     }
   </style>
   
