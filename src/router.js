@@ -11,7 +11,7 @@ import TableAdmin from './components/AdminTemplate/TablePage.vue';
 import TablePage from './components/TablePage.vue';
 import DetailsPage from './components/DetailsPage.vue';
 import ProfilePage from './components/ProfilePage.vue';
-
+import AddCategory from './components/AddCategory.vue';
 
 
 import { useCounterStore } from './store';
@@ -65,6 +65,11 @@ const routes = [
       ]
     },
     children: [
+      {
+        path: "AddCategory",
+        name:  "AddCategory",
+        component: AddCategory
+      },
       {
         path: "ProfilePage",
         name: "ProfilePage",
