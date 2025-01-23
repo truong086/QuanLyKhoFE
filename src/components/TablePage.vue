@@ -1,64 +1,113 @@
 <template>
-    <div class="table-page">
-      <h1>Quản lý Kho</h1>
-      
-      <!-- Bảng Kho -->
+  <div class="table-page">
+    <h1>Quản lý Kho</h1>
+
+    <!-- Bảng Kho -->
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="title">Kho</th>
+        </tr>
+      </thead>
+    </table>
+    <div class="empty-frame">
+      <!-- Bảng con cho Kho -->
       <table class="table">
         <thead>
           <tr>
-            <th class="title">Kho</th>
+            <th v-for="(header, index) in warehouseTable.headers" :key="index">{{ header }}</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(warehouse, index) in warehouseList" :key="index">
-            <td>{{ warehouse }}</td>
+          <tr v-for="(row, rowIndex) in warehouseTable.rows" :key="rowIndex">
+            <td v-for="(cell, cellIndex) in row" :key="cellIndex">{{ cell }}</td>
           </tr>
         </tbody>
       </table>
-      <div class="empty-frame"></div> <!-- Khung dưới Kho -->
-      
-      <br />
-      
-      <!-- Bảng Tầng -->
-      <table class="table">
-        <thead>
-          <tr>
-            <th class="title">Tầng</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="floor in floors" :key="floor">
-            <td>{{ `Tầng ${floor}` }}</td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="empty-frame"></div> <!-- Khung dưới Tầng -->
-      
-      <br />
-      
-      <!-- Bảng Khu -->
-      <table class="table">
-        <thead>
-          <tr>
-            <th class="title">Khu</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(area, index) in currentAreaPrefixes" :key="index">
-            <td>{{ area }}</td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="empty-frame"></div> <!-- Khung dưới Khu -->
     </div>
-  </template>
-  
-  
-  <script setup>
-  
-  </script>
-  
-  <style scoped>
+
+    <!-- Bảng Tầng -->
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="title">Tầng</th>
+        </tr>
+      </thead>
+    </table>
+    <div class="empty-frame">
+      <!-- Bảng con cho Tầng -->
+      <table class="table">
+        <thead>
+          <tr>
+            <th v-for="(header, index) in floorTable.headers" :key="index">{{ header }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(row, rowIndex) in floorTable.rows" :key="rowIndex">
+            <td v-for="(cell, cellIndex) in row" :key="cellIndex">{{ cell }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Bảng Khu -->
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="title">Khu</th>
+        </tr>
+      </thead>
+    </table>
+    <div class="empty-frame">
+      <!-- Bảng con cho Khu -->
+      <table class="table">
+        <thead>
+          <tr>
+            <th v-for="(header, index) in areaTable.headers" :key="index">{{ header }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(row, rowIndex) in areaTable.rows" :key="rowIndex">
+            <td v-for="(cell, cellIndex) in row" :key="cellIndex">{{ cell }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue';
+
+// Dữ liệu cho bảng Kho
+const warehouseTable = ref({
+  headers: ['Tên', 'Loại', 'Số lượng'],
+  rows: [
+    ['Sản phẩm 1', 'Loại A', '50'],
+    ['Sản phẩm 2', 'Loại B', '30'],
+  ],
+});
+
+// Dữ liệu cho bảng Tầng
+const floorTable = ref({
+  headers: ['Tầng', 'Trạng thái'],
+  rows: [
+    ['Tầng 1', 'Đầy'],
+    ['Tầng 2', 'Trống'],
+  ],
+});
+
+// Dữ liệu cho bảng Khu
+const areaTable = ref({
+  headers: ['Khu vực', 'Số lượng'],
+  rows: [
+    ['Khu A', '20'],
+    ['Khu B', '15'],
+  ],
+});
+</script>
+
+<style scoped>
 .table-page {
   padding: 20px;
   font-family: 'Arial', sans-serif;
@@ -66,36 +115,33 @@
   color: #333;
   display: flex;
   flex-direction: column;
-  align-items: center; /* Căn giữa các phần tử theo chiều ngang */
+  align-items: center;
 }
 
 h1 {
   text-align: center;
   font-size: 2rem;
   margin-bottom: 30px;
-  color: #4CAF50; /* Màu xanh lá cây */
+  color: #4CAF50;
 }
 
 .table {
-  width: 10%; /* Thay đổi width của bảng */
+  width: auto;
   border-collapse: collapse;
   margin-bottom: 30px;
   background-color: #fff;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Thêm bóng đổ */
-  margin: 0 auto; /* Căn giữa bảng */
-  border-radius: 50px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
 }
 
 .title {
-  width: 120px; /* Thu nhỏ chiều rộng tiêu đề */
   text-align: center;
   font-size: 1.1rem;
   color: #555;
   background-color: #f2f2f2;
   padding: 10px;
   font-weight: bold;
-  border-radius: 10px; /* Bo tròn tiêu đề */
-  border: none; /* Loại bỏ viền quanh tiêu đề */
+  border-radius: 10px;
 }
 
 .table th,
@@ -112,42 +158,22 @@ h1 {
 }
 
 .table tr:nth-child(even) td {
-  background-color: #f9f9f9; /* Dòng chẵn màu sáng */
+  background-color: #f9f9f9;
 }
 
 .table tr:hover td {
-  background-color: #e1e1e1; /* Màu nền khi hover */
+  background-color: #e1e1e1;
   cursor: pointer;
 }
 
 .empty-frame {
-  width: 100%; /* Khung cũng căn giữa như bảng */
-  height: 300px; /* Chiều cao của khung trống */
-  background-color: #e0e0e0; /* Màu nền cho khung */
-  border: 1px solid #ccc; /* Đường viền cho khung */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background-color: #e0e0e0;
+  border: 1px solid #ccc;
   border-radius: 8px;
-  margin-top: 15px; /* Khoảng cách giữa bảng và khung */
-  margin: 0 auto; /* Căn giữa khung */
+  margin-top: 15px;
 }
-
-@media screen and (max-width: 768px) {
-  .table th, .table td {
-    font-size: 0.875rem;
-    padding: 8px;
-  }
-
-  h1 {
-    font-size: 1.5rem;
-  }
-
-  .table {
-    width: 80%; /* Thay đổi width khi màn hình nhỏ */
-  }
-
-  .empty-frame {
-    width: 80%; /* Khung cũng thay đổi width khi màn hình nhỏ */
-  }
-}
-
-  </style>
-  
+</style>
