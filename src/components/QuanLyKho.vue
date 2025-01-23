@@ -262,7 +262,7 @@ function goToNextPage() {
 
 /* Nội dung của popup */
 .frame-content {
-  background-color: white;
+  background-color: rgb(255, 255, 255);
   padding: 20px;
   border-radius: 10px;
   display: flex; /* Sắp xếp ngang */
@@ -351,7 +351,7 @@ function goToNextPage() {
 /* Nút đóng và nút điều hướng */
 .close-btn, .navigate-btn {
   padding: 10px 20px;
-  background-color: #007bff;
+  background-color: #fc04d3;
   color: white;
   border: none;
   border-radius: 5px;
@@ -412,6 +412,7 @@ function goToNextPage() {
 
 .header-title {
   flex: 1;
+  margin-top: 20px;
 }
 
 .warehouse-title {
@@ -457,12 +458,13 @@ function goToNextPage() {
   background-color: #007bff;
   color: white;
   padding: 5px 10px;
-  border-radius: 100px;
-  margin-right: 20px;
+  border-radius: 10px;
+  margin-left: 90px;
   text-align: center;
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-right: 10px;
 }
 
 .grid {
@@ -524,7 +526,7 @@ select {
 #warehouse-select,
 #area-select,
 #floor-select {
-  font-size: 17px;
+  font-size: 16px;
   padding: 5px 10px;
   border: 2px solid #007bff;
   border-radius: 5px;

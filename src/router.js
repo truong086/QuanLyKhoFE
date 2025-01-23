@@ -10,11 +10,14 @@ import dassboadPage from './components/AdminTemplate/DashboadPage.vue';
 import TableAdmin from './components/AdminTemplate/TablePage.vue';
 import TablePage from './components/TablePage.vue';
 import DetailsPage from './components/DetailsPage.vue';
+import ProfilePage from './components/ProfilePage.vue';
+
 
 
 import { useCounterStore } from './store';
 
 const routes = [
+
   {
     path: "/DetailsPage",
     name: "DetailsPage",
@@ -62,6 +65,11 @@ const routes = [
       ]
     },
     children: [
+      {
+        path: "ProfilePage",
+        name: "ProfilePage",
+        component: ProfilePage  
+      },
       {
         path: "warehouse",  // Thêm route cho QuanLyKho.vue
         name: "QuanLyKho",
