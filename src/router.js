@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import WarehouseManagement from './components/WarehouseManagement.vue';  // Vẫn giữ nguyên WarehouseManagement.vue
 import QuanLyKho from './components/QuanLyKho.vue';  // Import thêm QuanLyKho.vue
-import LoginPage from './components/LoginPage.vue';
+import LoginPage from './components/loginPage.vue';
 import RegisterPage from './components/RegisterPage.vue';
 import GetOTP from './components/GetOTP.vue';
 import AddorEdit from './components/AddorEdit.vue';
@@ -44,7 +44,7 @@ const routes = [
     component: GetOTP, 
   },
   {
-    path: "/admin",
+    path: "/admin/",
     name: "admin",
     component: AdminPage, 
     meta: {
@@ -173,7 +173,7 @@ router.afterEach((to) => {
 router.beforeEach((to, from, next) => {
   loadBootstrap(to);
   const counter = useCounterStore();
-  const paths = [ "/", "/ware", "/warehouse","/login","/register","/getotp","/Add","/tablepage"];
+  const paths = ["/login","/register","/getotp"];
 
   const checkPaths = !paths.includes(to.path);
 
