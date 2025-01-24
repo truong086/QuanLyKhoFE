@@ -18,11 +18,7 @@ import { useCounterStore } from './store';
 
 const routes = [
 
-  {
-    path: "/DetailsPage",
-    name: "DetailsPage",
-    component: DetailsPage,
-  },
+
   {
     path: "/tablepage",
     name: "tablepage",
@@ -37,6 +33,7 @@ const routes = [
     path: "/AddorEdit",
     name: "AddorEdit",
     component: AddorEdit,
+    meta:{requiresAuth: false}
   },
   {
     path: "/getotp",
@@ -66,14 +63,25 @@ const routes = [
     },
     children: [
       {
+        path: "/DetailsPage",
+        name: "DetailsPage",
+        component: DetailsPage,
+      },
+      {
         path: "AddCategory",
         name:  "AddCategory",
         component: AddCategory
+        
       },
       {
         path: "ProfilePage",
         name: "ProfilePage",
         component: ProfilePage  
+      },
+      {
+        path: "Addedit",
+        name: "addedit",
+        component: AddorEdit  
       },
       {
         path: "warehouse",  // Thêm route cho QuanLyKho.vue
@@ -178,7 +186,7 @@ router.afterEach((to) => {
 router.beforeEach((to, from, next) => {
   loadBootstrap(to);
   const counter = useCounterStore();
-  const paths = ["/login","/register","/getotp"];
+  const paths = ["/login","/register","/getotp", "/AddorEdit"];
 
   const checkPaths = !paths.includes(to.path);
 
@@ -191,18 +199,18 @@ router.beforeEach((to, from, next) => {
     next();
   }
   if (auth && !token) {
-    next("/warehouse");
+    next("/AddorEdit");
   } else if (auth && token) {
     if (!roles || roles.includes(role)) {
       next();
     } else {
-      next("/warehouse");
+      next("/AddorEdit");
     }
   } else {
     next();
   }
   if (paths) {
-    next("/warehouse");
+    next("/AddorEdit");
   } else {
     next();
   }

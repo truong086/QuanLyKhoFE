@@ -81,9 +81,9 @@
               <span class="badge bg-danger">3</span>
             </a>
             <ul class="dropdown-menu notification-menu" aria-labelledby="notificationDropdown">
-              <li><a class="dropdown-item" href="#">Thông báo 1</a></li>
-              <li><a class="dropdown-item" href="#">Thông báo 2</a></li>
-              <li><a class="dropdown-item" href="#">Thông báo 3</a></li>
+              <li><a class="dropdown-item" href="#">Notification 1</a></li>
+              <li><a class="dropdown-item" href="#">Notification 2</a></li>
+              <li><a class="dropdown-item" href="#">Notification 3</a></li>
             </ul>
           </li>
           <li class="nav-item dropdown u-pro">
@@ -107,7 +107,7 @@
                   class="dropdown-item" 
                   href="javascript:void(0)" 
                   @click="logout">
-                  <i class="fa fa-sign-out-alt"></i> Đăng xuất
+                  <i class="fa fa-sign-out-alt"></i> Log out
                 </a>
               </li>
             </ul>
@@ -138,7 +138,7 @@
         v-model="messageInput"
         type="text"
         class="chat-input"
-        placeholder="Nhập tin nhắn..."
+        placeholder="Enter message..."
         @keydown="sendMessage"
         @keydown.enter="sendMessage"
       />
@@ -152,7 +152,7 @@
         @change="addFile"
         style="display: none;"
       />
-      <button class="send-btn" @click="sendMessage">Gửi</button>
+      <button class="send-btn" @click="sendMessage">Send</button>
 </div>
 
 </div>
@@ -181,7 +181,7 @@ export default {
   },
   methods: {
     logout() {
-      alert("Đăng xuất thành công!");
+      alert("Log out successfully!");
     },
     openChatBox(profileName) {
       this.activeProfile = profileName;

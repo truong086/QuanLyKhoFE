@@ -30,7 +30,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <center class="mt-4"> <img src="https://scontent.fkhh2-1.fna.fbcdn.net/v/t39.30808-6/474144675_122170234274279858_6841199688129033277_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=127cfc&_nc_ohc=xexoZx5xlJMQ7kNvgG9ejs3&_nc_zt=23&_nc_ht=scontent.fkhh2-1.fna&_nc_gid=ATe8LbkCUiL4flXfFzYrsGX&oh=00_AYDCN7iT0NEzk9L8Pp2QbvxCFtxR66Evqql6Gt9Kqz_EQA&oe=6797A69E" class="img-circle"
-                                        width="150" />
+                                        width="150" height="150" />
                                     <h4 class="card-title mt-2">Hanna Gover</h4>
                                     <h6 class="card-subtitle">Accoubts Manager Amix corp</h6>
                                     <div class="row text-center justify-content-md-center">

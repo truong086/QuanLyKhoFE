@@ -7,6 +7,8 @@ import Vue3Notification from '@kyvg/vue3-notification'
 import { createPinia } from 'pinia';
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 import  Toast  from 'vue-toastification'
+import "bootstrap"
+import "bootstrap/dist/css/bootstrap.min.css"
 import 'vue-toastification/dist/index.css'
 import axios from 'axios'
 import VueAxios from 'vue-axios'

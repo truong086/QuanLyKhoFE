@@ -2,15 +2,15 @@
     <div class="container">
       <!-- Title và nhập số lượng -->
       <div class="title-container">
-        <h2 class="title">Biểu mẫu</h2>
+        <h2 class="title">Form</h2>
         <div class="quantity-input">
-          <label for="quantity">Nhập số lượng:</label>
+          <label for="quantity">Quantity:</label>
           <input
             v-model="quantity"
             type="number"
             min="1"
             class="form-input"
-            placeholder="Nhập số lượng"
+            placeholder="Enter quantity"
           />
         </div>
       </div>
@@ -28,7 +28,7 @@
         />
         <!-- Khung cho phép kéo thả và chọn tệp -->
         <div class="file-upload-zone" :class="{'drag-over': isDragOver}" @click="triggerFileInput">
-          <p>Kéo và thả tệp ở đây hoặc nhấp để chọn tệp</p>
+          <p>將文件拖放到此處或點擊以選擇文件</p>
         </div>
         <!-- Hiển thị ảnh khi chọn -->
         <div v-if="imagePreview" class="image-preview">
@@ -38,40 +38,40 @@
   
       <!-- Các mục chọn miền, tỉnh, huyện, xã, và ghi chú không thay đổi -->
       <div class="form-group">
-        <label for="region">Chọn miền:</label>
+        <label for="region">直轄市:</label>
         <select v-model="selectedRegion" @change="onRegionChange" class="form-select">
-          <option value="" disabled selected>Chọn miền</option>
+          <option value="" disabled selected>直轄市</option>
           <option v-for="region in regions" :key="region.id" :value="region.id">{{ region.name }}</option>
         </select>
       </div>
   
       <div v-if="provinces.length > 0" class="form-group">
-        <label for="province">Chọn tỉnh:</label>
+        <label for="province">縣:</label>
         <select v-model="selectedProvince" @change="onProvinceChange" class="form-select">
-          <option value="" disabled selected>Chọn tỉnh</option>
+          <option value="" disabled selected>縣:</option>
           <option v-for="province in provinces" :key="province.id" :value="province.id">{{ province.name }}</option>
         </select>
       </div>
   
       <div v-if="districts.length > 0" class="form-group">
-        <label for="district">Chọn huyện:</label>
+        <label for="district">縣轄市:</label>
         <select v-model="selectedDistrict" @change="onDistrictChange" class="form-select">
-          <option value="" disabled selected>Chọn huyện</option>
+          <option value="" disabled selected>縣轄市</option>
           <option v-for="district in districts" :key="district.id" :value="district.id">{{ district.name }}</option>
         </select>
       </div>
   
       <div v-if="wards.length > 0" class="form-group">
-        <label for="ward">Chọn xã:</label>
+        <label for="ward">鎮和區:</label>
         <select v-model="selectedWard" class="form-select">
-          <option value="" disabled selected>Chọn xã</option>
+          <option value="" disabled selected>鎮和區</option>
           <option v-for="ward in wards" :key="ward.id" :value="ward.id">{{ ward.name }}</option>
         </select>
       </div>
   
       <div class="form-group">
-        <label for="comments">Nhập ghi chú:</label>
-        <textarea v-model="comments" class="form-textarea" placeholder="Nhập ghi chú ở đây..."></textarea>
+        <label for="comments">Notes:</label>
+        <textarea v-model="comments" class="form-textarea" placeholder="enter notes here..."></textarea>
       </div>
     </div>
   </template>
@@ -93,17 +93,17 @@
       const regions = ref([
         {
           id: 1,
-          name: "Miền 1",
+          name: "直轄市 1",
           provinces: generateProvinces(5, "1"),
         },
         {
           id: 2,
-          name: "Miền 2",
+          name: "直轄市 2",
           provinces: generateProvinces(5, "2"),
         },
         {
           id: 3,
-          name: "Miền 3",
+          name: "直轄市 3",
           provinces: generateProvinces(5, "3"),
         },
       ]);
@@ -156,7 +156,7 @@
       function generateProvinces(count, regionName) {
         return Array.from({ length: count }, (_, i) => ({
           id: `${regionName}-province-${i + 1}`,
-          name: `Tỉnh ${regionName}-${i + 1}`,
+          name: `縣 ${regionName}-${i + 1}`,
           districts: generateDistricts(5, `${regionName}-${i + 1}`),
         }));
       }
@@ -165,7 +165,7 @@
       function generateDistricts(count, provinceName) {
         return Array.from({ length: count }, (_, i) => ({
           id: `${provinceName}-district-${i + 1}`,
-          name: `Huyện ${provinceName}-${i + 1}`,
+          name: `縣轄市 ${provinceName}-${i + 1}`,
           wards: generateWards(5, `${provinceName}-${i + 1}`),
         }));
       }
@@ -174,7 +174,7 @@
       function generateWards(count, districtName) {
         return Array.from({ length: count }, (_, i) => ({
           id: `${districtName}-ward-${i + 1}`,
-          name: `Xã ${districtName}-${i + 1}`,
+          name: `縣轄市 ${districtName}-${i + 1}`,
         }));
       }
   
@@ -264,6 +264,7 @@
   
   .form-select, .form-input, .form-textarea {
     width: 100%;
+    height: 90%;
     padding: 12px;
     border: 1px solid #ccc;
     border-radius: 8px;

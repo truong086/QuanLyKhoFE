@@ -124,9 +124,7 @@ export default {
 
 <style scoped>
 /* Các kiểu CSS của bạn ở đây */
-.wrapper{
-  background-image: url('../assets/loginTemplate/images/bg.jpg');  
-}
+
 .image-holder{
   background-image: url(../assets/RegisterPageTemplate/images/anh-cute-pho-mai-que-con-gai-1.jpg);
   background-repeat: no-repeat;

@@ -11,12 +11,12 @@
           <div class="header-container">
             <div class="header-title">
               <h2 class="warehouse-title">
-                {{ currentWarehouse }} - Tầng {{ currentFloor }} - Khu {{ areaPrefixes[currentFloor - 1] }}{{ areaIndex + 1 }}
+                {{ currentWarehouse }} - Floor {{ currentFloor }} - Area {{ areaPrefixes[currentFloor - 1] }}{{ areaIndex + 1 }}
               </h2>
             </div>
             <div class="selectors-container">
               <div class="warehouse-select-container">
-                <label for="warehouse-select" class="warehouse-label">Chọn kho:</label>
+                <label for="warehouse-select" class="warehouse-label">Select warehouse:</label>
                 <select id="warehouse-select" v-model="currentWarehouse">
                   <option v-for="warehouse in Object.keys(warehouseData)" :key="warehouse" :value="warehouse">
                     {{ warehouse }}
@@ -25,14 +25,14 @@
               </div>
 
               <div class="floor-select-container">
-                <label for="floor-select" class="floor-label">Chọn tầng:</label>
+                <label for="floor-select" class="floor-label">Select floor:</label>
                 <select id="floor-select" v-model="currentFloor">
                   <option
                     v-for="(floor, index) in currentWarehouseData"
                     :key="index"
                     :value="index + 1"
                   >
-                    Tầng {{ index + 1 }}
+                  Floor {{ index + 1 }}
                   </option>
                 </select>
               </div>
@@ -76,20 +76,20 @@
 
           <div class="frame-info">
             <div class="info-line">
-              <span class="info-title">Giá:</span>
+              <span class="info-title">Price:</span>
               <span class="info-content">{{ frameData?.content1 }}</span>
             </div>
             <div class="info-line">
-              <span class="info-title">Số Lượng:</span>
+              <span class="info-title">Quantity:</span>
               <span class="info-content">{{ frameData?.content2 }}</span>
             </div>
             <div class="info-line">
-              <span class="info-title">Tồn kho:</span>
+              <span class="info-title">Inventory:</span>
               <span class="info-content">{{ frameData?.content3 }}</span>
             </div>
 
             <button @click="goToNextPage" class="navigate-btn">Update</button>
-            <button @click="closeFrame" class="close-btn">Đóng</button>
+            <button @click="closeFrame" class="close-btn">Close</button>
           </div>
         </div>
       </div>
@@ -106,18 +106,18 @@ import { ref, computed } from "vue";
 
 // Khai báo tiền tố khu vực cho từng kho
 const areaPrefixesForWarehouses = {
-  "Kho 1": ["A", "B", "C", "D", "E"],
-  "Kho 2": ["F", "G", "H", "I", "J"],
-  "Kho 3": ["K", "L", "M", "N", "O"],
-  "Kho 4": ["P", "Q", "R", "S", "T"],
+  "Warehouse 1": ["A", "B", "C", "D", "E"],
+  "Warehouse 2": ["F", "G", "H", "I", "J"],
+  "Warehouse 3": ["K", "L", "M", "N", "O"],
+  "Warehouse 4": ["P", "Q", "R", "S", "T"],
 };
 
 // Dữ liệu cho từng kho
 const warehouseData = {
-  "Kho 1": generateWarehouseData("Kho 1"),
-  "Kho 2": generateWarehouseData("Kho 2"),
-  "Kho 3": generateWarehouseData("Kho 3"),
-  "Kho 4": generateWarehouseData("Kho 4"),
+  "Warehouse 1": generateWarehouseData("Warehouse 1"),
+  "Warehouse 2": generateWarehouseData("Warehouse 2"),
+  "Warehouse 3": generateWarehouseData("Warehouse 3"),
+  "Warehouse 4": generateWarehouseData("Warehouse 4"),
 };
 
 // Hàm tạo dữ liệu cho từng kho
@@ -127,7 +127,7 @@ function generateWarehouseData(warehouseName) {
     Array.from({ length: 10 }, (_, areaIndex) =>
       Array.from({ length: 10 }, (_, rowIndex) =>
         Array.from({ length: 20 }, (_, colIndex) => ({
-          id: `${warehouseName}-${areaPrefixes[floorIndex]}${areaIndex + 1}-${String(rowIndex + 1).padStart(2, "0")}-${colIndex + 1}`,
+          id: `${areaPrefixes[floorIndex]}${areaIndex + 1}-${String(rowIndex + 1).padStart(2, "0")}-${colIndex + 1}`,
           occupied: Math.random() > 0.7,
         }))
       )
@@ -135,7 +135,7 @@ function generateWarehouseData(warehouseName) {
   );
 }
 // Trạng thái hiện tại
-const currentWarehouse = ref("Kho 1");
+const currentWarehouse = ref("Warehouse 1");
 const currentFloor = ref(1);
 
 // Dữ liệu tầng của kho được chọn
@@ -195,7 +195,7 @@ function goToNextPage() {
   if (currentFloor.value < 5) {
     currentFloor.value++;
   } else {
-    currentWarehouse.value = "Kho 2"; // Ví dụ chuyển kho nếu đạt tầng cuối
+    currentWarehouse.value = "Warehouse 2"; // Ví dụ chuyển kho nếu đạt tầng cuối
     currentFloor.value = 1; // Reset lại tầng
   }
   closeFrame();
