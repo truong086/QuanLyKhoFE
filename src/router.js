@@ -13,13 +13,21 @@ import DetailsPage from './components/DetailsPage.vue';
 import ProfilePage from './components/ProfilePage.vue';
 import AddCategory from './components/AddCategory.vue';
 import WarehouseTransfer from './components/WarehouseTransfer.vue';
-
+import AllCategory from './components/AllCategory.vue'
 
 import { useCounterStore } from './store';
 
 const routes = [
-
-
+  {
+    path: "/AllCategory",
+    name: "AllCategory",
+    component: AllCategory,
+  },
+  {
+    path: "/DetailsPage",
+    name: "DetailsPage",
+    component: DetailsPage,
+  },
   {
     path: "/tablepage",
     name: "tablepage",
@@ -37,15 +45,16 @@ const routes = [
     meta:{requiresAuth: false}
   },
   {
-    path: "/getotp",
+    path: "/getotp/:email",
     name: "GetOTP",
     component: GetOTP, 
   },
   {
-    path: "/admin/",
+    path: "/",
     name: "admin",
     component: AdminPage, 
     meta: {
+      requiresAuth: true,
       css: [
         "/AdminTemplatePage/assets/images/favicon.png",
         "/AdminTemplatePage/assets/node_modules/bootstrap/css/bootstrap.min.css",
@@ -144,16 +153,6 @@ const routes = [
            "/RegisterPageTemplate/js/main.js"],
     },
   },  
-  // {
-  //   path: "/warehouse",  // Thêm route cho QuanLyKho.vue
-  //   name: "QuanLyKho",
-  //   component: QuanLyKho, // Sử dụng component QuanLyKho.vue
-  //   meta: {
-  //     requiresAuth: false,
-  //     css: ["/path/to/custom.css"],
-  //     js: ["/path/to/custom.js"],
-  //   },
-  // },
 ];
 
 const router = createRouter({
@@ -192,7 +191,7 @@ router.afterEach((to) => {
 router.beforeEach((to, from, next) => {
   loadBootstrap(to);
   const counter = useCounterStore();
-  const paths = ["/login","/register","/getotp", "/AddorEdit"];
+  const paths = ["/login","/register","/getotp", "/"];
 
   const checkPaths = !paths.includes(to.path);
 
@@ -205,18 +204,18 @@ router.beforeEach((to, from, next) => {
     next();
   }
   if (auth && !token) {
-    next("/AddorEdit");
+    next("/login");
   } else if (auth && token) {
     if (!roles || roles.includes(role)) {
       next();
     } else {
-      next("/AddorEdit");
+      next("/login");
     }
   } else {
     next();
   }
   if (paths) {
-    next("/AddorEdit");
+    next("/login");
   } else {
     next();
   }

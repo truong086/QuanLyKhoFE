@@ -9,12 +9,12 @@
                                     class="fa fa-tachometer"></i><span class="hide-menu">Dashboard</span></a>
                         </li> -->
                         <li>
-                        <router-link to="/admin/warehouse" class="waves-effect waves-dark" aria-expanded="false">
+                        <router-link to="/warehouse" class="waves-effect waves-dark" aria-expanded="false">
                             <i class="fa fa-tachometer"></i>
                             <span class="hide-menu">Dashboard</span>
                         </router-link>
                         </li>
-                        <li> <a class="waves-effect waves-dark" href="pages-profile.html" aria-expanded="false"><i
+                        <li> <a class="waves-effect waves-dark" @click="next" aria-expanded="false"><i
                                     class="fa fa-user-circle-o"></i><span class="hide-menu">Profile</span></a>
                         </li>
                         <li> <a class="waves-effect waves-dark" href="table-basic.html" aria-expanded="false"><i
@@ -29,6 +29,7 @@
                         <li>
                         <router-link to="/admin/ware" class="waves-effect waves-dark" aria-expanded="false">
                             <i class="fa fa-bookmark-o"></i>
+                            <span class="hide-menu">Status</span>
                             <span class="hide-menu">Status</span>
                         </router-link>
                         </li>
@@ -79,3 +80,11 @@
 }
 
 </style>
+
+<script setup>
+  import {useRouter} from 'vue-router'
+    const router = useRouter()
+    const next = () => {
+        router.push("/ProfilePage")
+    }
+</script>
