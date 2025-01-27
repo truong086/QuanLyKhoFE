@@ -12,6 +12,7 @@ import TablePage from './components/TablePage.vue';
 import DetailsPage from './components/DetailsPage.vue';
 import ProfilePage from './components/ProfilePage.vue';
 import AddCategory from './components/AddCategory.vue';
+import WarehouseTransfer from './components/WarehouseTransfer.vue';
 
 
 import { useCounterStore } from './store';
@@ -63,7 +64,12 @@ const routes = [
     },
     children: [
       {
-        path: "/DetailsPage",
+        path: "TransferPage",
+        name: "TransferPage",
+        component: WarehouseTransfer,
+      },
+      {
+        path: "DetailsPage",
         name: "DetailsPage",
         component: DetailsPage,
       },
