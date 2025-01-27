@@ -72,6 +72,12 @@
       </div>
     </section>
   </body>
+
+  <!-- Hiển thị màn hình loading -->
+  <div v-if="isLoading" class="loading-overlay">
+      <div class="spinner"></div>
+      <p>Đang tải...</p>
+    </div>
 </template>
 
 <script setup>
@@ -110,7 +116,8 @@
       Toast.success("Đăng nhập thành công")
       DataToken.setToken(res.data.content.token)
       DataToken.setRole(res.data.content.role)
-      router.push("/admin/")
+      DataToken.setIdAccount(res.data.content.id)
+      router.push("/")
       
     }else{
       isLoading.value = false
@@ -127,5 +134,46 @@ body {
   background-image: url("../assets/loginTemplate/images/bg.jpg");
   background-size: cover;
   background-repeat: no-repeat;
+}
+
+ /* Màn hình chờ */
+ .loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  pointer-events: all; /* Kích hoạt lớp phủ ngăn tương tác */
+}
+
+/* Biểu tượng spinner */
+.spinner {
+  border: 4px solid #f3f3f3; /* Light grey */
+  border-top: 4px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+/* Hiệu ứng xoay */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Ngăn người dùng thao tác khi đang load */
+body.loading {
+  pointer-events: none; /* Ngăn tất cả tương tác */
+  user-select: none; /* Ngăn chọn văn bản */
 }
 </style>

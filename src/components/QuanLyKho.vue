@@ -4,213 +4,384 @@
     <div class="scrollable-container">
       <div class="warehouse-container">
         <div
-          v-for="(area, areaIndex) in currentWarehouseData[currentFloor - 1]"
-          :key="areaIndex"
           class="frame"
         >
           <div class="header-container">
             <div class="header-title">
               <h2 class="warehouse-title">
-                {{ currentWarehouse }} - Tầng {{ currentFloor }} - Khu {{ areaPrefixes[currentFloor - 1] }}{{ areaIndex + 1 }}
+                Kho: {{ Warename }} - Tầng:  {{ Floorname }} - Khu: {{ Areaname}}
               </h2>
             </div>
             <div class="selectors-container">
               <div class="warehouse-select-container">
                 <label for="warehouse-select" class="warehouse-label">Chọn kho:</label>
-                <select id="warehouse-select" v-model="currentWarehouse">
-                  <option v-for="warehouse in Object.keys(warehouseData)" :key="warehouse" :value="warehouse">
-                    {{ warehouse }}
+                <select id="warehouse-select" v-model="currentWarehouse" @change="SearchWarehourse">
+                  <option v-for="(item, index) in warehouseData" :key="index" :value="item">
+                    {{ item.name }}
                   </option>
                 </select>
               </div>
 
               <div class="floor-select-container">
                 <label for="floor-select" class="floor-label">Chọn tầng:</label>
-                <select id="floor-select" v-model="currentFloor">
+                <select id="floor-select" v-model="currentFloor" @change="SearchFloor">
                   <option
-                    v-for="(floor, index) in currentWarehouseData"
+                    v-for="(floor, index) in currentFloorData"
                     :key="index"
-                    :value="index + 1"
+                    :value="floor"
                   >
-                    Tầng {{ index + 1 }}
+                    {{ floor.name }} 
                   </option>
                 </select>
               </div>
             </div>
           </div>
 
-          <!-- Hiển thị lưới dữ liệu -->
           <div class="grid-wrapper">
-            <div v-for="(row, rowIndex) in area" :key="rowIndex" class="grid-item">
+            <div v-for="(row, rowIndex) in currentAreaData" :key="rowIndex" class="grid-item">
               <div class="row-container">
                 <div class="row-header">
                   <h3>排 {{ rowIndex + 1 }}</h3>
                 </div>
-                <div class="grid">
-                  <button
-                    v-for="(cell, cellIndex) in row"
-                    :key="cellIndex"
-                    :class="['cell', { occupied: cell.occupied }]"
-                    @click="(event) => openFrame(cell, rowIndex, cellIndex, event)"
-                  >
-                    {{ cell.id }}
-                  </button>
+                <div class="grid" style="width: 1200px; display: flex; flex-wrap: wrap;">
+                  <div v-for="(cell, cellIndex) in row.quantity" :key="cellIndex">
+                    <div v-if="row.productArea.productPlans.some(x => x.location == cell)">
+                        <button 
+                            :key="cellIndex"
+                            :class="['cell', { occupied: cell }]"
+                            @click="(event) => openFrame(row.id, cell, row.productArea.productLocationAreas, row.productArea.productPlans)"
+                            style="animation: planData 0.1s ease-in-out infinite;"
+                          >
+                          {{ row.productArea.productLocationAreas.some(x => x.location == cell) || row.productArea.productPlans.some(x => x.location == cell) ? cell + " - " + row.name + " (Có sản phẩm)" : cell + " - " + row.name }}
+                        </button>
+                    </div>
+                    <div v-else-if="hasvalue(row.productArea.locationTotal)">
+                      <div v-if="row.productArea.locationTotal.hasOwnProperty(cell)"> <!--Tìm Key, sử dụng hàm "hasOwnProperty()"-->
+                          <button v-if=" row.productArea.locationTotal[cell] <= 3"
+                            :class="['cell', { occupied: cell }]"
+                            @click="(event) => openFrame(row.id, cell, row.productArea.productLocationAreas, row.productArea.productPlans)"
+                            style="background-color: red;"
+                          >
+                            {{ row.productArea.productLocationAreas.some(x => x.location == cell) || row.productArea.productPlans.some(x => x.location == cell) ? cell + " - " + row.name + " (Có sản phẩm)" : cell + " - " + row.name }}
+                          </button>
+                          <button v-else-if="row.productArea.locationTotal[cell] >= 5 && row.productArea.locationTotal[cell] <= 10"
+                              :class="['cell', { occupied: cell }]"
+                              @click="(event) => openFrame(row.id, cell, row.productArea.productLocationAreas, row.productArea.productPlans)"
+                              style="background-color: yellow;"
+                            >
+                            {{ row.productArea.productLocationAreas.some(x => x.location == cell) || row.productArea.productPlans.some(x => x.location == cell) ? cell + " - " + row.name + " (Có sản phẩm)" : cell + " - " + row.name }}
+                          </button>
+                          <button v-else
+                              :class="['cell', { occupied: cell }]"
+                              @click="(event) => openFrame(row.id, cell, row.productArea.productLocationAreas, row.productArea.productPlans)"
+                              style="background-color: pink;"
+                            >
+                            {{ row.productArea.productLocationAreas.some(x => x.location == cell) || row.productArea.productPlans.some(x => x.location == cell) ? cell + " - " + row.name + " (Có sản phẩm)" : cell + " - " + row.name }}
+                          </button>
+                      </div>
+                      <div v-else>
+                          <button
+                              :class="['cell', { occupied: cell }]"
+                              @click="(event) => openFrame(row.id, cell, row.productArea.productLocationAreas, row.productArea.productPlans)"
+                              style="background-color: gray;"
+                            >
+                            {{ row.productArea.productLocationAreas.some(x => x.location == cell) || row.productArea.productPlans.some(x => x.location == cell) ? cell + " - " + row.name + " (Có sản phẩm)" : cell + " - " + row.name }}
+                          </button>
+                        </div>
+                    </div>
+                    <div v-else>
+                      <button 
+                        :key="cellIndex"
+                        :class="['cell', { occupied: cell }]"
+                        @click="(event) => openFrame(row.id, cell, row.productArea.productLocationAreas, row.productArea.productPlans)"
+                        style="background-color: gray;"
+                      >
+                      {{ row.productArea.productLocationAreas.some(x => x.location == cell) || row.productArea.productPlans.some(x => x.location == cell) ? cell + " - " + row.name + " (Có sản phẩm)" : cell + " - " + row.name }}
+                    </button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
+          <PagesTotal :page="page" :totalPage="totalPage" :valueE="valueE" @pageChange="findAllArea" @pageSizeChange="changeReload"></PagesTotal>
         </div>
       </div>
-      <!-- Frame Popup -->
       <div
         v-if="frameVisible"
         class="frame-popup"
-        :style="{ top: popupPosition.top + 'px', left: popupPosition.left + 'px' }"
+        :style="{ top: popupPosition.top + 'px', left: popupPosition.left + 'px'}"
         @click="closeFrame"
       >
-        <div class="frame-content" @click.stop>
-          <div class="frame-main">
-            <h3>{{ frameData?.title }}</h3>
-            <img :src="frameData?.image" alt="Image" class="frame-image" />
-          </div>
-
-          <div class="frame-info">
-            <div class="info-line">
-              <span class="info-title">Giá:</span>
-              <span class="info-content">{{ frameData?.content1 }}</span>
-            </div>
-            <div class="info-line">
-              <span class="info-title">Số Lượng:</span>
-              <span class="info-content">{{ frameData?.content2 }}</span>
-            </div>
-            <div class="info-line">
-              <span class="info-title">Tồn kho:</span>
-              <span class="info-content">{{ frameData?.content3 }}</span>
+          <div style="width: 1000px; display: flex; flex-wrap: wrap;">
+            <div class="frame-content" @click.stop v-for="(item, index) in frameData" :key="index">
+            <div class="frame-main">
+              <h3>{{ item?.name }}</h3>
+              <img :src="item?.image" alt="Image" class="frame-image" />
             </div>
 
-            <button @click="goToNextPage" class="navigate-btn">Update</button>
-            <button @click="closeFrame" class="close-btn">Đóng</button>
+            <div class="frame-info">
+              <div class="info-line">
+                <span class="info-title">Location:</span>
+                <span class="info-content">{{ item?.location }}</span>
+              </div>
+              <div class="info-line">
+                <span class="info-title">Quantity:</span>
+                <span class="info-content">{{ item?.quantity }}</span>
+              </div>
+
+              <div class="info-line">
+                <span class="info-title">Type:</span>
+                <span class="info-content">{{ item?.type }}</span>
+              </div>
+              <button @click="goToNextPage" class="navigate-btn">Update</button>
+              <button @click="closeFrame" class="close-btn">Đóng</button>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+
+    <!-- Hiển thị màn hình loading -->
+    <div v-if="isLoading" class="loading-overlay">
+      <div class="spinner"></div>
+      <p>Đang tải...</p>
+    </div>
 </template>
 
-
-
-
-
 <script setup>
-import { ref, computed } from "vue";
+  import { useCounterStore } from "../store";
+  import {ref, getCurrentInstance, onMounted, watch} from 'vue'
+  import PagesTotal from './PageList/PagesTotal.vue'
+  import axios from 'axios'
+  import {useToast} from 'vue-toastification'
+  import {useRouter} from 'vue-router'
 
-// Khai báo tiền tố khu vực cho từng kho
-const areaPrefixesForWarehouses = {
-  "Kho 1": ["A", "B", "C", "D", "E"],
-  "Kho 2": ["F", "G", "H", "I", "J"],
-  "Kho 3": ["K", "L", "M", "N", "O"],
-  "Kho 4": ["P", "Q", "R", "S", "T"],
-};
+  onMounted(() => {
+    loadDataWarehouse()
+    setInterval(() => {
+      if(!checkTokenData()){
+        store.clearStore()
+        localStorage.clear()
+        router.push("/login")
+      }
+    }, 20000)
+  })
 
-// Dữ liệu cho từng kho
-const warehouseData = {
-  "Kho 1": generateWarehouseData("Kho 1"),
-  "Kho 2": generateWarehouseData("Kho 2"),
-  "Kho 3": generateWarehouseData("Kho 3"),
-  "Kho 4": generateWarehouseData("Kho 4"),
-};
-
-// Hàm tạo dữ liệu cho từng kho
-function generateWarehouseData(warehouseName) {
-  const areaPrefixes = areaPrefixesForWarehouses[warehouseName];
-  return Array.from({ length: 5 }, (_, floorIndex) =>
-    Array.from({ length: 10 }, (_, areaIndex) =>
-      Array.from({ length: 10 }, (_, rowIndex) =>
-        Array.from({ length: 20 }, (_, colIndex) => ({
-          id: `${warehouseName}-${areaPrefixes[floorIndex]}${areaIndex + 1}-${String(rowIndex + 1).padStart(2, "0")}-${colIndex + 1}`,
-          occupied: Math.random() > 0.7,
-        }))
-      )
-    )
-  );
-}
-// Trạng thái hiện tại
-const currentWarehouse = ref("Kho 1");
-const currentFloor = ref(1);
-
-// Dữ liệu tầng của kho được chọn
-const currentWarehouseData = computed(() => warehouseData[currentWarehouse.value]);
-
-// Tiền tố khu vực
-const areaPrefixes = ["A", "B", "C", "D", "E"];
-
-// Các biến để điều khiển popup
-const frameVisible = ref(false);
-const frameData = ref(null);
-const popupPosition = ref({ top: 0, left: 0 });
-
-// Hàm mở frame với dữ liệu của ô được nhấn
-function openFrame(cell, rowIndex, cellIndex, event) {
-  console.log("Row:", rowIndex, "Cell:", cellIndex, "Data:", cell);
-
-  frameData.value = {
-    title: cell.id,
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRPjVjuhd5m-dXPSvTua4ApUesQ7RreOtWXw&s",
-    content1: "1200$",
-    content2: "20",
-    content3: "200",
-  };
-
-  const gridButton = event.target;
-  const rect = gridButton.getBoundingClientRect();
-
-  const screenWidth = window.innerWidth;
-  const screenHeight = window.innerHeight;
-
-  let top = rect.top + window.scrollY;
-  let left = rect.left + window.scrollX + rect.width + 10;
-
-  // Điều chỉnh nếu vượt quá giới hạn màn hình
-  if (left + 300 > screenWidth) {
-    left = rect.left + window.scrollX - 300 - 10;
-  }
-  if (top + 200 > screenHeight) {
-    top = rect.top + window.scrollY - 200 - 10;
+  const checkTokenData = async () => {
+    const res = await axios.post(hostName + `/api/Account/CheckToken?token=${store.getToken}`, {}, getToken())
+    if(res.data.success){
+      const check = res.data.content.split(".")
+      if(check.length !== 3){
+        return true
+      }else{
+        store.setToken(res.data.content)
+        return true
+      }
+    }
+    else{
+      return false
+    }
   }
 
-  popupPosition.value = { top, left };
-  frameVisible.value = true;
-}
-
-
-
-// Hàm đóng frame
-function closeFrame() {
-  frameVisible.value = false;
-}
-
-// Hàm chuyển trang (ví dụ: chuyển tầng hoặc kho)
-function goToNextPage() {
-  // Chuyển tới tầng kế tiếp hoặc kho kế tiếp
-  if (currentFloor.value < 5) {
-    currentFloor.value++;
-  } else {
-    currentWarehouse.value = "Kho 2"; // Ví dụ chuyển kho nếu đạt tầng cuối
-    currentFloor.value = 1; // Reset lại tầng
+  const router = useRouter()
+  const hasvalue = (data) => {
+    return Object.keys(data).length > 0
   }
-  closeFrame();
+  const Warename = ref("")
+  const Floorname = ref("")
+  const Areaname = ref("")
+  const warehouseData = ref([])
+  const currentFloor = ref({})
+  const currentFloorData = ref([])
+  const valueE = ref("")
+  const currentAreaData = ref([])
+  const currentWarehouse = ref({})
+  const isLoading = ref(false)
+  const store = useCounterStore()
+  const Toast = useToast()
+  const page = ref(1)
+  const totalPage = ref(0)
+  const pageSize = ref(5)
+  const frameData = ref([])
+
+  const {proxy} = getCurrentInstance()
+  const hostName = proxy?.hostname
+  const popupPosition = ref({})
+  const frameVisible = ref(false)
+  const closeFrame = () => {
+    frameVisible.value = false
+  }
+  const openFrame = (id, location, list, listPlan) =>{
+    frameData.value = []
+    if(list.length <= 0 && listPlan <= 0)
+      return
+    if(list.length > 0){
+      list.forEach(element => {
+        if(element.location === location){
+          let dataItem = {...element, type: "Sản phẩm đang ở kho"}
+          frameData.value.push(dataItem)
+        }
+      });
+    }
+    if(listPlan.length > 0){
+      listPlan.forEach(element => {
+        if(element.location === location){
+          let dataItem = {...element, type: "Sản phẩm chuẩn bị chuyển đến"}
+          frameData.value.push(dataItem)
+        }
+      });
+    }
+
+    const gridButton = event.target;
+      const rect = gridButton.getBoundingClientRect();
+
+      const screenWidth = window.innerWidth;
+      const screenHeight = window.innerHeight;
+
+      let top = rect.top + window.scrollY;
+      let left = rect.left + window.scrollX + rect.width + 10;
+
+      // Điều chỉnh nếu vượt quá giới hạn màn hình
+      if (left + 300 > screenWidth) {
+        left = rect.left + window.scrollX - 300 - 10;
+      }
+      if (top + 200 > screenHeight) {
+        top = rect.top + window.scrollY - 200 - 10;
+      }
+
+      popupPosition.value = { top, left };
+      frameVisible.value = true;
 }
+  watch(page.value, (newPage) => {
+    findAllArea(valueE.value, newPage)
+  })
+  const changeReload = (event) => {
+    pageSize.value = event
+    findAllArea(valueE.value, page.value)
+  }
+  const SearchFloor = async () => {
+    findAllArea(valueE.value, page.value)
+  }
+  const findAllArea = async (search, pageData) => {
+    console.log(search)
+    isLoading.value = true
+    document.body.classList.add('loading') // Add Lớp "loading"
+    document.body.style.overflow = 'hidden'
+
+    const res = await axios.get(hostName + `/api/Area/FindByFloor?id=${currentFloor.value.id}&page=${pageData}&pageSize=${pageSize.value}`, getToken())
+    if(res.data.success){
+      page.value = res.data.content.page
+      totalPage.value = res.data.content.totalPages
+      currentAreaData.value = res.data.content.data
+      console.log(res)
+    }
+
+    isLoading.value = false
+    document.body.classList.remove('loading')
+    document.body.style.overflow = 'auto'
+    
+  }
+  const getToken = () => {
+        var token = store.getToken
+            var result = {
+                headers: {Authorization: `Bearer ${token}`}
+            }
+            return result
+      }
+      const SearchWarehourse = async () => {
+        const res = await axios.get(hostName + `/api/Floor/FindByWareHouser?id=${currentWarehouse.value.id}&page=1&pageSize=2000`, getToken())
+        currentFloorData.value = res.data.content.data
+        currentFloor.value = res.data.content.data[0]
+        Warename.value = currentWarehouse.value.name
+        Floorname.value = res.data.content.data[0].name
+        findAllArea(valueE.value, page.value)
+        Toast.success("Success")
+      }
+  const loadDataWarehouse = async () => {
+    const res = await axios.get(hostName + '/api/Warehouse/FindAll?page=1&pageSize=2000', getToken())
+    warehouseData.value = res.data.content.data
+    currentWarehouse.value = res.data.content.data[0]
+    Warename.value = res.data.content.data[0].name
+    loadDataFloor(currentWarehouse.value)
+    Toast.success("Success")
+  }
+
+  const loadDataFloor = async (id) => {
+    const res = await axios.get(hostName + `/api/Floor/FindByWareHouser?id=${id.id}&page=1&pageSize=2000`, getToken())
+    currentFloorData.value = res.data.content.data
+    currentFloor.value = res.data.content.data[0]
+    Floorname.value = res.data.content.data[0].name
+    findAllArea(valueE.value, page.value)
+    Toast.success("Success")
+  }
 
 </script>
 
+<style>
+  /* Màn hình chờ */
+  .loading-overlay {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background-color: rgba(0, 0, 0, 0.5);
+display: flex;
+justify-content: center;
+align-items: center;
+z-index: 1000;
+pointer-events: all; /* Kích hoạt lớp phủ ngăn tương tác */
+}
 
+/* Biểu tượng spinner */
+.spinner {
+border: 4px solid #f3f3f3; /* Light grey */
+border-top: 4px solid #3498db; /* Blue */
+border-radius: 50%;
+width: 40px;
+height: 40px;
+animation: spin 1s linear infinite;
+}
 
+/* Hiệu ứng xoay */
+@keyframes spin {
+0% {
+  transform: rotate(0deg);
+}
+100% {
+  transform: rotate(360deg);
+}
+}
 
+@keyframes planData {
+  0%{
+    background-color: greenyellow;
+  }
+  25%{
+    background-color: green;
+  }
+  50%{
+    background-color: red;
+  }
+  100%{
+    background-color: violet;
+  }
+}
 
-
-
-
-<style scoped>
+/* Ngăn người dùng thao tác khi đang load */
+body.loading {
+pointer-events: none; /* Ngăn tất cả tương tác */
+user-select: none; /* Ngăn chọn văn bản */
+}
+  .image-preview img {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 5px;
+  }
 .info-line {
   display: flex;
   margin: 5px 0;

@@ -7,7 +7,10 @@ export const useCounterStore = defineStore('counter', {
     count: 0,
     token: "",
     role: [],
-    id_category: null
+    id_category: null,
+    emailotp: "",
+    floorId: {},
+    id_account: 0
   }),
 
   // Getters (giống computed)
@@ -18,10 +21,16 @@ export const useCounterStore = defineStore('counter', {
       return state.role[index]
     },
     getCategory: (state) => state.id_category,
+    getEmailOtp: (state) => state.emailotp,
+    getFloorId: (state) => state.floorId,
+    getIdAccount: (state) => state.id_account
   },
 
   // Actions (giống methods)
   actions: {
+    setIdAccount(item){
+      this.id_account = item
+    },
     increment() {
       this.count++;
     },
@@ -36,6 +45,15 @@ export const useCounterStore = defineStore('counter', {
     },
     setCategory(item){
       this.id_category = item
+    },
+    setEmailOtp(item){
+      this.emailotp = item
+    },
+    setFloorId(item){
+      this.floorId = item
+    },
+    clearStore(){
+      this.$reset
     }
   },
   persist: true,

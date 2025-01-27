@@ -9,19 +9,19 @@
                                     class="fa fa-tachometer"></i><span class="hide-menu">Dashboard</span></a>
                         </li> -->
                         <li>
-                        <router-link to="/admin/warehouse" class="waves-effect waves-dark" aria-expanded="false">
+                        <router-link to="/warehouse" class="waves-effect waves-dark" aria-expanded="false">
                             <i class="fa fa-tachometer"></i>
                             <span class="hide-menu">Dashboard</span>
                         </router-link>
                         </li>
-                        <li> <a class="waves-effect waves-dark" href="pages-profile.html" aria-expanded="false"><i
+                        <li> <a class="waves-effect waves-dark" @click="next" aria-expanded="false"><i
                                     class="fa fa-user-circle-o"></i><span class="hide-menu">Profile</span></a>
                         </li>
                         <li> <a class="waves-effect waves-dark" href="table-basic.html" aria-expanded="false"><i
                                     class="fa fa-table"></i><span class="hide-menu">Tables</span></a>
                         </li>
                         <li> <a class="waves-effect waves-dark" href="icon-fontawesome.html" aria-expanded="false"><i
-                                    class="fa fa-smile-o"></i><span class="hide-menu">Icons</span></a>
+                                    class="fa fa-smile-o"></i><span class="hide-menu">Plan</span></a>
                         </li>
                         <li> <a class="waves-effect waves-dark" href="map-google.html" aria-expanded="false"><i
                                     class="fa fa-globe"></i><span class="hide-menu">Map</span></a>
@@ -29,7 +29,7 @@
                         <li>
                         <router-link to="/admin/ware" class="waves-effect waves-dark" aria-expanded="false">
                             <i class="fa fa-bookmark-o"></i>
-                            <span class="hide-menu">Blank</span>
+                            <span class="hide-menu">Status</span>
                         </router-link>
                         </li>
                         <li>
@@ -52,3 +52,11 @@
             <!-- End Sidebar scroll-->
         </aside>
 </template>
+
+<script setup>
+  import {useRouter} from 'vue-router'
+    const router = useRouter()
+    const next = () => {
+        router.push("/ProfilePage")
+    }
+</script>

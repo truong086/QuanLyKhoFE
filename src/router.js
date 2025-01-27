@@ -39,15 +39,16 @@ const routes = [
     component: AddorEdit,
   },
   {
-    path: "/getotp",
+    path: "/getotp/:email",
     name: "GetOTP",
     component: GetOTP, 
   },
   {
-    path: "/admin/",
+    path: "/",
     name: "admin",
     component: AdminPage, 
     meta: {
+      requiresAuth: true,
       css: [
         "/AdminTemplatePage/assets/images/favicon.png",
         "/AdminTemplatePage/assets/node_modules/bootstrap/css/bootstrap.min.css",
@@ -125,16 +126,6 @@ const routes = [
            "/RegisterPageTemplate/js/main.js"],
     },
   },  
-  // {
-  //   path: "/warehouse",  // Thêm route cho QuanLyKho.vue
-  //   name: "QuanLyKho",
-  //   component: QuanLyKho, // Sử dụng component QuanLyKho.vue
-  //   meta: {
-  //     requiresAuth: false,
-  //     css: ["/path/to/custom.css"],
-  //     js: ["/path/to/custom.js"],
-  //   },
-  // },
 ];
 
 const router = createRouter({
@@ -173,7 +164,7 @@ router.afterEach((to) => {
 router.beforeEach((to, from, next) => {
   loadBootstrap(to);
   const counter = useCounterStore();
-  const paths = ["/login","/register","/getotp"];
+  const paths = ["/login","/register","/getotp", "/"];
 
   const checkPaths = !paths.includes(to.path);
 
@@ -186,18 +177,18 @@ router.beforeEach((to, from, next) => {
     next();
   }
   if (auth && !token) {
-    next("/warehouse");
+    next("/login");
   } else if (auth && token) {
     if (!roles || roles.includes(role)) {
       next();
     } else {
-      next("/warehouse");
+      next("/login");
     }
   } else {
     next();
   }
   if (paths) {
-    next("/warehouse");
+    next("/login");
   } else {
     next();
   }
