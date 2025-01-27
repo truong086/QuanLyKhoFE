@@ -3,108 +3,103 @@
     <h1>Quản lý Kho</h1>
 
     <!-- Bảng Kho -->
-    <table class="table">
-      <thead>
-        <tr>
-          <th class="title">Kho</th>
-        </tr>
-      </thead>
-    </table>
-    <div class="empty-frame">
-      <!-- Bảng con cho Kho -->
+    <div class="table-container">
+      <h2 class="table-title">Thông tin Kho</h2>
       <table class="table">
         <thead>
           <tr>
-            <th v-for="(header, index) in warehouseTable.headers" :key="index">{{ header }}</th>
+            <th class="title">Tên</th>
+            <th class="title">Loại</th>
+            <th class="title">Số lượng</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(row, rowIndex) in warehouseTable.rows" :key="rowIndex">
-            <td v-for="(cell, cellIndex) in row" :key="cellIndex">{{ cell }}</td>
+          <tr v-for="(row, rowIndex) in sharedData" :key="rowIndex">
+            <td>{{ row.name }}</td>
+            <td>{{ row.type }}</td>
+            <td>{{ row.quantity }}</td>
           </tr>
         </tbody>
       </table>
     </div>
 
     <!-- Bảng Tầng -->
-    <table class="table">
-      <thead>
-        <tr>
-          <th class="title">Tầng</th>
-        </tr>
-      </thead>
-    </table>
-    <div class="empty-frame">
-      <!-- Bảng con cho Tầng -->
+    <div class="table-container">
+      <h2 class="table-title">Thông tin Tầng</h2>
       <table class="table">
         <thead>
           <tr>
-            <th v-for="(header, index) in floorTable.headers" :key="index">{{ header }}</th>
+            <th class="title">Tầng</th>
+            <th class="title">Trạng thái</th>
+            <th class="title">Diện tích</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(row, rowIndex) in floorTable.rows" :key="rowIndex">
-            <td v-for="(cell, cellIndex) in row" :key="cellIndex">{{ cell }}</td>
+          <tr v-for="(row, rowIndex) in sharedData" :key="rowIndex">
+            <td>{{ row.floor }}</td>
+            <td>{{ row.status }}</td>
+            <td>{{ row.area }}</td>
           </tr>
         </tbody>
       </table>
     </div>
 
     <!-- Bảng Khu -->
-    <table class="table">
-      <thead>
-        <tr>
-          <th class="title">Khu</th>
-        </tr>
-      </thead>
-    </table>
-    <div class="empty-frame">
-      <!-- Bảng con cho Khu -->
+    <div class="table-container">
+      <h2 class="table-title">Thông tin Khu</h2>
       <table class="table">
         <thead>
           <tr>
-            <th v-for="(header, index) in areaTable.headers" :key="index">{{ header }}</th>
+            <th class="title">Khu vực</th>
+            <th class="title">Số lượng</th>
+            <th class="title">Diện tích</th>
+            <th class="title">Loại</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(row, rowIndex) in areaTable.rows" :key="rowIndex">
-            <td v-for="(cell, cellIndex) in row" :key="cellIndex">{{ cell }}</td>
+          <tr v-for="(row, rowIndex) in sharedData" :key="rowIndex">
+            <td>{{ row.areaName }}</td>
+            <td>{{ row.areaQuantity }}</td>
+            <td>{{ row.areaSize }}</td>
+            <td>{{ row.areaType }}</td>
           </tr>
         </tbody>
       </table>
     </div>
+
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue';
 
-// Dữ liệu cho bảng Kho
-const warehouseTable = ref({
-  headers: ['Tên', 'Loại', 'Số lượng'],
-  rows: [
-    ['Sản phẩm 1', 'Loại A', '50'],
-    ['Sản phẩm 2', 'Loại B', '30'],
-  ],
-});
-
-// Dữ liệu cho bảng Tầng
-const floorTable = ref({
-  headers: ['Tầng', 'Trạng thái'],
-  rows: [
-    ['Tầng 1', 'Đầy'],
-    ['Tầng 2', 'Trống'],
-  ],
-});
-
-// Dữ liệu cho bảng Khu
-const areaTable = ref({
-  headers: ['Khu vực', 'Số lượng'],
-  rows: [
-    ['Khu A', '20'],
-    ['Khu B', '15'],
-  ],
-});
+// Dữ liệu chung cho các bảng
+const sharedData = ref([
+  {
+    name: 'Sản phẩm 1',
+    type: 'Loại A',
+    quantity: 50,
+    floor: 'Tầng 1',
+    status: 'Đầy',
+    area: 'Khu A',
+    areaName: 'Khu A',
+    areaQuantity: 20,
+    areaSize: 150,
+    areaType: 'Kho'
+  },
+  {
+    name: 'Sản phẩm 2',
+    type: 'Loại B',
+    quantity: 30,
+    floor: 'Tầng 2',
+    status: 'Trống',
+    area: 'Khu B',
+    areaName: 'Khu B',
+    areaQuantity: 15,
+    areaSize: 120,
+    areaType: 'Văn phòng'
+  },
+]);
 </script>
 
 <style scoped>
@@ -125,10 +120,22 @@ h1 {
   color: #4CAF50;
 }
 
-.table {
-  width: auto;
-  border-collapse: collapse;
+.table-container {
+  width: 100%;
   margin-bottom: 30px;
+}
+
+.table-title {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 15px;
+  color: #4CAF50;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
   background-color: #fff;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
@@ -164,16 +171,5 @@ h1 {
 .table tr:hover td {
   background-color: #e1e1e1;
   cursor: pointer;
-}
-
-.empty-frame {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
-  background-color: #e0e0e0;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  margin-top: 15px;
 }
 </style>

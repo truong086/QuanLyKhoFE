@@ -54,18 +54,24 @@
         <ul class="navbar-nav my-lg-0">
           <li class="nav-item d-flex align-items-center">
             <div class="profile-container">
-              <div 
-                v-for="(profile, index) in profiles" 
+              <div>
+                <!-- Data: {{ testData }} -->
+              </div>
+              <div
+                v-for="(profile, index) in accountOnline" 
                 :key="index" 
                 class="profile-item" 
-                @click="openChatBox(profile.name)"
+                @click="openChatBox(profile.id_account)"
               >
+              <div v-if="profile.id_account != idACcount">
+                {{ profile.id }}
                 <img 
-                  :src="profile.image" 
+                  :src="profile.account_image" 
                   alt="Profile" 
                   class="profile-img"
                 />
-                <span :class="{'status-online': profile.status === 'online', 'status-offline': profile.status === 'offline'}"></span>
+                <span :class="{'status-online': profile.isOnline === true, 'status-offline': profile.isOnline === false}"></span>
+              </div>
               </div>
             </div>
           </li>
@@ -81,9 +87,9 @@
               <span class="badge bg-danger">3</span>
             </a>
             <ul class="dropdown-menu notification-menu" aria-labelledby="notificationDropdown">
-              <li><a class="dropdown-item" href="#">Thông báo 1</a></li>
-              <li><a class="dropdown-item" href="#">Thông báo 2</a></li>
-              <li><a class="dropdown-item" href="#">Thông báo 3</a></li>
+              <li><a class="dropdown-item" href="#">Notification 1</a></li>
+              <li><a class="dropdown-item" href="#">Notification 2</a></li>
+              <li><a class="dropdown-item" href="#">Notification 3</a></li>
             </ul>
           </li>
           <li class="nav-item dropdown u-pro">
@@ -107,7 +113,7 @@
                   class="dropdown-item" 
                   href="javascript:void(0)" 
                   @click="logout">
-                  <i class="fa fa-sign-out-alt"></i> Đăng xuất
+                  <i class="fa fa-sign-out-alt"></i> Log out
                 </a>
               </li>
             </ul>
@@ -117,111 +123,351 @@
     </nav>
   </header>
 
-  <div v-if="chatBoxVisible" class="chat-box">
+  <div v-if="chatBoxVisible" class="chat-box" style="width: 500px;">
   <div class="chat-box-header">
     <div class="profile-info">
-      <img :src="activeProfileImage" alt="Profile" class="profile-img" />
-      <h5>Chat With {{ activeProfile }}</h5>
+      <img :src="messages.image" alt="Profile" class="profile-img" />
+      <h5>Chat With {{ messages.username }}</h5>
     </div >
     <button  @click="closeChatBox"  >X</button>
   </div>
-  <div class="chat-box-content">
-    <div class="messages" ref="messageContainer">
-      <div v-for="(message, index) in messages" :key="index" class="message">
-        <div class="message-author">{{ message.author }}</div>
-        <div class="message-text">{{ message.text }}</div>
+  <div class="chat-box-content" ref="messageContainer">
+    <div class="messages">
+      <div v-for="(message, index) in messages.dataItem" :key="index" style="position: relative;" class="chat-container">
+        <div v-if="message.idUser2 == idACcount" style="background-color: yellow; margin-left: 200px;" class="message">
+          <div @click="showImage(message.imagedata)" v-if="message.imagedata !== null" class="message-author"><img width="60px" :src="message.imagedata" alt=""></div>
+          <div class="message-author"><p>{{ message.message }}</p></div>
+          <p style="font-size: 12px; margin-top: 20px;">{{ getTimeFromDateTimeOffset(message.createAt) }}</p>
+        </div>
+        <div v-else  class="messageData" style="display: flex;">
+          <div style="margin-right: 30px;">
+            <img v-if="message.image_user1" style="width: 20px; height: 20px; border-radius: 50%;" :src="message.image_user1" alt="">
+          </div>
+          <div>
+            <div @click="showImage(message.imagedata)" v-if="message.imagedata !== null" class="message-author"><img width="60px" :src="message.imagedata" alt=""></div>
+            <div class="message-author">{{ message.message }}</div>
+            <p style="font-size: 12px; margin-top: 20px;">{{ getTimeFromDateTimeOffset(message.createAt) }}</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-  <div class="chat-box-footer">
-      <input
-        v-model="messageInput"
-        type="text"
-        class="chat-input"
-        placeholder="Nhập tin nhắn..."
-        @keydown="sendMessage"
-        @keydown.enter="sendMessage"
-      />
 
-      <label for="file-upload" class="send-file-btn">
-        <i class="fa fa-paperclip"></i>
+  <div class="chat-box-footer message-box">
+    <!-- Input tin nhắn -->
+    <input
+      v-model="messageInput"
+      type="text"
+      class="chat-input"
+      placeholder="Nhập tin nhắn..."
+      @keydown.enter="sendMessage"
+      :disabled="isLoadingMessage"  
+    />
+
+    <!-- Phần upload ảnh -->
+    <div class="image-upload-container">
+      <label class="image-upload">
+        <span>Click to upload your profile picture</span>
+        <input type="file" accept="image/*" id="profile-pic" style="display:none;" @change="previewImageLoad">
       </label>
-      <input
-        id="file-upload"
-        type="file"
-        @change="addFile"
-        style="display: none;"
-      />
-      <button class="send-btn" @click="sendMessage">Gửi</button>
-</div>
+    </div>
+    <div class="preview-container" id="image-preview"></div>
+
+    <!-- Nút gửi tin nhắn -->
+    <button class="send-btn" @click="sendMessage" :disabled="isLoadingMessage">Gửi</button>
+
+    <!-- Hiệu ứng loading -->
+    <div v-if="isLoadingMessage" class="loading-spinner">
+      <div class="spinner"></div>
+      <p>Đang gửi...</p>
+    </div>
+  </div>
+
+  <!-- Hiển thị màn hình loading -->
+  <div v-if="isLoading" class="loading-overlay">
+      <div class="spinnerData"></div>
+      <p>Đang tải...</p>
+    </div>
+
+<!-- Popup hiển thị ảnh lớn -->
+<div v-if="selectedImage" class="image-modal" @click.self="closeImage">
+      <img :src="selectedImage" class="image-full" alt="Full Image" />
+    </div>
 
 </div>
 
 </template>
 
+<script setup>
+  import {ref, onMounted, getCurrentInstance} from 'vue'
+  import * as signalR from "@microsoft/signalr";
+  import {useCounterStore} from "../../store";
+  import axios from 'axios'
+  import {useToast} from 'vue-toastification'
+  import {useRouter} from 'vue-router'
 
+  const previewImage = ref(null)
+  const chatBoxVisible = ref(false)
+  const activeProfile = ref('')
+  const activeProfileImage = ref('')
+  const messages = ref({})
+  const messageInput= ref('')
+  const accountOnline = ref(null)
+  const idACcount = ref(0)
+  const store = useCounterStore()
+  const connection = ref(null)
+  const messageTest = ref({})
+  const messageContainer = ref(null);
+  const imageMessage = ref(null)
+  const selectedImage = ref(null)
+  const preview = ref(null)
+  const isLoadingMessage = ref(false)
+  const isLoading = ref(false)
 
-<script>
-export default {
-  data() {
-    return {
-      profiles: [
-        { name: 'User 1', image: 'https://scontent.fkhh2-2.fna.fbcdn.net/v/t39.30808-6/473256450_122168331770279858_1233402960530596024_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=127cfc&_nc_ohc=ztOl6zdgjmsQ7kNvgF_Bibs&_nc_zt=23&_nc_ht=scontent.fkhh2-2.fna&_nc_gid=AtNs9twimqxmIRKQNl3MYoe&oh=00_AYCL6FRqrOFH_B3gTMkOHp5U_yxY3LA6vqLTT3zDdAw91A&oe=6797C813', status: 'online' },
-        { name: 'User 2', image: 'https://scontent.fkhh2-1.fna.fbcdn.net/v/t39.30808-6/473169881_122168331704279858_1128085097387166884_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=127cfc&_nc_ohc=r87rt8AONNYQ7kNvgGo3Jh1&_nc_zt=23&_nc_ht=scontent.fkhh2-1.fna&_nc_gid=ARhIqKJPXYLGLhBh_QDyJul&oh=00_AYALLQpbwkjELBViTDvHWYumkO6CPLy1Je2udzHYTl6c6w&oe=6797A61B ', status: 'offline' },
-        { name: 'User 3', image: 'https://scontent.fkhh2-1.fna.fbcdn.net/v/t39.30808-6/473113411_122168331614279858_4841002852087880734_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=127cfc&_nc_ohc=1ZmvyTiJOiYQ7kNvgFzyFFP&_nc_zt=23&_nc_ht=scontent.fkhh2-1.fna&_nc_gid=ANUYoqaPSKWQp4HeWD2nFc8&oh=00_AYBaFTv-ZwFifmUzBqgESF3exjY_XRkzKBwdvCJlTp9eOA&oe=6797AD9D', status: 'online' },
-        { name: 'User 4', image: 'https://scontent.fkhh2-1.fna.fbcdn.net/v/t39.30808-6/472425730_122166648422279858_6731797195696114475_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=127cfc&_nc_ohc=2wlCkigHM2UQ7kNvgHumm3D&_nc_zt=23&_nc_ht=scontent.fkhh2-1.fna&_nc_gid=AStWUKv443VBqjPP5xFKhUe&oh=00_AYAvB_-hEXNBCCv2sI2wt_G3FTK3mh3So7ueN-uPLdJyIw&oe=6797CFDB', status: 'offline' },
-        { name: 'User 5', image: 'https://scontent.fkhh2-1.fna.fbcdn.net/v/t39.30808-6/472760492_122167839842279858_8147298907144507792_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=127cfc&_nc_ohc=yD1V0Pj_es4Q7kNvgGqGpMs&_nc_zt=23&_nc_ht=scontent.fkhh2-1.fna&_nc_gid=AAKrg5UqVG1puiBRAiV757J&oh=00_AYAcnstT1KI0ohXUGz_BrTHxYsGfrNc1JahWO6w5QgDTsQ&oe=6797D5C7', status: 'online' }
-      ],
-      chatBoxVisible: false,
-      activeProfile: '',
-      activeProfileImage: '',
-      messages: [],
-      messageInput: '',
-    };
-  },
-  methods: {
-    logout() {
-      alert("Đăng xuất thành công!");
-    },
-    openChatBox(profileName) {
-      this.activeProfile = profileName;
-      const profile = this.profiles.find(p => p.name === profileName);
-      this.activeProfileImage = profile.image;
-      this.chatBoxVisible = true;
-    },
-    closeChatBox() {
-      this.chatBoxVisible = false;
-      this.activeProfile = '';
-      this.activeProfileImage = '';
-    },
-    sendMessage(event) {
-  if (event && event.shiftKey) {
-    // Nếu người dùng nhấn Shift + Enter, không gửi tin nhắn mà xuống dòng
-    return;
+  const getTokens = () => {
+        var token = store.getToken
+            var result = {
+                headers: {Authorization: `Bearer ${token}`}
+            }
+            return result
   }
-  if (this.messageInput.trim()) {
-    this.messages.push({
-      author: 'You',
-      text: this.messageInput
-    });
-    this.messageInput = '';
-    this.scrollToBottom();
-  }
-},
+  const previewImageLoad = (event)  =>{
+            const file = event.target.files[0];
+            
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imageMessage.value = reader.result.split(",")[1];
+                    preview.value = document.getElementById('image-preview');
+                    preview.value.innerHTML = `<img src="${e.target.result}" width="60px" alt="Profile Picture Preview">`;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
 
-    addFile(event) {
-      // Handle file addition
-      alert('File added: ' + event.target.files[0].name);
-    },
-    scrollToBottom() {
-      const messageContainer = this.$refs.messageContainer;
-      messageContainer.scrollTop = messageContainer.scrollHeight;
+
+      const getTimeFromDateTimeOffset = (dateTimeOffset) => {
+        const date = new Date(dateTimeOffset); // Chuyển đổi DateTimeOffset thành Date đối tượng
+        const hours = date.getHours().toString().padStart(2, '0'); // Lấy giờ và đảm bảo có 2 chữ số
+        const minutes = date.getMinutes().toString().padStart(2, '0'); // Lấy phút và đảm bảo có 2 chữ số
+        return `${hours}:${minutes}`; // Trả về giờ và phút
+      }
+  onMounted(() => {
+    idACcount.value = store.getIdAccount
+    ivalidate()
+      
+    })
+
+    const ivalidate = () => {
+     connection.value = new signalR.HubConnectionBuilder()
+      .withUrl("https://localhost:44376/notificationHub", {
+        accessTokenFactory: () => store.getToken
+      })
+      .withAutomaticReconnect() // Tự động kết nối lại khi bị mất kết nối
+      .build();
+    
+      connection.value.start().then(() => {
+          console.log("Connection started");
+        }).catch(err => console.log("SignalR Connection Error:", err));
+
+        connection.value.on("UserData", (user) => {
+          accountOnline.value = user
+        })
+
+        connection.value.on("logoutData", (user) => {
+          accountOnline.value = user
+        })
+        
+        connection.value.on("ReceiveMessage", (data) => {
+          if(data.name_user2 != null){
+            if(chatBoxVisible.value === false)
+                Toast.success("Có thông báo mới từ " + data.name_user2 + ", Message: " + data.message)
+          }
+          messages.value.dataItem.push(data)
+
+          // Cuộn xuống cuối danh sách
+          const container = messageContainer.value;
+          if (container) {
+            container.scrollTop = container.scrollHeight;
+          }
+          messageTest.value = data
+          isLoadingMessage.value = false
+        })
     }
-  }
-};
+
+    const showImage = (image) => {
+      selectedImage.value = image; // Hiển thị ảnh khi click
+    }
+    const closeImage = () => {
+      selectedImage.value = null; // Đóng popup khi click ngoài
+    }
+    const router = useRouter()
+    const Toast = useToast()
+    const {proxy} = getCurrentInstance()
+    const hostName = proxy?.hostname
+    const logout = async () => {
+      const res = await axios.post(hostName + "/api/Account/Logout", {}, getTokens())
+      if(res.data.success){
+        Toast.success("Thành công")
+      }
+      router.push('/login')
+      store.clearStore()
+    }
+    const openChatBox = async (id) => {
+      // activeProfile.value = profileName;
+      // const profile = this.profiles.find(p => p.name === profileName);
+      // activeProfileImage.value = profile.image;
+      isLoading.value = true
+      document.body.classList.add('loading') // Add Lớp "loading"
+      const res = await axios.get(hostName + `/api/Message/FindAll?user1=${id}`, getTokens())
+      messages.value = res.data.content
+      chatBoxVisible.value = true;
+      isLoading.value = false
+      document.body.classList.remove('loading') // Add Lớp "loading"
+      
+    }
+    const closeChatBox = () => {
+      chatBoxVisible.value = false;
+      activeProfile.value = '';
+      activeProfileImage.value = '';
+    }
+
+    
+    const sendMessage = (event) => {
+      
+        if (event && event.shiftKey) {
+          // Nếu người dùng nhấn Shift + Enter, không gửi tin nhắn mà xuống dòng
+          return;
+        }
+        isLoadingMessage.value = true
+          connection.value.invoke("sendMessageToUser", messages.value.id, messageInput.value, imageMessage.value  || null)
+          .catch(err => console.error("Faild: ", err))
+
+          previewImage.value = null
+          imageMessage.value = null
+          // preview.value.innerHTML = 'no'
+          
+        scrollToBottom();
+        isLoadingMessage.value = true
+      }
+    const scrollToBottom = () => {
+      messageContainer.value.scrollTop = messageContainer.value.scrollHeight;
+    }
 </script>
 
 <style scoped>
+.send-btn {
+  margin-top: 10px;
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.send-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.loading-spinner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  font-size: 16px;
+  z-index: 1000;
+}
+
+.spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+.image-gallery {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.image-thumbnail {
+  width: 150px;
+  height: 100px;
+  object-fit: cover;
+  cursor: pointer;
+  border: 2px solid #ccc;
+  transition: transform 0.2s ease;
+}
+
+.image-thumbnail:hover {
+  transform: scale(1.1);
+}
+
+.image-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.image-full {
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.img-thumbnail {
+  margin-top: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 5px;
+}
+.preview-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .preview-container img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  }
 /* CSS cũ */
 .nav-item.hidden-xs-down .additional-input {
   margin-top: 10px;
@@ -428,14 +674,33 @@ export default {
   gap: 10px;
 }
 
+.chat-container {
+  display: flex;
+  justify-content: flex-end; /* Căn trái cho phần tử con */
+}
+
 /* Tin nhắn */
 .message {
   background-color: #e1f3ff;
   padding: 10px;
-  border-radius: 4px;
   font-size: 14px;
   word-wrap: break-word; /* Tự động xuống dòng nếu quá dài */
-  max-width: 80%;
+  display: inline-block; /* Cho phép div co giãn theo nội dung */
+  padding: 10px; /* Đệm xung quanh tin nhắn */
+  border-radius: 10px; /* Bo góc cho tin nhắn */
+  max-width: 80%; /* Giới hạn chiều rộng tối đa nếu muốn */
+  margin-left: auto; /* Đẩy div về bên trái */
+}
+.messageData{
+  background-color: #e1f3ff;
+  padding: 10px;
+  font-size: 14px;
+  word-wrap: break-word; /* Tự động xuống dòng nếu quá dài */
+  display: inline-block; /* Cho phép div co giãn theo nội dung */
+  padding: 10px; /* Đệm xung quanh tin nhắn */
+  border-radius: 10px; /* Bo góc cho tin nhắn */
+  max-width: 80%; /* Giới hạn chiều rộng tối đa nếu muốn */
+  margin-right: auto; /* Đẩy div về bên trái */
 }
 
 /* Tin nhắn của bạn */
@@ -452,9 +717,6 @@ export default {
   background-color: #f8d7da;
   text-align: left; /* Căn text về trái */
 }
-
-
-
 .message-text {
   color: #333;
   text-align: left;
@@ -535,10 +797,6 @@ export default {
   background-color: #ffcccc; /* Màu nền khi click */
   color: #cc0000; /* Màu chữ khi click */
 }
-
-
-
-
 /* Overlay để đóng tất cả chat */
 .overlay {
   position: fixed;
@@ -548,5 +806,46 @@ export default {
   bottom: 0;
   background: rgba(0, 0, 0, 0.3);
   z-index: 10;
+}
+
+ /* Màn hình chờ */
+ .loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  pointer-events: all; /* Kích hoạt lớp phủ ngăn tương tác */
+}
+
+/* Biểu tượng spinner */
+.spinnerData {
+  border: 4px solid #f3f3f3; /* Light grey */
+  border-top: 4px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+/* Hiệu ứng xoay */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Ngăn người dùng thao tác khi đang load */
+body.loading {
+  pointer-events: none; /* Ngăn tất cả tương tác */
+  user-select: none; /* Ngăn chọn văn bản */
 }
 </style>
