@@ -11,18 +11,14 @@ import TableAdmin from './components/AdminTemplate/TablePage.vue';
 import TablePage from './components/TablePage.vue';
 import DetailsPage from './components/DetailsPage.vue';
 import ProfilePage from './components/ProfilePage.vue';
-
+import AddCategory from './components/AddCategory.vue';
 
 
 import { useCounterStore } from './store';
 
 const routes = [
 
-  {
-    path: "/DetailsPage",
-    name: "DetailsPage",
-    component: DetailsPage,
-  },
+
   {
     path: "/tablepage",
     name: "tablepage",
@@ -37,6 +33,7 @@ const routes = [
     path: "/AddorEdit",
     name: "AddorEdit",
     component: AddorEdit,
+    meta:{requiresAuth: false}
   },
   {
     path: "/getotp/:email",
@@ -67,9 +64,25 @@ const routes = [
     },
     children: [
       {
+        path: "/DetailsPage",
+        name: "DetailsPage",
+        component: DetailsPage,
+      },
+      {
+        path: "AddCategory",
+        name:  "AddCategory",
+        component: AddCategory
+        
+      },
+      {
         path: "ProfilePage",
         name: "ProfilePage",
         component: ProfilePage  
+      },
+      {
+        path: "Addedit",
+        name: "addedit",
+        component: AddorEdit  
       },
       {
         path: "warehouse",  // Thêm route cho QuanLyKho.vue

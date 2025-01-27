@@ -22,6 +22,7 @@
                         </li>
                         <li> <a class="waves-effect waves-dark" href="icon-fontawesome.html" aria-expanded="false"><i
                                     class="fa fa-smile-o"></i><span class="hide-menu">Plan</span></a>
+                                    class="fa fa-smile-o"></i><span class="hide-menu">Plan</span></a>
                         </li>
                         <li> <a class="waves-effect waves-dark" href="map-google.html" aria-expanded="false"><i
                                     class="fa fa-globe"></i><span class="hide-menu">Map</span></a>
@@ -29,6 +30,7 @@
                         <li>
                         <router-link to="/admin/ware" class="waves-effect waves-dark" aria-expanded="false">
                             <i class="fa fa-bookmark-o"></i>
+                            <span class="hide-menu">Status</span>
                             <span class="hide-menu">Status</span>
                         </router-link>
                         </li>
@@ -52,6 +54,33 @@
             <!-- End Sidebar scroll-->
         </aside>
 </template>
+
+<style scoped>
+/* Căn các phần tử trong sidebar sang trái */
+.left-sidebar .sidebar-nav ul#sidebarnav {
+  padding-left: 0; /* Loại bỏ padding bên trái nếu có */
+  text-align: left; /* Căn nội dung sang trái */
+}
+
+.left-sidebar .sidebar-nav ul#sidebarnav li {
+  list-style: none; /* Ẩn ký hiệu danh sách nếu cần */
+  text-align: left; /* Đảm bảo nội dung bên trong li được căn trái */
+}
+
+.left-sidebar .sidebar-nav ul#sidebarnav li a,
+.left-sidebar .sidebar-nav ul#sidebarnav li router-link {
+  display: flex; /* Giúp căn chỉnh icon và text trên cùng một hàng */
+  align-items: center; /* Căn giữa icon và text theo chiều dọc */
+  text-align: left; /* Căn chữ sang trái */
+  padding: 10px 15px; /* Tùy chỉnh khoảng cách bên trong */
+  text-decoration: none; /* Loại bỏ gạch chân (nếu có) */
+}
+
+.left-sidebar .sidebar-nav ul#sidebarnav li a i {
+  margin-right: 10px; /* Thêm khoảng cách giữa icon và text */
+}
+
+</style>
 
 <script setup>
   import {useRouter} from 'vue-router'
