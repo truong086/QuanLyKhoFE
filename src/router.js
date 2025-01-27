@@ -12,12 +12,16 @@ import TablePage from './components/TablePage.vue';
 import DetailsPage from './components/DetailsPage.vue';
 import ProfilePage from './components/ProfilePage.vue';
 import AddCategory from './components/AddCategory.vue';
-
+import AllCategory from './components/AllCategory.vue'
 
 import { useCounterStore } from './store';
 
 const routes = [
-
+  {
+    path: "/AllCategory",
+    name: "AllCategory",
+    component: AllCategory,
+  },
   {
     path: "/DetailsPage",
     name: "DetailsPage",
@@ -44,7 +48,7 @@ const routes = [
     component: GetOTP, 
   },
   {
-    path: "/admin/",
+    path: "/",
     name: "admin",
     component: AdminPage, 
     meta: {
