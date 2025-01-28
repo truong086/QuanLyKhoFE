@@ -80,24 +80,62 @@
                           </button>
                       </div>
                       <div v-else>
-                          <button
+                        <button v-if="checkQuantityLocationProduct(row.productArea.productLocationAreas, cell) > 0 && checkQuantityLocationProduct(row.productArea.productLocationAreas, cell) <=  4"
+                            :key="cellIndex"
+                            :class="['cell', { occupied: cell }]"
+                            @click="(event) => openFrame(row.id, cell, row.productArea.productLocationAreas, row.productArea.productPlans)"
+                            style="background-color: blueviolet;"
+                          >
+                          {{ row.productArea.productLocationAreas.some(x => x.location == cell) || row.productArea.productPlans.some(x => x.location == cell) ? cell + " - " + row.name + " (Có sản phẩm)" : cell + " - " + row.name }}
+                          </button>
+                          <button v-if="checkQuantityLocationProduct(row.productArea.productLocationAreas, cell) <= 0"
+                              :key="cellIndex"
+                              :class="['cell', { occupied: cell }]"
+                              @click="(event) => openFrame(row.id, cell, row.productArea.productLocationAreas, row.productArea.productPlans)"
+                              style="background-color: grey; opacity: 0.5;"
+                            >
+                            {{ row.productArea.productLocationAreas.some(x => x.location == cell) || row.productArea.productPlans.some(x => x.location == cell) ? cell + " - " + row.name + " (Có sản phẩm)" : cell + " - " + row.name }}
+                          </button>
+                          <!-- <button
                               :class="['cell', { occupied: cell }]"
                               @click="(event) => openFrame(row.id, cell, row.productArea.productLocationAreas, row.productArea.productPlans)"
                               style="background-color: gray;"
                             >
                             {{ row.productArea.productLocationAreas.some(x => x.location == cell) || row.productArea.productPlans.some(x => x.location == cell) ? cell + " - " + row.name + " (Có sản phẩm)" : cell + " - " + row.name }}
-                          </button>
+                          </button> -->
                         </div>
                     </div>
                     <div v-else>
-                      <button 
-                        :key="cellIndex"
-                        :class="['cell', { occupied: cell }]"
-                        @click="(event) => openFrame(row.id, cell, row.productArea.productLocationAreas, row.productArea.productPlans)"
-                        style="background-color: gray;"
-                      >
-                      {{ row.productArea.productLocationAreas.some(x => x.location == cell) || row.productArea.productPlans.some(x => x.location == cell) ? cell + " - " + row.name + " (Có sản phẩm)" : cell + " - " + row.name }}
-                    </button>
+                      <div v-if="checkQuantityLocationProduct(row.productArea.productLocationAreas, cell) > 0 && checkQuantityLocationProduct(row.productArea.productLocationAreas, cell) <=  4">
+                        <button 
+                          :key="cellIndex"
+                          :class="['cell', { occupied: cell }]"
+                          @click="(event) => openFrame(row.id, cell, row.productArea.productLocationAreas, row.productArea.productPlans)"
+                          style="background-color: blueviolet;"
+                        >
+                        {{ row.productArea.productLocationAreas.some(x => x.location == cell) || row.productArea.productPlans.some(x => x.location == cell) ? cell + " - " + row.name + " (Có sản phẩm)" : cell + " - " + row.name }}
+                        </button>
+                      </div>
+                      <div v-else-if="checkQuantityLocationProduct(row.productArea.productLocationAreas, cell) > 0 && checkQuantityLocationProduct(row.productArea.productLocationAreas, cell) <=  5">
+                        <button
+                          :key="cellIndex"
+                          :class="['cell', { occupied: cell }]"
+                          @click="(event) => openFrame(row.id, cell, row.productArea.productLocationAreas, row.productArea.productPlans)"
+                          style="background-color: blueviolet;"
+                        >
+                        {{ row.productArea.productLocationAreas.some(x => x.location == cell) || row.productArea.productPlans.some(x => x.location == cell) ? cell + " - " + row.name + " (Có sản phẩm)" : cell + " - " + row.name }}
+                        </button>
+                      </div>
+                      <div v-else>
+                        <button
+                            :key="cellIndex"
+                            :class="['cell', { occupied: cell }]"
+                            @click="(event) => openFrame(row.id, cell, row.productArea.productLocationAreas, row.productArea.productPlans)"
+                            style="background-color: grey; opacity: 0.5;"
+                          >
+                          {{ row.productArea.productLocationAreas.some(x => x.location == cell) || row.productArea.productPlans.some(x => x.location == cell) ? cell + " - " + row.name + " (Có sản phẩm)" : cell + " - " + row.name }}
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -169,6 +207,10 @@
     }, 20000)
   })
 
+  const checkQuantityLocationProduct = (data, location) => {
+    var count = data.filter(p => p.location == location).length
+    return count
+  }
   const checkTokenData = async () => {
     const res = await axios.post(hostName + `/api/Account/CheckToken?token=${store.getToken}`, {}, getToken())
     if(res.data.success){
