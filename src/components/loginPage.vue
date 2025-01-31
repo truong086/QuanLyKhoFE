@@ -117,6 +117,8 @@
       DataToken.setToken(res.data.content.token)
       DataToken.setRole(res.data.content.role)
       DataToken.setIdAccount(res.data.content.id)
+      DataToken.setAccountImage(res.data.content.image)
+      DataToken.setAccountName(res.data.content.username)
       router.push("/")
       
     }else{

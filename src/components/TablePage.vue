@@ -5,22 +5,38 @@
     <!-- Bảng Kho -->
     <div class="table-container">
       <h2 class="table-title">Thông tin Kho</h2>
+      <router-link to="/AddorEdit" class="waves-effect waves-dark" aria-expanded="false">
+        <i class="fa fa-tachometer"></i>
+        <span class="hide-menu">Add Warehourse</span>
+      </router-link>
       <table class="table">
         <thead>
           <tr>
-            <th class="title">Tên</th>
-            <th class="title">Loại</th>
-            <th class="title">Số lượng</th>
+            <th class="title">Image</th>
+            <th class="title">Name</th>
+            <th class="title">Address</th>
+            <th class="title">Quantity</th>
+            <th class="title">Quantity Emty</th>
+            <th class="title">Account Create</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(row, rowIndex) in sharedData" :key="rowIndex">
+          <tr v-for="(row, rowIndex) in dataWarehourse" :key="rowIndex">
+            <td><img :src="row.image" style="width: 50px; height: 50px; border-radius: 50%;" alt=""></td>
             <td>{{ row.name }}</td>
-            <td>{{ row.type }}</td>
-            <td>{{ row.quantity }}</td>
+            <td>{{ row.city }}, {{ row.street }}, {{ row.district }}</td>
+            <td>{{ row.numberoffloors }}</td>
+            <td>{{ row.numberoffloorsEmty }}</td>
+            <td>
+              <div style="display: flex;">
+                <img :src="row.account_image" style="width: 50px; height: 50px; border-radius: 50%;" alt="">
+                <h3 style="margin: 0 15px; font-weight: bold;">{{ row.account_name }}</h3>
+              </div>
+            </td>
           </tr>
         </tbody>
       </table>
+      <PagesTotal :page="page" :totalPage="totalPage" :valueE="valueE" @pageChange="findAllWarehourse" @pageSizeChange="changeReload"></PagesTotal>
     </div>
 
     <!-- Bảng Tầng -->
@@ -29,19 +45,36 @@
       <table class="table">
         <thead>
           <tr>
-            <th class="title">Tầng</th>
-            <th class="title">Trạng thái</th>
-            <th class="title">Diện tích</th>
+            <th class="title">Image</th>
+            <th class="title">Name</th>
+            <th class="title">Warehourse</th>
+            <th class="title">Quantity</th>
+            <th class="title">Quantity Emty</th>
+            <th class="title">Account Create</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(row, rowIndex) in sharedData" :key="rowIndex">
-            <td>{{ row.floor }}</td>
-            <td>{{ row.status }}</td>
-            <td>{{ row.area }}</td>
+          <tr v-for="(row, rowIndex) in dataFloor" :key="rowIndex">
+            <td><img :src="row.image" style="width: 50px; height: 50px; border-radius: 50%;" alt=""></td>
+            <td>{{ row.name }}</td>
+            <td>
+              <div style="display: flex;">
+                <img :src="row.warehouse_image" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
+                <h5 style="margin: 0 15px; font-weight: bold;">{{ row.warehouse_name }}</h5>
+              </div>
+            </td>
+            <td>{{ row.quantityarea }}</td>
+            <td>{{ row.locationEmty }}</td>
+            <td>
+              <div style="display: flex;">
+                <img :src="row.account_image" style="width: 50px; height: 50px; border-radius: 50%;" alt="">
+                <h3 style="margin: 0 15px; font-weight: bold;">{{ row.account_name }}</h3>
+              </div>
+            </td>
           </tr>
         </tbody>
       </table>
+      <PagesTotal :page="pageFloor" :totalPage="totalPageFloor" :valueE="valueEFloor" @pageChange="findAllFloor" @pageSizeChange="changeReloadFloor"></PagesTotal>
     </div>
 
     <!-- Bảng Khu -->
@@ -50,56 +83,157 @@
       <table class="table">
         <thead>
           <tr>
-            <th class="title">Khu vực</th>
-            <th class="title">Số lượng</th>
-            <th class="title">Diện tích</th>
-            <th class="title">Loại</th>
+            <th class="title">Image</th>
+            <th class="title">Name</th>
+            <th class="title">Floor</th>
+            <th class="title">Quantity</th>
+            <th class="title">Quantity Emty</th>
+            <th class="title">Account Create</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(row, rowIndex) in sharedData" :key="rowIndex">
-            <td>{{ row.areaName }}</td>
-            <td>{{ row.areaQuantity }}</td>
-            <td>{{ row.areaSize }}</td>
-            <td>{{ row.areaType }}</td>
+          <tr v-for="(row, rowIndex) in dataArea" :key="rowIndex">
+            <td><img :src="row.image" style="width: 50px; height: 50px; border-radius: 50%;" alt=""></td>
+            <td>{{ row.name }}</td>
+            <td>
+              <div style="display: flex;">
+                <img :src="row.floor_image" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
+                <h5 style="margin: 0 15px; font-weight: bold;">{{ row.floor_name }}</h5>
+              </div>
+            </td>
+            <td>{{ row.quantity }}</td>
+            <td>{{ row.totalLocationExsis }}</td>
+            <td>
+              <div style="display: flex;">
+                <img :src="row.account_image" style="width: 50px; height: 50px; border-radius: 50%;" alt="">
+                <h3 style="margin: 0 15px; font-weight: bold;">{{ row.account_name }}</h3>
+              </div>
+            </td>
           </tr>
         </tbody>
       </table>
+      <PagesTotal :page="pageArea" :totalPage="totalPageArea" :valueE="valueEArea" @pageChange="findAllArea" @pageSizeChange="changeReloadArea"></PagesTotal>
     </div>
-
   </div>
+
+  <!-- Hiển thị màn hình loading -->
+  <div v-if="isLoading" class="loading-overlay">
+      <div class="spinner"></div>
+      <p>Đang tải...</p>
+    </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import axios from "axios";
+import { ref, getCurrentInstance, watch, onMounted } from "vue";
+import PagesTotal from "./PageList/PagesTotal.vue";
+import { useCounterStore } from "../store";
 
-// Dữ liệu chung cho các bảng
-const sharedData = ref([
-  {
-    name: 'Sản phẩm 1',
-    type: 'Loại A',
-    quantity: 50,
-    floor: 'Tầng 1',
-    status: 'Đầy',
-    area: 'Khu A',
-    areaName: 'Khu A',
-    areaQuantity: 20,
-    areaSize: 150,
-    areaType: 'Kho'
-  },
-  {
-    name: 'Sản phẩm 2',
-    type: 'Loại B',
-    quantity: 30,
-    floor: 'Tầng 2',
-    status: 'Trống',
-    area: 'Khu B',
-    areaName: 'Khu B',
-    areaQuantity: 15,
-    areaSize: 120,
-    areaType: 'Văn phòng'
-  },
-]);
+onMounted(() => {
+  findAllWarehourse(valueE.value, page.value)
+  findAllFloor(valueEFloor.value, pageFloor.value)
+  findAllArea(valueEArea.value, pageArea.value)
+})
+const { proxy } = getCurrentInstance();
+const hostName = proxy?.hostname;
+const page = ref(1);
+const totalPage = ref(0);
+const pageSize = ref(5);
+const valueE = ref("");
+const pageFloor = ref(1);
+const totalPageFloor = ref(0);
+const pageSizeFloor = ref(5);
+const valueEFloor = ref("");
+const dataFloor = ref([])
+const pageArea = ref(1);
+const totalPageArea = ref(0);
+const pageSizeArea = ref(5);
+const valueEArea = ref("");
+const dataArea = ref([])
+const store = useCounterStore()
+const isLoading = ref(false)
+const dataWarehourse = ref([])
+watch(page.value, (newPage) => {
+  findAllWarehourse(valueE.value, newPage)
+  
+  })
+  watch(pageArea.value, (newPage) => {
+    findAllArea(valueEArea.value, newPage)
+  })
+  watch(pageFloor.value, (newPage) => {
+    findAllFloor(valueEFloor.value, newPage)
+  
+  })
+const getToken = () => {
+        var token = store.getToken
+            var result = {
+                headers: {Authorization: `Bearer ${token}`}
+            }
+            return result
+      }
+const findAllFloor = async (search, pageData) => {
+  isLoading.value = true
+    document.body.classList.add('loading') // Add Lớp "loading"
+    document.body.style.overflow = 'hidden'
+    const res = search === '' ? await axios.get(hostName + `/api/Floor/FindAll?page=${pageData}&pageSize=${pageSizeFloor.value}`, getToken()) 
+    : await axios.get(hostName + `/api/Floor/FindAll?name=${search}&page=${pageData}&pageSize=${pageSizeFloor.value}`, getToken())
+
+    if (res.data.success) {
+      dataFloor.value = res.data.content.data
+      pageFloor.value = res.data.content.page;
+      totalPageFloor.value = res.data.content.totalPages;
+    }
+  isLoading.value = false
+    document.body.classList.remove('loading')
+    document.body.style.overflow = 'auto'
+}
+const findAllWarehourse = async (search, pageData) => {
+  isLoading.value = true
+    document.body.classList.add('loading') // Add Lớp "loading"
+    document.body.style.overflow = 'hidden'
+    const res = search === '' ? await axios.get(hostName + `/api/Warehouse/FindAll?page=${pageData}&pageSize=${pageSize.value}`, getToken()) 
+                              : await axios.get(hostName + `/api/Warehouse/FindAll?name=${search}&page=${pageData}&pageSize=${pageSize.value}`, getToken())
+
+    if (res.data.success) {
+      dataWarehourse.value = res.data.content.data
+      page.value = res.data.content.page;
+      totalPage.value = res.data.content.totalPages;
+    }
+    isLoading.value = false
+    document.body.classList.remove('loading')
+    document.body.style.overflow = 'auto'
+}
+
+const changeReload = (event) => {
+    pageSize.value = event
+    findAllWarehourse(valueE.value, page.value)
+  }
+
+  const changeReloadFloor = (event) => {
+    pageSizeFloor.value = event
+    findAllFloor(valueEFloor.value, pageFloor.value)
+  }
+  const findAllArea = async (search, pageData) => {
+    isLoading.value = true
+    document.body.classList.add('loading') // Add Lớp "loading"
+    document.body.style.overflow = 'hidden'
+    const res = search === '' ? await axios.get(hostName + `/api/Area/FindAll?page=${pageData}&pageSize=${pageSizeArea.value}`, getToken()) 
+                              : await axios.get(hostName + `/api/Area/FindAll?name=${search}&page=${pageData}&pageSize=${pageSizeArea.value}`, getToken())
+
+    console.log(res)          
+    if (res.data.success) {
+      dataArea.value = res.data.content.data
+      pageArea.value = res.data.content.page;
+      totalPageArea.value = res.data.content.totalPages;
+    }
+    isLoading.value = false
+    document.body.classList.remove('loading')
+    document.body.style.overflow = 'auto'
+  }
+  const changeReloadArea = (event) => {
+    pageSizeArea.value = event
+    findAllArea(valueEArea.value, pageArea.value)
+  }
 </script>
 
 <style scoped>

@@ -52,8 +52,8 @@ export default {
     },
     data() {
         return {
-            pageSizeList: [5, 10, 20, 30], // Các kích thước trang
-            pageSize: 5 // Kích thước mặc định
+            pageSizeList: [2, 5, 10, 20, 30], // Các kích thước trang
+            pageSize: 2 // Kích thước mặc định
         };
     },
     computed: {

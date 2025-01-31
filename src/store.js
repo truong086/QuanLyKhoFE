@@ -10,7 +10,9 @@ export const useCounterStore = defineStore('counter', {
     id_category: null,
     emailotp: "",
     floorId: {},
-    id_account: 0
+    id_account: 0,
+    account_name: '',
+    account_image: ''
   }),
 
   // Getters (giống computed)
@@ -23,11 +25,20 @@ export const useCounterStore = defineStore('counter', {
     getCategory: (state) => state.id_category,
     getEmailOtp: (state) => state.emailotp,
     getFloorId: (state) => state.floorId,
-    getIdAccount: (state) => state.id_account
+    getIdAccount: (state) => state.id_account,
+    getIdAccountName: (state) => state.account_name,
+    getIdAccountImage: (state) => state.account_image
+    
   },
 
   // Actions (giống methods)
   actions: {
+    setAccountName(item){
+      this.account_name = item
+    },
+    setAccountImage(item){
+      this.account_image = item
+    },
     setIdAccount(item){
       this.id_account = item
     },

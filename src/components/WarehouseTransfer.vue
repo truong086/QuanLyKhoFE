@@ -1,384 +1,749 @@
-  <template>
-    <div class="container">
-      <!-- Form Kho cũ -->
-      <div class="form-section">
-        <h2 class="title">Kho cũ</h2>
+<template>
+  <div class="container">
+    <!-- Form Kho cũ -->
+    <div class="form-section">
+      <h2 class="title">Kho cũ</h2>
 
-        <!-- Kho Select -->
-        <div class="form-group">
-          <label for="region">Kho:</label>
-          <select v-model="selectedRegionOld" @change="onRegionChange('old')" class="form-select">
-            <option value="" disabled>Chọn kho</option>
-            <option v-for="region in regions" :key="region.id" :value="region.id">{{ region.name }}</option>
-          </select>
-        </div>
+      <!-- Kho Select -->
+      <div class="form-group">
+        <label for="region">Kho:</label>
+        <select class="form-select" v-model="currentWarehouse" @change="SearchWarehourse('old')">
+          <option value="" disabled selected>Chọn kho</option>
+          <option v-for="(item, index) in warehouseData" :key="index" :value="item">{{ item.name }}</option>
+        </select>
+      </div>
 
-        <!-- Tầng Select -->
-        <div v-if="provincesOld.length > 0" class="form-group">
-          <label for="province">Tầng:</label>
-          <select v-model="selectedProvinceOld" @change="onProvinceChange('old')" class="form-select">
-            <option value="" disabled>Chọn tầng</option>
-            <option v-for="province in provincesOld" :key="province.id" :value="province.id">{{ province.name }}</option>
-          </select>
-        </div>
+      <!-- Tầng Select -->
+      <div class="form-group">
+        <label for="province">Tầng:</label>
+        <select class="form-select" v-model="currentFloor" @change="SearchFloor('old')">
+          <option v-for="(item, index) in currentFloorData" :key="index" :value="item">{{item.name}}</option>
+        </select>
+      </div>
 
-        <!-- Khu Select -->
-        <div v-if="districtsOld.length > 0" class="form-group">
-          <label for="district">Khu:</label>
-          <select v-model="selectedDistrictOld" @change="onDistrictChange('old')" class="form-select">
-            <option value="" disabled>Chọn khu</option>
-            <option v-for="district in districtsOld" :key="district.id" :value="district.id">{{ district.name }}</option>
-          </select>
-        </div>
+      <!-- Khu Select -->
+      <div class="form-group">
+        <label for="district">Khu:</label>
+        <select class="form-select" v-model="DataOneArea" @change="searchArea('old')">
+          <option value="" disabled selected>Chọn khu</option>
+          <option v-for="(item, index) in currentAreaData" :key="index" :value="item">{{ item.name }}</option>
+        </select>
+      </div>
 
-        <!-- Vị trí Select -->
-        <div v-if="wardsOld.length > 0" class="form-group">
-          <label for="ward">Vị trí:</label>
-          <div class="dropdown-container">
-            <button @click="toggleWardDropdown('old')" class="form-select">
-              {{ selectedWardOldName || "Chọn vị trí" }}
-            </button>
+      <!-- Vị trí Select -->
+      <div class="form-group">
+        <label for="ward">Vị trí:</label>
+        <div class="dropdown-container">
+          <button class="form-select">Chọn vị trí</button>
 
-            <div v-if="showWardFrameOld" class="ward-dropdown">
-              <div class="ward-grid">
-                <button
-                  v-for="ward in wardsOld"
-                  :key="ward.id"
-                  class="ward-button"
-                  :class="{ selected: ward.id === selectedWardOld }"
-                  @click="selectWard(ward.id, 'old')"
-                  @mouseenter="showWardInfo(ward, 'old', $event)"
-                  @mouseleave="hideWardInfo"
-                >
-                  {{ ward.name }}
-                </button>
-              </div>
+          <div class="ward-dropdown">
+            <div class="ward-grid">
+              <div v-for="(cell, cellIndex) in quantityLocation.quantity" :key="cellIndex">
+                    <div v-if="quantityLocation.productPlans.some(x => x.location == cell)">
+                        <button 
+                            :key="cellIndex"
+                            :class="'form-select' + ' ' + 'swapBgOld_' + quantityLocation.id + '_' + cell"
+                            @click="(event) => openFrame(quantityLocation.id, cell, quantityLocation.productLocationAreas, quantityLocation.productPlans, 'old', 'swapBgOld_' + quantityLocation.id + '_' + cell)"
+                            style="animation: planData 0.1s ease-in-out infinite; font-size: 12px;"
+                          >
+                          {{ quantityLocation.productLocationAreas.some(x => x.location == cell) || quantityLocation.productPlans.some(x => x.location == cell) ? cell + " - " + quantityLocation.name + " (Có sản phẩm)" : cell + " - " + quantityLocation.name }}
+                        </button>
+                    </div>
+                    <div v-else-if="hasvalue(quantityLocation.locationTotal)">
+                      <div v-if="quantityLocation.locationTotal.hasOwnProperty(cell)"> <!--Tìm Key, sử dụng hàm "hasOwnProperty()"-->
+                          <button v-if=" quantityLocation.locationTotal[cell] <= 3"
+                            :class="'form-select' + ' ' + 'swapBgOld_' + quantityLocation.id + '_' + cell"
+                            @click="(event) => openFrame(quantityLocation.id, cell, quantityLocation.productLocationAreas, quantityLocation.productPlans, 'old', 'swapBgOld_' + quantityLocation.id + '_' + cell)"
+                            style="background-color: red; font-size: 12px;"
+                          >
+                            {{ quantityLocation.productLocationAreas.some(x => x.location == cell) || quantityLocation.productPlans.some(x => x.location == cell) ? cell + " - " + quantityLocation.name + " (Có sản phẩm)" : cell + " - " + quantityLocation.name }}
+                          </button>
+                          <button v-else-if="quantityLocation.locationTotal[cell] >= 5 && quantityLocation.locationTotal[cell] <= 10"
+                              :class="'form-select' + ' ' + 'swapBgOld_' + quantityLocation.id + '_' + cell"
+                              @click="(event) => openFrame(quantityLocation.id, cell, quantityLocation.productLocationAreas, quantityLocation.productPlans, 'old', 'swapBgOld_' + quantityLocation.id + '_' + cell)"
+                              style="background-color: yellow; font-size: 12px;"
+                            >
+                            {{ quantityLocation.productLocationAreas.some(x => x.location == cell) || quantityLocation.productPlans.some(x => x.location == cell) ? cell + " - " + quantityLocation.name + " (Có sản phẩm)" : cell + " - " + quantityLocation.name }}
+                          </button>
+                          <button v-else
+                              :class="'form-select' + ' ' + 'swapBgOld_' + quantityLocation.id + '_' + cell"
+                              @click="(event) => openFrame(quantityLocation.id, cell, quantityLocation.productLocationAreas, quantityLocation.productPlans, 'old', 'swapBgOld_' + quantityLocation.id + '_' + cell)"
+                              style="background-color: pink; font-size: 12px;"
+                            >
+                            {{ quantityLocation.productLocationAreas.some(x => x.location == cell) || quantityLocation.productPlans.some(x => x.location == cell) ? cell + " - " + quantityLocation.name + " (Có sản phẩm)" : cell + " - " + quantityLocation.name }}
+                          </button>
+                      </div>
+                      <div v-else>
+                        <button v-if="checkQuantityLocationProduct(quantityLocation.productLocationAreas, cell) > 0 && checkQuantityLocationProduct(quantityLocation.productLocationAreas, cell) <=  4"
+                            :key="cellIndex"
+                            :class="'form-select' + ' ' + 'swapBgOld_' + quantityLocation.id + '_' + cell"
+                            @click="(event) => openFrame(quantityLocation.id, cell, quantityLocation.productLocationAreas, quantityLocation.productPlans, 'old', 'swapBgOld_' + quantityLocation.id + '_' + cell)"
+                            style="background-color: blueviolet; font-size: 12px;"
+                          >
+                          {{ quantityLocation.productLocationAreas.some(x => x.location == cell) || quantityLocation.productPlans.some(x => x.location == cell) ? cell + " - " + quantityLocation.name + " (Có sản phẩm)" : cell + " - " + quantityLocation.name }}
+                          </button>
+                          <button v-if="checkQuantityLocationProduct(quantityLocation.productLocationAreas, cell) <= 0"
+                              :key="cellIndex"
+                              :class="'form-select' + ' ' + 'swapBgOld_' + quantityLocation.id + '_' + cell"
+                              @click="(event) => openFrame(quantityLocation.id, cell, quantityLocation.productLocationAreas, quantityLocation.productPlans, 'old', 'swapBgOld_' + quantityLocation.id + '_' + cell)"
+                              style="background-color: grey; opacity: 0.5; font-size: 12px;"
+                            >
+                            {{ quantityLocation.productLocationAreas.some(x => x.location == cell) || quantityLocation.productPlans.some(x => x.location == cell) ? cell + " - " + quantityLocation.name + " (Có sản phẩm)" : cell + " - " + quantityLocation.name }}
+                          </button>
+                          <!-- <button
+                              :class="['cell', { occupied: cell }]"
+                              @click="(event) => openFrame(quantityLocation.id, cell, quantityLocation.productLocationAreas.productLocationAreas, quantityLocation.productLocationAreas.productPlans)"
+                              style="background-color: gray;"
+                            >
+                            {{ quantityLocation.productLocationAreas.productLocationAreas.some(x => x.location == cell) || quantityLocation.productLocationAreas.productPlans.some(x => x.location == cell) ? cell + " - " + quantityLocation.name + " (Có sản phẩm)" : cell + " - " + quantityLocation.name }}
+                          </button> -->
+                        </div>
+                    </div>
+                    <div v-else>
+                      <div v-if="checkQuantityLocationProduct(quantityLocation.productLocationAreas, cell) > 0 && checkQuantityLocationProduct(quantityLocation.productLocationAreas, cell) <=  4">
+                        <button 
+                          :key="cellIndex"
+                          :class="'form-select' + ' ' + 'swapBgOld_' + quantityLocation.id + '_' + cell"
+                          @click="(event) => openFrame(quantityLocation.id, cell, quantityLocation.productLocationAreas, quantityLocation.productPlans, 'old', 'swapBgOld_' + quantityLocation.id + '_' + cell)"
+                          style="background-color: blueviolet; font-size: 12px;"
+                        >
+                        {{ quantityLocation.productLocationAreas.some(x => x.location == cell) || quantityLocation.productPlans.some(x => x.location == cell) ? cell + " - " + quantityLocation.name + " (Có sản phẩm)" : cell + " - " + quantityLocation.name }}
+                        </button>
+                      </div>
+                      <div v-else-if="checkQuantityLocationProduct(quantityLocation.productLocationAreas, cell) > 0 && checkQuantityLocationProduct(quantityLocation.productLocationAreas, cell) <=  5">
+                        <button
+                          :key="cellIndex"
+                          :class="'form-select' + ' ' + 'swapBgOld_' + quantityLocation.id + '_' + cell"
+                          @click="(event) => openFrame(quantityLocation.id, cell, quantityLocation.productLocationAreas, quantityLocation.productPlans, 'old', 'swapBgOld_' + quantityLocation.id + '_' + cell)"
+                          style="background-color: blueviolet; font-size: 12px;"
+                        >
+                        {{ quantityLocation.productLocationAreas.some(x => x.location == cell) || quantityLocation.productPlans.some(x => x.location == cell) ? cell + " - " + quantityLocation.name + " (Có sản phẩm)" : cell + " - " + quantityLocation.name }}
+                        </button>
+                      </div>
+                      <div v-else>
+                        <button
+                            :key="cellIndex"
+                            :class="'form-select' + ' ' + 'swapBgOld_' + quantityLocation.id + '_' + cell"
+                            @click="(event) => openFrame(quantityLocation.id, cell, quantityLocation.productLocationAreas, quantityLocation.productPlans, 'old', 'swapBgOld_' + quantityLocation.id + '_' + cell)"
+                            style="background-color: grey; opacity: 0.5; font-size: 12px;"
+                          >
+                          {{ quantityLocation.productLocationAreas.some(x => x.location == cell) || quantityLocation.productPlans.some(x => x.location == cell) ? cell + " - " + quantityLocation.name + " (Có sản phẩm)" : cell + " - " + quantityLocation.name }}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
             </div>
           </div>
         </div>
-
-        <!-- Quantity and Comments -->
-        <div class="form-group">
-          <label for="quantity">Số lượng:</label>
-          <input v-model="quantityOld" type="number" min="1" class="form-input" placeholder="Nhập số lượng" />
-        </div>
-        <div class="form-group">
-          <label for="comments">Ghi chú:</label>
-          <textarea v-model="commentsOld" class="form-textarea" placeholder="Nhập ghi chú..."></textarea>
-        </div>
-      </div>
-
-      <!-- Swap Button -->
-      <button @click="swapForm" class="swap-button">
-        <i class="fas fa-exchange-alt"></i> Chuyển sang kho mới
-      </button>
-
-      <!-- Form Kho mới -->
-      <div v-if="showNewWarehouse" class="form-section">
-        <h2 class="title">Kho mới</h2>
-
-        <!-- Kho Select -->
-        <div class="form-group">
-          <label for="region">Kho:</label>
-          <select v-model="selectedRegionNew" @change="onRegionChange('new')" class="form-select">
-            <option value="" disabled>Chọn kho</option>
-            <option v-for="region in regions" :key="region.id" :value="region.id">{{ region.name }}</option>
-          </select>
-        </div>
-
-        <!-- Tầng Select -->
-        <div v-if="provincesNew.length > 0" class="form-group">
-          <label for="province">Tầng:</label>
-          <select v-model="selectedProvinceNew" @change="onProvinceChange('new')" class="form-select">
-            <option value="" disabled>Chọn tầng</option>
-            <option v-for="province in provincesNew" :key="province.id" :value="province.id">{{ province.name }}</option>
-          </select>
-        </div>
-
-        <!-- Khu Select -->
-        <div v-if="districtsNew.length > 0" class="form-group">
-          <label for="district">Khu:</label>
-          <select v-model="selectedDistrictNew" @change="onDistrictChange('new')" class="form-select">
-            <option value="" disabled>Chọn khu</option>
-            <option v-for="district in districtsNew" :key="district.id" :value="district.id">{{ district.name }}</option>
-          </select>
-        </div>
-
-        <!-- Vị trí Select -->
-        <div v-if="wardsNew.length > 0" class="form-group">
-          <label for="ward">Vị trí:</label>
-          <div class="dropdown-container">
-            <button @click="toggleWardDropdown('new')" class="form-select">
-              {{ selectedWardNewName || "Chọn vị trí" }}
-            </button>
-
-            <div v-if="showWardFrameNew" class="ward-dropdown">
-              <div class="ward-grid">
-                <button
-                  v-for="ward in wardsNew"
-                  :key="ward.id"
-                  class="ward-button"
-                  :class="{ selected: ward.id === selectedWardNew }"
-                  @click="selectWard(ward.id, 'new')"
-                  @mouseenter="showWardInfo(ward, 'new', $event)"
-                  @mouseleave="hideWardInfo"
-                >
-                  {{ ward.name }}
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Quantity and Comments -->
-        <div class="form-group">
-          <label for="quantity">Số lượng:</label>
-          <input v-model="quantityNew" type="number" min="1" class="form-input" placeholder="Nhập số lượng" />
-        </div>
-        <div class="form-group">
-          <label for="comments">Ghi chú:</label>
-          <textarea v-model="commentsNew" class="form-textarea" placeholder="Nhập ghi chú..."></textarea>
-        </div>
-
-        <div class="form-group">
-          <button @click="saveNewWarehouse" class="save-button">Lưu kho mới</button>
-        </div>
-      </div>
-
-      <!-- Ward Information Box -->
-      <div v-if="showWardInfoBox" class="ward-info-frame" :style="wardInfoFrameStyle">
-        <h3>{{ wardInfo.name }}</h3>
-        <img :src="wardInfo.image" class="ward-info-image" />
-        <button @click="closeWardInfo" class="cancel-button">Đóng</button>
       </div>
     </div>
-  </template>
 
+    <!-- Swap Button -->
+    <button class="swap-button" @click="toggleKhoMoi">
+      <i class="fas fa-exchange-alt"></i> Chuyển sang kho mới
+    </button>
 
+    <!-- Form Kho mới -->
+    <div class="form-section" v-if="isKhoMoiVisible">
+      <h2 class="title">Kho mới</h2>
 
+      <div class="form-group">
+        <label for="region">Kho:</label>
+        <select class="form-select" v-model="currentWarehouseNew" @change="SearchWarehourse('new')">
+          <option value="" disabled selected>Chọn kho</option>
+          <option v-for="(item, index) in warehouseDataNew" :key="index" :value="item">{{ item.name }}</option>
+        </select>
+      </div>
 
-  <script>
-  import { ref, computed } from "vue";
+      <!-- Tầng Select -->
+      <div class="form-group">
+        <label for="province">Tầng:</label>
+        <select class="form-select" v-model="currentFloorNew" @change="SearchFloor('new')">
+          <option v-for="(item, index) in currentFloorDataNew" :key="index" :value="item">{{item.name}}</option>
+        </select>
+      </div>
 
-  // Generate mock data for provinces, districts, and wards
-  const generateProvinces = (count, regionId) => 
-    Array.from({ length: count }, (_, i) => ({
-      id: `${regionId}-${i + 1}`,
-      name: `Tầng ${regionId}-${i + 1}`,
-      districts: Array.from({ length: 10 }, (_, j) => ({
-        id: `${regionId}-${i + 1}-${j + 1}`,
-        name: `Khu ${regionId}-${i + 1}-${j + 1}`,
-        wards: Array.from({ length: 20 }, (_, k) => ({
-          id: `${regionId}-${i + 1}-${j + 1}-${k + 1}`,
-          name: `Vị trí ${regionId}-${i + 1}-${j + 1}-${k + 1}`,
-        })),
-      })),
-    }));
+      <!-- Khu Select -->
+      <div class="form-group">
+        <label for="district">Khu:</label>
+        <select class="form-select" v-model="DataOneAreaNew" @change="searchArea('new')">
+          <option value="" disabled selected>Chọn khu</option>
+          <option v-for="(item, index) in currentAreaDataNew" :key="index" :value="item">{{ item.name }}</option>
+        </select>
+      </div>
 
-  export default {
-    setup() {
-      const regions = ref([
-        { id: "1", name: "Kho 1", provinces: generateProvinces(5, "1") },
-        { id: "2", name: "Kho 2", provinces: generateProvinces(5, "2") },
-        { id: "3", name: "Kho 3", provinces: generateProvinces(5, "3") },
-      ]);
+      <!-- Vị trí Select -->
+      <div class="form-group">
+        <label for="ward">Vị trí:</label>
+        <div class="dropdown-container">
+          <button class="form-select">Chọn vị trí</button>
 
-      const selectedRegionOld = ref(null);
-      const selectedProvinceOld = ref(null);
-      const selectedDistrictOld = ref(null);
-      const selectedWardOld = ref(null);
-      const provincesOld = ref([]);
-      const districtsOld = ref([]);
-      const wardsOld = ref([]);
-      const quantityOld = ref("");
-      const commentsOld = ref("");
+          <div class="ward-dropdown">
+            <div class="ward-grid">
+              <div v-for="(cell, cellIndex) in quantityLocationNew.quantity" :key="cellIndex">
+                    <div v-if="quantityLocationNew.productPlans.some(x => x.location == cell)">
+                        <button 
+                            :key="cellIndex"
+                            :class="'form-select' + ' ' + 'swapBgNew_' + quantityLocation.id + '_' + cell"
+                            @click="(event) => openFrame(quantityLocationNew.id, cell, quantityLocationNew.productLocationAreas, quantityLocationNew.productPlans, 'new', 'swapBgNew_' + quantityLocation.id + '_' + cell)"
+                            style="animation: planData 0.1s ease-in-out infinite; font-size: 12px;"
+                          >
+                          {{ quantityLocationNew.productLocationAreas.some(x => x.location == cell) || quantityLocationNew.productPlans.some(x => x.location == cell) ? cell + " - " + quantityLocationNew.name + " (Có sản phẩm)" : cell + " - " + quantityLocationNew.name }}
+                        </button>
+                    </div>
+                    <div v-else-if="hasvalue(quantityLocationNew.locationTotal)">
+                      <div v-if="quantityLocationNew.locationTotal.hasOwnProperty(cell)"> <!--Tìm Key, sử dụng hàm "hasOwnProperty()"-->
+                          <button v-if=" quantityLocationNew.locationTotal[cell] <= 3"
+                            :class="'form-select' + ' ' + 'swapBgNew_' + quantityLocation.id + '_' + cell"
+                            @click="(event) => openFrame(quantityLocationNew.id, cell, quantityLocationNew.productLocationAreas, quantityLocationNew.productPlans, 'new', 'swapBgNew_' + quantityLocation.id + '_' + cell)"
+                            style="background-color: red; font-size: 12px;"
+                          >
+                            {{ quantityLocationNew.productLocationAreas.some(x => x.location == cell) || quantityLocationNew.productPlans.some(x => x.location == cell) ? cell + " - " + quantityLocationNew.name + " (Có sản phẩm)" : cell + " - " + quantityLocationNew.name }}
+                          </button>
+                          <button v-else-if="quantityLocationNew.locationTotal[cell] >= 5 && quantityLocationNew.locationTotal[cell] <= 10"
+                              :class="'form-select' + ' ' + 'swapBgNew_' + quantityLocation.id + '_' + cell"
+                              @click="(event) => openFrame(quantityLocationNew.id, cell, quantityLocationNew.productLocationAreas, quantityLocationNew.productPlans, 'new', 'swapBgNew_' + quantityLocation.id + '_' + cell)"
+                              style="background-color: yellow; font-size: 12px;"
+                            >
+                            {{ quantityLocationNew.productLocationAreas.some(x => x.location == cell) || quantityLocationNew.productPlans.some(x => x.location == cell) ? cell + " - " + quantityLocationNew.name + " (Có sản phẩm)" : cell + " - " + quantityLocationNew.name }}
+                          </button>
+                          <button v-else
+                              :class="'form-select' + ' ' + 'swapBgNew_' + quantityLocation.id + '_' + cell"
+                              @click="(event) => openFrame(quantityLocationNew.id, cell, quantityLocationNew.productLocationAreas, quantityLocationNew.productPlans, 'new', 'swapBgNew_' + quantityLocation.id + '_' + cell)"
+                              style="background-color: pink; font-size: 12px;"
+                            >
+                            {{ quantityLocationNew.productLocationAreas.some(x => x.location == cell) || quantityLocationNew.productPlans.some(x => x.location == cell) ? cell + " - " + quantityLocationNew.name + " (Có sản phẩm)" : cell + " - " + quantityLocationNew.name }}
+                          </button>
+                      </div>
+                      <div v-else>
+                        <button v-if="checkQuantityLocationProduct(quantityLocationNew.productLocationAreas, cell) > 0 && checkQuantityLocationProduct(quantityLocationNew.productLocationAreas, cell) <=  4"
+                            :key="cellIndex"
+                            :class="'form-select' + ' ' + 'swapBgNew_' + quantityLocation.id + '_' + cell"
+                            @click="(event) => openFrame(quantityLocationNew.id, cell, quantityLocationNew.productLocationAreas, quantityLocationNew.productPlans, 'new', 'swapBgNew_' + quantityLocation.id + '_' + cell)"
+                            style="background-color: blueviolet; font-size: 12px;"
+                          >
+                          {{ quantityLocationNew.productLocationAreas.some(x => x.location == cell) || quantityLocationNew.productPlans.some(x => x.location == cell) ? cell + " - " + quantityLocationNew.name + " (Có sản phẩm)" : cell + " - " + quantityLocationNew.name }}
+                          </button>
+                          <button v-if="checkQuantityLocationProduct(quantityLocationNew.productLocationAreas, cell) <= 0"
+                              :key="cellIndex"
+                              :class="'form-select' + ' ' + 'swapBgNew_' + quantityLocation.id + '_' + cell"
+                              @click="(event) => openFrame(quantityLocationNew.id, cell, quantityLocationNew.productLocationAreas, quantityLocationNew.productPlans, 'new', 'swapBgNew_' + quantityLocation.id + '_' + cell)"
+                              style="background-color: grey; opacity: 0.5; font-size: 12px;"
+                            >
+                            {{ quantityLocationNew.productLocationAreas.some(x => x.location == cell) || quantityLocationNew.productPlans.some(x => x.location == cell) ? cell + " - " + quantityLocationNew.name + " (Có sản phẩm)" : cell + " - " + quantityLocationNew.name }}
+                          </button>
+                          <!-- <button
+                              :class="['cell', { occupied: cell }]"
+                              @click="(event) => openFrame(quantityLocation.id, cell, quantityLocation.productLocationAreas.productLocationAreas, quantityLocation.productLocationAreas.productPlans)"
+                              style="background-color: gray;"
+                            >
+                            {{ quantityLocation.productLocationAreas.productLocationAreas.some(x => x.location == cell) || quantityLocation.productLocationAreas.productPlans.some(x => x.location == cell) ? cell + " - " + quantityLocation.name + " (Có sản phẩm)" : cell + " - " + quantityLocation.name }}
+                          </button> -->
+                        </div>
+                    </div>
+                    <div v-else>
+                      <div v-if="checkQuantityLocationProduct(quantityLocationNew.productLocationAreas, cell) > 0 && checkQuantityLocationProduct(quantityLocationNew.productLocationAreas, cell) <=  4">
+                        <button 
+                          :key="cellIndex"
+                          :class="'form-select' + ' ' + 'swapBgNew_' + quantityLocation.id + '_' + cell"
+                          @click="openFrame(quantityLocationNew.id, cell, quantityLocationNew.productLocationAreas, quantityLocationNew.productPlans, 'new', 'swapBgNew_' + quantityLocation.id + '_' + cell)"
+                          style="background-color: blueviolet; font-size: 12px;"
+                        >
+                        {{ quantityLocationNew.productLocationAreas.some(x => x.location == cell) || quantityLocationNew.productPlans.some(x => x.location == cell) ? cell + " - " + quantityLocationNew.name + " (Có sản phẩm)" : cell + " - " + quantityLocationNew.name }}
+                        </button>
+                      </div>
+                      <div v-else-if="checkQuantityLocationProduct(quantityLocationNew.productLocationAreas, cell) > 0 && checkQuantityLocationProduct(quantityLocationNew.productLocationAreas, cell) <=  5">
+                        <button
+                          :key="cellIndex"
+                          :class="'form-select' + ' ' + 'swapBgNew_' + quantityLocation.id + '_' + cell"
+                          @click="openFrame(quantityLocationNew.id, cell, quantityLocationNew.productLocationAreas, quantityLocationNew.productPlans, 'new', 'swapBgNew_' + quantityLocation.id + '_' + cell)"
+                          style="background-color: blueviolet; font-size: 12px;"
+                        >
+                        {{ quantityLocationNew.productLocationAreas.some(x => x.location == cell) || quantityLocationNew.productPlans.some(x => x.location == cell) ? cell + " - " + quantityLocationNew.name + " (Có sản phẩm)" : cell + " - " + quantityLocationNew.name }}
+                        </button>
+                      </div>
+                      <div v-else>
+                        <button
+                            :key="cellIndex"
+                            :class="'form-select' + ' ' + 'swapBgNew_' + quantityLocation.id + '_' + cell"
+                            @click="openFrame(quantityLocationNew.id, cell, quantityLocationNew.productLocationAreas, quantityLocationNew.productPlans, 'new', 'swapBgNew_' + quantityLocation.id + '_' + cell)"
+                            style="background-color: grey; opacity: 0.5; font-size: 12px;"
+                          >
+                          {{ quantityLocationNew.productLocationAreas.some(x => x.location == cell) || quantityLocationNew.productPlans.some(x => x.location == cell) ? cell + " - " + quantityLocationNew.name + " (Có sản phẩm)" : cell + " - " + quantityLocationNew.name }}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-      const showNewWarehouse = ref(false);
-      const selectedRegionNew = ref(null);
-      const selectedProvinceNew = ref(null);
-      const selectedDistrictNew = ref(null);
-      const selectedWardNew = ref(null);
-      const provincesNew = ref([]);
-      const districtsNew = ref([]);
-      const wardsNew = ref([]);
-      const quantityNew = ref(1);
-      const commentsNew = ref("");
+      <!-- Quantity and Comments -->
+      <div class="form-group">
+        <label for="quantity">Title:</label>
+        <input
+          type="text"
+          min="1"
+          class="form-input"
+          placeholder="Nhập số lượng"
+          v-model="planNew.title"
+        />
+      </div>
+      <div class="form-group">
+        <label for="comments">Desctiption:</label>
+        <textarea
+          class="form-textarea"
+          placeholder="Nhập ghi chú..."
+          v-model="planNew.description"
+        ></textarea>
+      </div>
+      <div class="form-group">
+        <button class="save-button" v-on:click="addPlan">Lưu kho mới</button>
+      </div>
+    </div>
 
-      const showWardFrameOld = ref(false);
-      const showWardFrameNew = ref(false);
-      const showWardTitle = ref(false);
-      const wardInfo = ref({ name: "", image: "" });
-      const wardInfoFrameStyle = ref({ top: "0px", left: "0px" });
-      const showWardInfoBox = ref(false);
+    <!-- Frame hiển thị thông tin -->
+    <div v-if="frameVisible" class="frame-popup">
+      <div class="frame-content" :style="{maxWidth: widthDom + 'px', justifyContent: 'flex-start'}">
+        <button @click="closeFrame" v-if="isCloseNoProduct" class="close-btn">Đóng</button>
+        <button @click="updateData" v-if="isSwap" class="close-btn">Swap</button>
+        <button @click="updateDataLocationNew" v-if="isSwapNew" class="close-btn">Swap Location New</button>
+        <div class="frame-item" v-for="(item, index) in frameData" :key="index" style="margin: 10px 50px;">
+          <h3>{{ item?.name }}</h3>
+          <img :src="item?.image" alt="Image" :class="'frame-image' + ' ' + 'images_' + item.id_product" />
+          <div style="display: flex; width: 150px; flex-wrap: wrap;">
+            <div v-for="(imageItem, indexImage) in item.images" :key="indexImage" style="margin: 0 10px;">
+              <img :src="imageItem" width="50px" @click="swapImage('images_' + item.id_product, imageItem)" alt="">
+            </div>
+          </div>
+          <div class="frame-info">
+            <div class="info-line"><span class="info-title">Location:</span> {{ item?.location }}</div>
+            <div class="info-line"><span class="info-title">Quantity:</span> {{ item?.quantity }}</div>
+            <div class="info-line"><span class="info-title">inventory:</span> {{ item?.inventory }}</div>
+            <div class="info-line"><span class="info-title">price:</span> {{ item?.price }}</div>
+            <div class="info-line"><span class="info-title">supplier:</span> {{ item?.supplier }}</div>
+            <div class="info-line"><span class="info-title">supplier Image:</span> <img :src="item?.supplier_image" width="50px" alt=""></div>
+            <div class="info-line"><span class="info-title">category Image:</span> <img :src="item?.category_image" width="50px" alt=""></div>
+            <div class="info-line"><span class="info-title">category:</span> {{ item?.category }}</div>
+            <div class="info-line"><span class="info-title">account Name:</span> {{ item?.account_name }}</div>
+            <div class="info-line"><span class="info-title">account Image:</span> <img :src="item.account_image" width="50px" alt=""></div>
+            <div class="info-line"><span class="info-title">Type:</span> {{ item?.type }}</div>
+            <button @click="closeFrame" class="close-btn">Đóng</button>
+            <!-- <button @click="closeFrame" v-if="item.id_plan == 0" class="close-btn">Swap</button> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-      const selectedWardOldName = computed(() => {
-        const ward = wardsOld.value.find((w) => w.id === selectedWardOld.value);
-        return ward ? ward.name : null;
-      });
+  <!-- Hiển thị màn hình loading -->
+  <div v-if="isLoading" class="loading-overlay">
+      <div class="spinner"></div>
+      <p>Đang tải...</p>
+  </div>
+</template>
+<script setup>
+import { useCounterStore } from "../store";
+import { ref, getCurrentInstance, onMounted } from "vue";
+import axios from "axios";
+import { useToast } from "vue-toastification";
+import { useRouter } from "vue-router";
+import Swal from 'sweetalert2';
 
-      const selectedWardNewName = computed(() => {
-        const ward = wardsNew.value.find((w) => w.id === selectedWardNew.value);
-        return ward ? ward.name : null;
-      });
+onMounted(() => {
+  loadDataWarehouse('old');
+  loadDataWarehouse('new')
+  setInterval(() => {
+    if (!checkTokenData()) {
+      store.clearStore();
+      localStorage.clear();
+      router.push("/login");
+    }
+  }, 20000);
+});
 
-      const toggleWardDropdown = (type) => {
-        if (type === "old") showWardFrameOld.value = !showWardFrameOld.value;
-        if (type === "new") showWardFrameNew.value = !showWardFrameNew.value;
-      };
-
-      const selectWard = (wardId, type) => {
-        if (type === "old") {
-          selectedWardOld.value = wardId;
-          showWardFrameOld.value = false;
-        }
-        if (type === "new") {
-          selectedWardNew.value = wardId;
-          showWardFrameNew.value = false;
-        }
-      };
-
-      const onRegionChange = (type) => {
-        const selectedRegion = type === "old" ? selectedRegionOld : selectedRegionNew;
-        const provinces = type === "old" ? provincesOld : provincesNew;
-        const region = regions.value.find((r) => r.id === selectedRegion.value);
-
-        provinces.value = region ? region.provinces : [];
-        resetSelections(type);
-      };
-
-      const onProvinceChange = (type) => {
-        const selectedProvince = type === "old" ? selectedProvinceOld : selectedProvinceNew;
-        const districts = type === "old" ? districtsOld : districtsNew;
-        const province = (type === "old" ? provincesOld.value : provincesNew.value).find(
-          (p) => p.id === selectedProvince.value
-        );
-
-        districts.value = province ? province.districts : [];
-        resetSelections(type, "district");
-      };
-
-      const onDistrictChange = (type) => {
-        const selectedDistrict = type === "old" ? selectedDistrictOld : selectedDistrictNew;
-        const wards = type === "old" ? wardsOld : wardsNew;
-        const district = (type === "old" ? districtsOld.value : districtsNew.value).find(
-          (d) => d.id === selectedDistrict.value
-        );
-
-        wards.value = district ? district.wards : [];
-        resetSelections(type, "ward");
-      };
-
-      const resetSelections = (type, level = "region") => {
-        if (level === "region") {
-          if (type === "old") {
-            selectedProvinceOld.value = null;
-            selectedDistrictOld.value = null;
-            selectedWardOld.value = null;
-          }
-          if (type === "new") {
-            selectedProvinceNew.value = null;
-            selectedDistrictNew.value = null;
-            selectedWardNew.value = null;
-          }
-        } else if (level === "district") {
-          if (type === "old") selectedWardOld.value = null;
-          if (type === "new") selectedWardNew.value = null;
-        }
-      };
-
-      const showWardInfo = (ward, type, event) => {
-  wardInfo.value = {
-    name: ward.name,
-    image: `https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThbl47VAQK_3kDo3-L6d84Y2qX-f0TTUlgIQ&s`,
-  };
-  showWardInfoBox.value = true;
-
-  const button = event.target;
-  const rect = button.getBoundingClientRect();
-
-  // Lấy form section cần tính toán vị trí
-  let formSection;
-if (type === "old") {
-  formSection = document.querySelector('.form-section:first-of-type');
-} else {
-  formSection = document.querySelector('.form-section:nth-of-type(2)');
-}
-
-  const formRect = formSection.getBoundingClientRect();
-
-  // Cập nhật vị trí của ward-info-frame sao cho đúng với form section
-  wardInfoFrameStyle.value = {
-    top: `${rect.top + window.scrollY + button.offsetHeight + 5 - formRect.top}px`,
-    left: `${rect.left + window.scrollX + (button.offsetWidth / 2) - 100}px`,
-  };
+const checkQuantityLocationProduct = (data, location) => {
+  var count = data.filter((p) => p.location == location).length;
+  return count;
+};
+const checkTokenData = async () => {
+  const res = await axios.post(
+    hostName + `/api/Account/CheckToken?token=${store.getToken}`,
+    {},
+    getToken()
+  );
+  if (res.data.success) {
+    const check = res.data.content.split(".");
+    if (check.length !== 3) {
+      return true;
+    } else {
+      store.setToken(res.data.content);
+      return true;
+    }
+  } else {
+    return false;
+  }
 };
 
+const router = useRouter();
+const hasvalue = (data) => {
+  return Object.keys(data).length > 0;
+};
+const Warename = ref("");
+const Floorname = ref("");
+const warehouseData = ref([]);
+const warehouseDataNew = ref([]);
+const currentWarehouseNew = ref({});
+const currentFloorNew = ref({});
+const currentFloorDataNew = ref([]);
+const currentAreaDataNew = ref([]);
+const DataOneAreaNew = ref({})
+const currentFloor = ref({});
+const currentFloorData = ref([]);
+const currentAreaData = ref([]);
+const currentWarehouse = ref({});
+const isLoading = ref(false);
+const store = useCounterStore();
+const Toast = useToast();
+const frameData = ref([]);
+const DataOneArea = ref({})
+const quantityLocation = ref({})
+const quantityLocationNew = ref({})
+// Biến trạng thái để hiển thị/ẩn "Kho mới"
+const isKhoMoiVisible = ref(false);
+const widthDom = ref(1500)
+const isCloseNoProduct = ref(false)
+const isSwap = ref(false)
+const isSwapNew = ref(false)
+const classNameData = ref('')
+const classNameDataOld = ref('')
+const classNameDataNew = ref('')
+const classNameNew = ref('')
+const locationCheck = ref({
+  id_Area: 0,
+  location: 0
+})
+const planNew = ref({
+  title: "",
+  description: "",
+  isWarehourse: true,
+  areaOld: 0,
+  localtionNew: 0,
+  warehouse: 0,
+  area: 0,
+  floor: 0,
+  locationOld: 0
+})
 
+const { proxy } = getCurrentInstance();
+const hostName = proxy?.hostname;
+const frameVisible = ref(false);
 
+const addPlan = async () => {
+  const res = await axios.post(hostName + "/api/Plan/Add", planNew.value, getToken())
+  if(res.data.success){
+    Toast.success("Add Success !!!")
+    router.push("warehouse")
+  }else{
+    Toast.info(res.data.error)
+  }
+}
+const updateData = async () => {
+   const res = await axios.post(hostName + "/api/Product/checkLocationTotal", locationCheck.value, getToken())
+   if(res.data.content){
+    Toast.success("Success !!!")
+    Swal.fire("Success !!!")
+    document.querySelector('.' + classNameData.value).style.backgroundColor = 'yellow'
 
-      const hideWardInfo = () => {
-        showWardInfoBox.value = false;
-      };
+    if(classNameDataOld.value != null && classNameDataOld.value != '')
+        document.querySelector('.' + classNameDataOld.value).style.backgroundColor = 'transparent'
+   }else{
+    Toast.error(res.data.error)
+   }
+}
 
-      const closeWardInfo = () => {
-        showWardInfoBox.value = false;
-      };
+const updateDataLocationNew = async () => {
+  planNew.value.floor = currentFloorNew.value.id
+  planNew.value.warehouse = currentWarehouseNew.value.id
+  planNew.value.locationOld = locationCheck.value.location
+  planNew.value.areaOld = locationCheck.value.id_Area
 
-      const swapForm = () => {
-        showNewWarehouse.value = !showNewWarehouse.value;
-      };
+  if(classNameNew.value != null && classNameNew.value != '')
+        document.querySelector('.' + classNameNew.value).style.backgroundColor = 'transparent'
 
-      const saveNewWarehouse = () => {
-        // Logic to save the new warehouse data
-      };
+  document.querySelector('.' + classNameDataNew.value).style.backgroundColor = 'yellow'
 
-      return {
-        regions,
-        selectedRegionOld,
-        selectedProvinceOld,
-        selectedDistrictOld,
-        selectedWardOld,
-        provincesOld,
-        districtsOld,
-        wardsOld,
-        quantityOld,
-        commentsOld,
-        selectedRegionNew,
-        selectedProvinceNew,
-        selectedDistrictNew,
-        selectedWardNew,
-        provincesNew,
-        districtsNew,
-        wardsNew,
-        quantityNew,
-        commentsNew,
-        showNewWarehouse,
-        showWardFrameOld,
-        showWardFrameNew,
-        showWardTitle,
-        wardInfo,
-        wardInfoFrameStyle,
-        showWardInfoBox,
-        selectedWardOldName,
-        selectedWardNewName,
-        toggleWardDropdown,
-        selectWard,
-        onRegionChange,
-        onProvinceChange,
-        onDistrictChange,
-        showWardInfo,
-        hideWardInfo,
-        closeWardInfo,
-        swapForm,
-        saveNewWarehouse,
-      };
-    },
+  Toast.success("Success !!!")
+}
+const swapImage = (data, imageNew) =>{
+  document.querySelector('.' + data).src = imageNew
+}
+// Hàm toggle hiển thị/ẩn phần Kho mới
+const toggleKhoMoi = () => {
+  isKhoMoiVisible.value = !isKhoMoiVisible.value;
+};
+const closeFrame = () => {
+  frameVisible.value = false;
+};
+// Hàm cập nhật kích thước frame dựa theo số sản phẩm
+// const updateFrameSize = () => {
+//   const itemCount = frameData.value.length; // Lấy số sản phẩm hiển thị
+
+//   widthDom.value = Math.min(1200, itemCount * 250); // Tăng chiều rộng mỗi sản phẩm 250px
+//   // frameHeight.value = Math.min(600, Math.ceil(itemCount / 3) * 200); // Mỗi 3 sản phẩm sẽ tăng 200px
+// };
+const openFrame = (id, location, list, listPlan, type, classData) =>{
+  
+    frameVisible.value = true;
+    if(type === 'new'){
+      planNew.value.area = id
+      planNew.value.localtionNew = location
+      classNameNew.value = classNameDataNew.value
+      classNameDataNew.value = classData
+    }
+    frameData.value = []
+    let check = false
+    if(list.length > 0){
+      
+      const checkListTotal = list.filter(l => l.location == location)
+      if(checkListTotal.length > 0){
+        if(type === 'old'){
+          locationCheck.value.id_Area = id
+          locationCheck.value.location = location
+          classNameDataOld.value = classNameData.value
+          classNameData.value = classData
+        }
+        check = true
+
+        checkListTotal.forEach(element => {
+          if(element.location === location){
+            let dataItem = {...element, type: "Sản phẩm đang ở kho"}
+            frameData.value.push(dataItem)
+            
+          }
+        });
+      }
+      
+    }
+    if(listPlan.length > 0){
+      listPlan.forEach(element => {
+        if(element.location === location){
+          let dataItem = {...element, type: "Sản phẩm chuẩn bị chuyển đến"}
+          frameData.value.push(dataItem)
+        }
+      });
+    }
+
+    console.log(frameData.value)
+
+    if(!check && type === 'old' && frameData.value.length > 0){
+      widthDom.value = 1500
+      isCloseNoProduct.value = true
+      isSwap.value = false
+      // updateFrameSize()
+    }else if(frameData.value.length <= 0 && type === 'old'){
+      widthDom.value = 300
+      isCloseNoProduct.value = true
+      isSwap.value = false
+    }
+    else if(frameData.value.length <= 0 && type === 'new'){
+      widthDom.value = 300
+      isCloseNoProduct.value = true
+      isSwap.value = false
+      isSwapNew.value = true
+    }
+    else if(frameData.value.length > 0 && type === 'old'){
+      widthDom.value = 1500
+      isCloseNoProduct.value = false
+      isSwap.value = true
+      isSwapNew.value = false
+    }else if(frameData.value.length > 0 && type === 'new'){
+      widthDom.value = 1500
+      isCloseNoProduct.value = false
+      isSwapNew.value = true
+      isSwap.value = false
+    }
+}
+const SearchFloor = (type) => {
+  findAllArea(type);
+};
+const searchArea = (type) => {
+  findOneArea(type)
+}
+const findOneArea = async (type) => {
+  isLoading.value = true;
+  document.body.classList.add("loading"); // Add Lớp "loading"
+  document.body.style.overflow = "hidden";
+
+  if(DataOneArea.value != null && DataOneAreaNew.value != null){
+    const res = await axios.get(
+      hostName +
+        `/api/Product/FindOneByArea?id=${type === 'old' ? DataOneArea.value.id : DataOneAreaNew.value.id}`,
+      getToken()
+    );
+    if (res.data.success) {
+      if(type === 'old'){
+        quantityLocation.value = res.data.content
+      }else{
+        quantityLocationNew.value = res.data.content
+      }
+      
+    }
+  }else{
+    quantityLocation.value = {}
+    quantityLocationNew.value = {}
+  }
+  
+
+  isLoading.value = false;
+  document.body.classList.remove("loading");
+  document.body.style.overflow = "auto";
+};
+const findAllArea = async (type) => {
+  isLoading.value = true;
+  document.body.classList.add("loading"); // Add Lớp "loading"
+  document.body.style.overflow = "hidden";
+
+  if(currentFloor.value != null || currentFloorNew.value != null){
+    const res = await axios.get(
+    hostName +
+      `/api/Area/FindByFloor?id=${type === 'old' ? currentFloor.value.id : currentFloorNew.value.id}&page=1&pageSize=2000`,
+        getToken()
+      );
+      if (res.data.success) {
+        if(type === 'old'){
+          currentAreaData.value = res.data.content.data;
+          DataOneArea.value = res.data.content.data[0]
+        }else{
+          currentAreaDataNew.value = res.data.content.data;
+          DataOneAreaNew.value = res.data.content.data[0]
+        }
+        
+        findOneArea(type)
+      }
+
+  }
+  
+  isLoading.value = false;
+  document.body.classList.remove("loading");
+  document.body.style.overflow = "auto";
+};
+const getToken = () => {
+  var token = store.getToken;
+  var result = {
+    headers: { Authorization: `Bearer ${token}` },
   };
-  </script>
+  return result;
+};
+const SearchWarehourse = async (type) => {
+  const res = await axios.get(
+    hostName +
+      `/api/Floor/FindByWareHouser?id=${type === 'old' ? currentWarehouse.value.id : currentWarehouseNew.value.id}&page=1&pageSize=2000`,
+    getToken()
+  );
+  if(type === 'old'){
+    currentFloorData.value = res.data.content.data;
+    currentFloor.value = res.data.content.data[0];
+  }else{
+    currentFloorDataNew.value = res.data.content.data;
+    currentFloorNew.value = res.data.content.data[0];
+  }
+  Warename.value = currentWarehouse.value.name;
+  Floorname.value = res.data.content.data[0].name;
+  findAllArea(type);
+  Toast.success("Success");
+};
+const loadDataWarehouse = async (type) => {
+  const res = await axios.get(
+    hostName + "/api/Warehouse/FindAll?page=1&pageSize=2000",
+    getToken()
+  );
+  
+  if(type === 'old'){
+    currentWarehouse.value = res.data.content.data[0];
+    Warename.value = res.data.content.data[0].name;
+    warehouseData.value = res.data.content.data;
+  }
+  else{
+    currentWarehouseNew.value = res.data.content.data[0];
+    warehouseDataNew.value = res.data.content.data;
+  } 
+  loadDataFloor(type === 'old' ? currentWarehouse.value : currentWarehouseNew.value, type);
+  Toast.success("Success");
+};
 
+const loadDataFloor = async (id, type) => {
+  const res = await axios.get(
+    hostName + `/api/Floor/FindByWareHouser?id=${id.id}&page=1&pageSize=2000`,
+    getToken()
+  );
+  if(type === 'old'){
+    currentFloorData.value = res.data.content.data;
+    currentFloor.value = res.data.content.data[0];
+  }else{
+    currentFloorDataNew.value = res.data.content.data;
+    currentFloorNew.value = res.data.content.data[0];
+  }
+  Floorname.value = res.data.content.data[0].name;
+  findAllArea(type);
+  Toast.success("Success");
+};
+</script>
+<style scoped>
+  .frame-popup {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.6);
+  width: 100%;
+  height: 100%;
+}
 
+.frame-content {
+  display: flex;
+  flex-wrap: wrap; /* Cho phép xuống dòng khi không đủ chỗ */
+  justify-content: center; /* Căn giữa sản phẩm */
+  align-items: center;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  max-height: 80vh; /* Giới hạn chiều cao tối đa */
+  overflow-y: auto; /* Bật cuộn dọc nếu nội dung quá dài */
+}
 
-  <style scoped>
+.frame-info {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  width: 100%;
+  gap: 10px; /* Khoảng cách giữa các phần */
+}
+
+.info-line {
+  width: calc(33.333% - 10px); /* Hiển thị 3 cột trên 1 hàng, trừ khoảng cách */
+  min-width: 150px; /* Đảm bảo cột không quá nhỏ */
+}
+
+.frame-image {
+  max-width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.close-btn {
+  margin-top: 10px;
+  padding: 5px 10px;
+  background: red;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
   .container {
     padding: 20px;
     max-width: 800px;
@@ -527,4 +892,4 @@ if (type === "old") {
   .cancel-button:hover {
     background-color: #c82333;
   }
-  </style>
+</style>

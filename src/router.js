@@ -34,16 +34,14 @@ const routes = [
     component: TablePage,
   },
   {
-    path: "/Ware",
-    name: "Ware",
+    path: "/test/Ware",
+    name: "WareTest",
     component: WarehouseManagement,
+    meta:{
+      css: ['"/AdminTemplatePage/css/statusCss.css"']
+    }
   },
-  {
-    path: "/AddorEdit",
-    name: "AddorEdit",
-    component: AddorEdit,
-    meta:{requiresAuth: false}
-  },
+  
   {
     path: "/getotp/:email",
     name: "GetOTP",
@@ -64,6 +62,7 @@ const routes = [
         "/AdminTemplatePage/css/style.css",
         "/AdminTemplatePage/css/pages/dashboard1.css",
         "/AdminTemplatePage/css/colors/default.css",
+        "/AdminTemplatePage/css/plan.css"
         
       ],
       js: [
@@ -76,6 +75,11 @@ const routes = [
         path: "TransferPage",
         name: "TransferPage",
         component: WarehouseTransfer,
+      },
+      {
+        path: "/AddorEdit",
+        name: "AddorEdit",
+        component: AddorEdit
       },
       {
         path: "DetailsPage",
@@ -111,7 +115,7 @@ const routes = [
       {
         path: "Ware",
         name: "Ware",
-        component: WarehouseManagement,
+        component: WarehouseManagement
       },
       {
         path: "dasboad", 

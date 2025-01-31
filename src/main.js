@@ -20,7 +20,7 @@ const app = createApp(App);
 const pinia = createPinia();
 // Sử dụng Pinia trong ứng dụng
 app.use(pinia);
-app.config.globalProperties.hostname = "https://localhost:7142" 
+app.config.globalProperties.hostname = "https://localhost:44376" 
 app.use(VueMap, {
     load: {
         key: 'AIzaSyBkgBNM7Mtgg6I3SvhOlwZCgqp7vFAPrS8',

@@ -40,11 +40,32 @@
           <div class="grid-wrapper">
             <div v-for="(row, rowIndex) in currentAreaData" :key="rowIndex" class="grid-item">
               <div class="row-container">
-                <div class="row-header">
-                  <h3>排 {{ rowIndex + 1 }}</h3>
+                <div v-if="row.totalLocationExsis <= 20">
+                  <div class="row-header" style="animation: AlmostFullHeader 0.5s ease-in-out infinite; flex-direction: column;">
+                    <h3>排 {{ rowIndex + 1 }}</h3>
+                    <p style="font-size: 10px; animation: AlmostFull 0.5s ease-in-out infinite;">Almost full !!!</p>
+                  </div>
                 </div>
+                <div v-else-if="row.totalLocationExsis == 0">
+                  <div class="row-header" style="animation: FullHeader 0.5s ease-in-out infinite; flex-direction: column;">
+                    <h3>排 {{ rowIndex + 1 }}</h3>
+                    <p style="font-size: 10px; animation: Full 0.5s ease-in-out infinite;">Full !!!</p>
+                  </div>
+                </div>
+                <div v-else>
+                  <div class="row-header">
+                    <h3>排 {{ rowIndex + 1 }}</h3>
+                  </div>
+                </div>
+                
                 <div class="grid" style="width: 1200px; display: flex; flex-wrap: wrap;">
                   <div v-for="(cell, cellIndex) in row.quantity" :key="cellIndex">
+                  <div v-if="row.totalQuantityUseds.some(d => d.location == cell && d.quantityUsed > 5 && d.quantityUsed < 30)" style="position: absolute;">
+                    <p style="font-size: 10px; font-weight: bold; animation: AlmostFull 0.5s ease-in-out infinite;">Almost full !!!</p>
+                  </div>
+                  <div v-else-if="row.totalQuantityUseds.some(d => d.location == cell && d.quantityUsed == 0)" style="position: absolute;">
+                    <p style="font-size: 10px; font-weight: bold; animation: Full 0.5s ease-in-out infinite;">Full !!!</p>
+                  </div>
                     <div v-if="row.productArea.productPlans.some(x => x.location == cell)">
                         <button 
                             :key="cellIndex"
@@ -151,35 +172,56 @@
         :style="{ top: popupPosition.top + 'px', left: popupPosition.left + 'px'}"
         @click="closeFrame"
       >
-          <div style="width: 1000px; display: flex; flex-wrap: wrap;">
+          <div style="width: 1200px; display: flex; flex-wrap: wrap;">
             <div class="frame-content" @click.stop v-for="(item, index) in frameData" :key="index">
-            <div class="frame-main">
-              <h3>{{ item?.name }}</h3>
-              <img :src="item?.image" alt="Image" class="frame-image" />
-            </div>
+                <div class="frame-main">
+                  <h3>{{ item?.name }}</h3>
+                  <img :src="item?.image" alt="Image" :class="'frame-image' + ' ' + 'images_' + item.id_product"/>
+                  <div style="display: flex; width: 150px; flex-wrap: wrap;">
+                    <div v-for="(imageItem, indexImage) in item.images" :key="indexImage" style="margin: 0 10px;">
+                      <img :src="imageItem" width="50px" @click="swapImage('images_' + item.id_product, imageItem)" alt="">
+                    </div>
+                  </div>
+                </div>
 
-            <div class="frame-info">
-              <div class="info-line">
-                <span class="info-title">Location:</span>
-                <span class="info-content">{{ item?.location }}</span>
+              <div class="frame-info">
+                <div class="info-line">
+                  <span class="info-title">Location:</span>
+                  <span class="info-content">{{ item?.location }}</span>
+                </div>
+                <div class="info-line">
+                  <span class="info-title">Quantity:</span>
+                  <span class="info-content">{{ item?.quantity }}</span>
+                </div>
+                <div class="info-line"><span class="info-title">inventory:</span> {{ item?.inventory }}</div>
+                <div class="info-line"><span class="info-title">price:</span> {{ item?.price }}</div>
+                <div class="info-line"><span class="info-title">supplier:</span> {{ item?.supplier }}</div>
+                <div class="info-line"><span class="info-title">supplier Image:</span> <img :src="item?.supplier_image" width="50px" alt=""></div>
+                <div class="info-line"><span class="info-title">category Image:</span> <img :src="item?.category_image" width="50px" alt=""></div>
+                <div class="info-line"><span class="info-title">category:</span> {{ item?.category }}</div>
+                <div class="info-line"><span class="info-title">account Name:</span> {{ item?.account_name }}</div>
+                <div class="info-line"><span class="info-title">account Image:</span> <img :src="item.account_image" width="50px" alt=""></div>
+                <div class="info-line">
+                  <span class="info-title">Type:</span>
+                  <span class="info-content">{{ item?.type }}</span>
+                </div>
+                <div v-if="item.id_plan == 0" style="flex-direction: column; width: 350px;">
+                  <div>
+                    <input type="number" placeholder="quantity" v-model="quantityProduct" style="padding: 0 10px;">
+                    <button style="margin: 0 10px;" @click="updateQuantity(item?.location, item?.id, item?.id_product)" class="navigate-btn">Update</button>
+                  </div>
+                  <div style="margin: 15px 0;">
+                    <input type="number" placeholder="Reduce quantity" v-model="quantityProductReduceQuantity" style="padding: 0 10px;">
+                    <button @click="ReduceQuantity(item?.location, item?.id, item?.id_product)" style="width: 200px;" class="navigate-btn">Update reduce</button>
+                  </div>
+                </div>
+                <button @click="closeFrame" class="close-btn">Đóng</button>
               </div>
-              <div class="info-line">
-                <span class="info-title">Quantity:</span>
-                <span class="info-content">{{ item?.quantity }}</span>
-              </div>
-
-              <div class="info-line">
-                <span class="info-title">Type:</span>
-                <span class="info-content">{{ item?.type }}</span>
-              </div>
-              <button @click="goToNextPage" class="navigate-btn">Update</button>
-              <button @click="closeFrame" class="close-btn">Đóng</button>
-            </div>
           </div>
+        </div>
         </div>
       </div>
     </div>
-  </div>
 
     <!-- Hiển thị màn hình loading -->
     <div v-if="isLoading" class="loading-overlay">
@@ -207,6 +249,9 @@
     }, 20000)
   })
 
+  const swapImage = (data, imageNew) =>{
+    document.querySelector('.' + data).src = imageNew
+  }
   const checkQuantityLocationProduct = (data, location) => {
     var count = data.filter(p => p.location == location).length
     return count
@@ -247,6 +292,15 @@
   const totalPage = ref(0)
   const pageSize = ref(5)
   const frameData = ref([])
+  const id_area = ref(0)
+  const quantityProduct = ref(0)
+  const quantityProductReduceQuantity = ref(0)
+  const updateDataQuantity = ref({
+    id_product: 0,
+    id_area: 0,
+    location: 0,
+    quantity: 0
+  })
 
   const {proxy} = getCurrentInstance()
   const hostName = proxy?.hostname
@@ -255,17 +309,60 @@
   const closeFrame = () => {
     frameVisible.value = false
   }
+
+  const updateQuantity = async (location, id, id_product) => {
+    if(quantityProduct.value == 0){
+      Toast.info("Chưa nhập số lượng !!!")
+      return
+    }
+    updateDataQuantity.value.id_product = id_product
+    updateDataQuantity.value.location = location
+    updateDataQuantity.value.id_area = id_area.value
+    updateDataQuantity.value.quantity = quantityProduct.value
+
+    const res = await axios.put(hostName + `/api/Product/UpdateArea?id=${id}`, updateDataQuantity.value, getToken())
+    if(res.data.success){
+      Toast.success("Update Success !!!")
+      findAllArea(valueE.value, page.value)
+    }else{
+      Toast.error(res.data.error)
+    }
+  }
+
+  const ReduceQuantity = async(location, id, id_product) => {
+    if(quantityProductReduceQuantity.value == 0){
+      Toast.info("Chưa nhập số lượng !!!")
+      return
+    }
+    updateDataQuantity.value.id_product = id_product
+    updateDataQuantity.value.location = location
+    updateDataQuantity.value.id_area = id_area.value
+    updateDataQuantity.value.quantity = quantityProductReduceQuantity.value
+
+    const res = await axios.put(hostName + `/api/Product/UpdateAreaQuantity?id=${id}`, updateDataQuantity.value, getToken())
+    if(res.data.success){
+      Toast.success("Update Success !!!")
+      findAllArea(valueE.value, page.value)
+    }else{
+      Toast.error(res.data.error)
+    }
+  }
   const openFrame = (id, location, list, listPlan) =>{
     frameData.value = []
     if(list.length <= 0 && listPlan <= 0)
       return
     if(list.length > 0){
-      list.forEach(element => {
-        if(element.location === location){
-          let dataItem = {...element, type: "Sản phẩm đang ở kho"}
-          frameData.value.push(dataItem)
-        }
-      });
+      const checkListData = list.filter(x => x.location == location)
+      if(checkListData.length > 0){
+        id_area.value = id
+        checkListData.forEach(element => {
+          if(element.location === location){
+            let dataItem = {...element, type: "Sản phẩm đang ở kho"}
+            frameData.value.push(dataItem)
+          }
+        });
+      }
+      
     }
     if(listPlan.length > 0){
       listPlan.forEach(element => {
@@ -276,7 +373,9 @@
       });
     }
 
-    const gridButton = event.target;
+    console.log(frameData.value)
+    if(frameData.value.length > 0){
+      const gridButton = event.target;
       const rect = gridButton.getBoundingClientRect();
 
       const screenWidth = window.innerWidth;
@@ -295,6 +394,7 @@
 
       popupPosition.value = { top, left };
       frameVisible.value = true;
+    }
 }
   watch(page.value, (newPage) => {
     findAllArea(valueE.value, newPage)
@@ -362,442 +462,45 @@
 </script>
 
 <style>
-  /* Màn hình chờ */
-  .loading-overlay {
-position: fixed;
-top: 0;
-left: 0;
-width: 100%;
-height: 100%;
-background-color: rgba(0, 0, 0, 0.5);
-display: flex;
-justify-content: center;
-align-items: center;
-z-index: 1000;
-pointer-events: all; /* Kích hoạt lớp phủ ngăn tương tác */
-}
-
-/* Biểu tượng spinner */
-.spinner {
-border: 4px solid #f3f3f3; /* Light grey */
-border-top: 4px solid #3498db; /* Blue */
-border-radius: 50%;
-width: 40px;
-height: 40px;
-animation: spin 1s linear infinite;
-}
-
-/* Hiệu ứng xoay */
-@keyframes spin {
-0% {
-  transform: rotate(0deg);
-}
-100% {
-  transform: rotate(360deg);
-}
-}
-
-@keyframes planData {
-  0%{
-    background-color: greenyellow;
-  }
-  25%{
-    background-color: green;
-  }
-  50%{
-    background-color: red;
-  }
-  100%{
-    background-color: violet;
-  }
-}
-
-/* Ngăn người dùng thao tác khi đang load */
-body.loading {
-pointer-events: none; /* Ngăn tất cả tương tác */
-user-select: none; /* Ngăn chọn văn bản */
-}
-  .image-preview img {
-    max-width: 100%;
-    height: auto;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 5px;
-  }
-.info-line {
-  display: flex;
-  margin: 5px 0;
-}
-
-.info-title {
-  font-weight: bold;
-  margin-right: 10px;
-}
-
-.info-content {
-  flex: 1;
-  text-align: left;
-}
-
-/* Style cho frame popup */
-.scrollable-container {
-  position: absolute; /* Hoặc `fixed` nếu bạn muốn nó luôn giữ vị trí */
-  top: 0;
-  left: 0;
-  padding-right: 100px;
-  width: 110%;
-  height: 100vh; /* Chiều cao 100% màn hình */
-  overflow-y: auto; /* Đảm bảo có thể cuộn theo chiều dọc */
-  overflow-x: hidden; /* Ẩn cuộn ngang nếu không cần */
-  display: flex;
-  flex-direction: column; /* Sắp xếp các phần tử theo chiều dọc */
-  justify-content: flex-start; /* Bắt đầu căn từ trên */
-  align-items: center;
-}
-
-
-.frame-popup {
-  position: fixed; /* Giữ cố định trong màn hình */
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 1000; /* Đảm bảo popup luôn nổi trên */
-  max-height: 90%; /* Giới hạn chiều cao để không vượt màn hình */
-  overflow-y: auto; /* Kích hoạt cuộn dọc nếu nội dung quá lớn */
-}
-
-
-.frame-content {
-  width: 100%;
-}
-
-
-
-/* Nội dung của popup */
-.frame-content {
-  background-color: rgb(255, 255, 255);
-  padding: 20px;
-  border-radius: 10px;
-  display: flex; /* Sắp xếp ngang */
-  align-items: flex-start; /* Căn chỉnh theo chiều dọc */
-  gap: 20px; /* Khoảng cách giữa các phần */
-  max-width: 100%;
-  animation: fadeInContent 0.3s ease-in-out;
-  flex: 1;
-}
-
-.frame-main {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: 10px;
-}
-
-.frame-info {
-  display: flex;
-  flex-direction: column; /* Các dòng thông tin xếp dọc */
-  justify-content: flex-start;
-  gap: 10px;
-  text-align: left;
-}
-
-.frame-image {
-  max-width: 150px;
-  max-height: 150px;
-  border-radius: 5px;
-}
-
-.info-line {
-  display: flex;
-  gap: 10px; /* Khoảng cách giữa tiêu đề và nội dung */
-}
-
-.info-title {
-  font-weight: bold;
-  color: #333;
-  min-width: 80px; /* Đảm bảo các tiêu đề có kích thước đồng đều */
-}
-
-.info-content {
-  flex: 1;
-  color: #555;
-}
-
-/* Điều chỉnh các nút trong popup */
-.close-btn, .navigate-btn {
-  width: 100px;
-  margin-top: 10px;
-}
-
-
-/* Thêm các hiệu ứng animation */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes scaleIn {
-  from {
-    transform: translate(-50%, -50%) scale(0.8);
-  }
-  to {
-    transform: translate(-50%, -50%) scale(1);
-  }
-}
-
-@keyframes fadeInContent {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-/* Nút đóng và nút điều hướng */
-.close-btn, .navigate-btn {
-  padding: 10px 20px;
-  background-color: #fc04d3;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-top: 10px;
-  transition: background-color 0.2s ease;
-}
-
-.close-btn:hover, .navigate-btn:hover {
-  background-color: #0056b3;
-}
-
-/* Các kiểu trước đó giữ nguyên */
-.warehouse-management {
-  transform: scale(0.9); /* Shrinks the whole page to 90% */
-  transform-origin: top center; /* Keeps the scaling anchored from the top center */
-  width: 100%;
-  padding: 0; /* Loại bỏ padding */
-  font-family: Arial, sans-serif;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start; /* Căn chỉnh từ trên cùng */
-  min-height: 100vh; /* Đảm bảo chiều cao của body chiếm toàn bộ chiều cao màn hình */
-
-}
-
-.warehouse-container {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  width: 100%; /* Đảm bảo container chiếm toàn bộ chiều rộng */
-  position: relative; /* Cần thiết để .frame-popup định vị chính xác */
-}
-
-
-.frame {
-  width: 100%;
-  max-width: 1500px;
-  padding: 20px;
-  box-sizing: border-box;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 20px auto;
-  padding-left: 0; /* Loại bỏ padding-left để không còn khoảng trống bên trái */
-  margin-bottom: 40px;
-}
-
-.header-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  margin-bottom: 20px;
-}
-
-.header-title {
-  flex: 1;
-  margin-top: 20px;
-}
-
-.warehouse-title {
-  font-size: 25px;
-  margin-bottom: 20px;
-  margin-left: 200px;
-  padding: 10px 20px;
-  border: 2px solid #007bff;
-  border-radius: 10px;
-  display: inline-block;
-  background-color: #f0f8ff;
-  color: #007bff;
-  text-align: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  font-size: 22px;
-  padding: 8px 15px;
-}
-
-.grid-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.grid-item {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  margin-bottom: 20px;
-  border: 1px solid #ccc;
-  padding: 10px;
-  background-color: #f9f9f9;
-  border-radius: 5px;
-}
-
-.row-container {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-
-.row-header {
-  background-color: #007bff;
-  color: white;
-  padding: 5px 10px;
-  border-radius: 10px;
-  margin-left: 90px;
-  text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: 10px;
-}
-
-.grid {
-  display: grid;
-  grid-template-rows: repeat(2, 1fr);
-  grid-auto-flow: column;
-  gap: 20px;
-}
-
-.cell {
-  width: 95px;
-  height: 40px;
-  background-color: #eee;
-  border: 1px solid #ccc;
-  text-align: center;
-  line-height: 40px;
-  font-size: 10px;
-}
-
-.cell.occupied {
-  background-color: #ff4d4d;
-  color: white;
-}
-.selectors-container {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.warehouse-select-container,
-/* .area-select-container {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-} */
-
-.warehouse-label,
-.area-label {
-  font-size: 16px;
-  color: #007bff;
-  font-weight: bold;
-}
-
-select {
-  font-size: 16px;
-  padding: 5px 10px;
-  border: 2px solid #007bff;
-  border-radius: 5px;
-  background-color: #f0f8ff;
-  color: #007bff;
-  cursor: pointer;
-}
-.floor-label {
-  font-size: 16px;
-  color: #007bff;
-  font-weight: bold;
-}
-
-#warehouse-select,
-#area-select,
-#floor-select {
-  font-size: 16px;
-  padding: 5px 10px;
-  border: 2px solid #007bff;
-  border-radius: 5px;
-  background-color: #f0f8ff;
-  color: #007bff;
-  cursor: pointer;
-}
-
-#warehouse-select:focus,
-#area-select:focus,
-#floor-select:focus {
-  border-color: #01060c;
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-}
-
-@media (max-width: 768px) {
-  .frame {
-    width: 95%;
-    padding-left: 30px;
+  @keyframes AlmostFull {
+    0%{
+      color: blue;
+    }
+    100%{
+      color: azure;
+    }
   }
 
-  .warehouse-title {
-    font-size: 18px;
-    padding: 8px 15px;
+  @keyframes Full {
+    0%{
+      color: goldenrod;
+    }
+    50%{
+      color: white;
+    }
+    100%{
+      color: green;
+    }
   }
 
-  .row-container {
-    flex-direction: column;
-    align-items: center;
+  @keyframes AlmostFullHeader {
+    0%{
+      background-color: violet;
+    }
+    100%{
+      background-color: darkorange;
+    }
   }
 
-  .grid {
-    grid-template-columns: repeat(5, 1fr);
-    gap: 10px;
+  @keyframes FullHeader {
+    0%{
+      background-color: gold;
+    }
+    100%{
+      background-color: mediumblue;
+    }
   }
+</style>
+<style scoped>
 
-  .cell {
-    width: 60px;
-    height: 30px;
-    font-size: 12px;
-  }
-}
-
-@media (max-width: 480px) {
-  .warehouse-title {
-    font-size: 16px;
-    padding: 5px 10px;
-  }
-
-  .grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-  }
-
-  .cell {
-    width: 50px;
-    height: 25px;
-    font-size: 10px;
-  }
-}
 </style>

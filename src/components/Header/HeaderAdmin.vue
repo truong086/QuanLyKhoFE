@@ -101,11 +101,12 @@
               aria-haspopup="true" 
               aria-expanded="false">
               <img 
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRBlfj7Wq-yc1gUVK6j-IpihoYZVLeKGJj5dZFlfQsPy93ScNk5tqMw3XZ7w_aH59wZy98&usqp=CAU" 
+                :src="accountImage" 
                 alt="Pro" 
                 class="profile-img" 
+                style="width: 50px; height: 50px; border-radius: 50%;"
               />
-              <span class="hidden-md-down">VanHauTop1Coder &nbsp;</span>
+              <span style="font-size: 15px; font-weight: bold; margin: 0 15px;" class="hidden-md-down">{{ accountName }} &nbsp;</span>
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
               <li>
@@ -199,7 +200,7 @@
 </template>
 
 <script setup>
-  import {ref, onMounted, getCurrentInstance} from 'vue'
+  import {ref, onMounted, getCurrentInstance, onUnmounted} from 'vue'
   import * as signalR from "@microsoft/signalr";
   import {useCounterStore} from "../../store";
   import axios from 'axios'
@@ -223,6 +224,8 @@
   const preview = ref(null)
   const isLoadingMessage = ref(false)
   const isLoading = ref(false)
+  const accountName = ref('')
+  const accountImage = ref('')
 
   const getTokens = () => {
         var token = store.getToken
@@ -254,10 +257,16 @@
       }
   onMounted(() => {
     idACcount.value = store.getIdAccount
+    accountImage.value = store.getIdAccountImage
+    accountName.value = store.getIdAccountName
     ivalidate()
       
     })
-
+    onUnmounted(() => {
+      if(connection.value){
+        connection.value.stop()
+      }
+    })
     const ivalidate = () => {
      connection.value = new signalR.HubConnectionBuilder()
       .withUrl("https://localhost:44376/notificationHub", {

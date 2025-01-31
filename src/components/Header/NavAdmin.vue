@@ -20,21 +20,25 @@
                         <li> <a class="waves-effect waves-dark" href="table-basic.html" aria-expanded="false"><i
                                     class="fa fa-table"></i><span class="hide-menu">Tables</span></a>
                         </li>
-                        <li> <a class="waves-effect waves-dark" href="icon-fontawesome.html" aria-expanded="false"><i
-                                    class="fa fa-smile-o"></i><span class="hide-menu">Plan</span></a>
+                        <li> 
+                        <router-link to="/TransferPage" class="waves-effect waves-dark" href="icon-fontawesome.html" aria-expanded="false">
+                          <i
+                            class="fa fa-smile-o"></i><span class="hide-menu">Plan</span>
+                        </router-link>
+                           
                         </li>
                         <li> <a class="waves-effect waves-dark" href="map-google.html" aria-expanded="false"><i
                                     class="fa fa-globe"></i><span class="hide-menu">Map</span></a>
                         </li>
                         <li>
-                        <router-link to="/admin/ware" class="waves-effect waves-dark" aria-expanded="false">
+                        <router-link to="/ware" class="waves-effect waves-dark" aria-expanded="false">
                             <i class="fa fa-bookmark-o"></i>
                             <span class="hide-menu">Status</span>
                             <span class="hide-menu">Status</span>
                         </router-link>
                         </li>
                         <li>
-                        <router-link to="/admin/tablepage" class="waves-effect waves-dark" aria-expanded="false">
+                        <router-link to="/tablepage" class="waves-effect waves-dark" aria-expanded="false">
                             <i class="fa fa-info-circle"></i>
                             <span class="hide-menu">Index</span>
                         </router-link>
@@ -83,6 +87,17 @@
 
 <script setup>
   import {useRouter} from 'vue-router'
+  import {useCounterStore} from '../../store'
+  import {ref, onMounted} from 'vue'
+
+  const store = useCounterStore()
+  const accountName = ref('')
+  const accountImage = ref('')
+
+  onMounted(() => {
+    accountImage.value = store.getIdAccountImage
+    accountName.value = store.getIdAccountName
+  })
     const router = useRouter()
     const next = () => {
         router.push("/ProfilePage")

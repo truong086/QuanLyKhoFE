@@ -1,0 +1,209 @@
+.image-full {
+    max-width: 90%;
+    max-height: 90%;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    animation: fadeIn 0.3s ease;
+  }
+  .image-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  /* Tối ưu hóa giao diện cho sự đồng nhất và đẹp mắt */
+  
+  .app-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: linear-gradient(to bottom, #f0f8ff, #e6e6fa);
+    font-family: "Arial", sans-serif;
+    color: #333;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow-x: hidden;
+  }
+  
+  .warehouse-management {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    max-width: 100%;
+    width: 100%;
+    background: linear-gradient(to bottom, #f0f8ff, #ffffff);
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  .shipment-frame {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    max-width: 1100px;
+  }
+  
+  .shipment-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 15px;
+    width: 100%;
+    padding: 20px;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .shipment-wrapper:hover {
+    transform: scale(1.03); /* Hiệu ứng phóng to khi di chuột qua */
+  }
+  
+  .shipment-info,
+  .shipment-status,
+  .shipper-info {
+    flex: 1;
+    min-width: 200px;
+    padding: 15px;
+    border-radius: 8px;
+    background: #f9f9f9;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .actions {
+    margin-top: 10px;
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+  }
+  
+  .main-btn {
+    background: radial-gradient(circle, #4caf50, #45a049);
+    border: none;
+    color: white;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    animation: pulse 1.5s infinite;
+    box-shadow: 0 0 8px rgba(72, 239, 128, 0.7);
+  }
+  
+  .main-btn:hover {
+    box-shadow: 0 0 12px rgba(72, 239, 128, 0.9);
+  }
+  
+  .action-btn {
+    background: #4caf50;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .action-btn:hover {
+    background-color: #45a049;
+  }
+  
+  .status-menu {
+    position: absolute;
+    bottom: 50px;
+    left: 0;
+    background: #f4f4f4;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    padding: 10px;
+    z-index: 10;
+  }
+  
+  .status-input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+  
+  .sub-btn {
+    display: block;
+    margin: 8px 0;
+    padding: 8px 12px;
+    background: #e0e0e0;
+    border: none;
+    border-radius: 4px;
+    color: #555;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .sub-btn:hover {
+    background-color: #d5d5d5;
+  }
+  
+  .icon-list {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .icon-btn {
+    background: #e0e0e0;
+    border: none;
+    padding: 12px;
+    border-radius: 50%;
+    font-size: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .icon-btn:hover {
+    background-color: #d5d5d5;
+    transform: scale(1.1);
+  }
+  
+  .delivery-man-image {
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  
+  .delivery-man-img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 50%;
+  }
+  
+  .total-price-container {
+    margin-top: 20px;
+    text-align: left;
+    padding-left: 200px;
+    background: #e6e6fa;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  .total-price-container h3 {
+    color: #333;
+  }
