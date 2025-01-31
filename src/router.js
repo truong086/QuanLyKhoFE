@@ -14,6 +14,8 @@ import ProfilePage from './components/ProfilePage.vue';
 import AddCategory from './components/AddCategory.vue';
 import WarehouseTransfer from './components/WarehouseTransfer.vue';
 import AllCategory from './components/AllCategory.vue'
+import ChiTietSanPham from './components/ChiTietSanPhamPage.vue';
+import SliderPage from './components/DetailSlider.vue';
 
 import { useCounterStore } from './store';
 
@@ -41,7 +43,6 @@ const routes = [
       css: ['"/AdminTemplatePage/css/statusCss.css"']
     }
   },
-  
   {
     path: "/getotp/:email",
     name: "GetOTP",
@@ -75,6 +76,16 @@ const routes = [
         path: "TransferPage",
         name: "TransferPage",
         component: WarehouseTransfer,
+      },
+      {
+        path: "/ChiTietSanPham",
+        name: "ChiTietSanPham",
+        component: ChiTietSanPham,
+      },
+      {
+        path: "/SliderPage",
+        name: "SliderPage",
+        component: SliderPage,
       },
       {
         path: "/AddorEdit",

@@ -63,7 +63,7 @@
                   <div v-if="row.totalQuantityUseds.some(d => d.location == cell && d.quantityUsed > 5 && d.quantityUsed < 30)" style="position: absolute;">
                     <p style="font-size: 10px; font-weight: bold; animation: AlmostFull 0.5s ease-in-out infinite;">Almost full !!!</p>
                   </div>
-                  <div v-else-if="row.totalQuantityUseds.some(d => d.location == cell && d.quantityUsed == 0)" style="position: absolute;">
+                  <div v-else-if="row.totalQuantityUseds.some(d => d.location == cell && d.quantityUsed <= 0)" style="position: absolute;">
                     <p style="font-size: 10px; font-weight: bold; animation: Full 0.5s ease-in-out infinite;">Full !!!</p>
                   </div>
                     <div v-if="row.productArea.productPlans.some(x => x.location == cell)">

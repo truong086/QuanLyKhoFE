@@ -28,7 +28,7 @@
         />
         <!-- Khung cho phép kéo thả và chọn tệp -->
         <div class="file-upload-zone" :class="{'drag-over': isDragOver}" @click="triggerFileInput">
-          <p>將文件拖放到此處或點擊以選擇文件</p>
+          <p>Kéo thả tệp tại đây</p>
         </div>
         <!-- Hiển thị ảnh khi chọn -->
         <div v-if="imagePreview" class="image-preview">
@@ -38,33 +38,33 @@
   
       <!-- Các mục chọn miền, tỉnh, huyện, xã, và ghi chú không thay đổi -->
       <div class="form-group">
-        <label for="region">直轄市:</label>
+        <label for="region">Miền:</label>
         <select v-model="selectedRegion" @change="onRegionChange" class="form-select">
-          <option value="" disabled selected>直轄市</option>
+          <option value="" disabled selected>Miền</option>
           <option v-for="region in regions" :key="region.id" :value="region.id">{{ region.name }}</option>
         </select>
       </div>
   
       <div v-if="provinces.length > 0" class="form-group">
-        <label for="province">縣:</label>
+        <label for="province">Tỉnh:</label>
         <select v-model="selectedProvince" @change="onProvinceChange" class="form-select">
-          <option value="" disabled selected>縣:</option>
+          <option value="" disabled selected>Tình:</option>
           <option v-for="province in provinces" :key="province.id" :value="province.id">{{ province.name }}</option>
         </select>
       </div>
   
       <div v-if="districts.length > 0" class="form-group">
-        <label for="district">縣轄市:</label>
+        <label for="district">Huyện:</label>
         <select v-model="selectedDistrict" @change="onDistrictChange" class="form-select">
-          <option value="" disabled selected>縣轄市</option>
+          <option value="" disabled selected>Huyện</option>
           <option v-for="district in districts" :key="district.id" :value="district.id">{{ district.name }}</option>
         </select>
       </div>
   
       <div v-if="wards.length > 0" class="form-group">
-        <label for="ward">鎮和區:</label>
+        <label for="ward">Xã:</label>
         <select v-model="selectedWard" class="form-select">
-          <option value="" disabled selected>鎮和區</option>
+          <option value="" disabled selected>Xã</option>
           <option v-for="ward in wards" :key="ward.id" :value="ward.id">{{ ward.name }}</option>
         </select>
       </div>
@@ -77,128 +77,176 @@
   </template>
   
   <script>
-  import { ref } from "vue";
-  
-  export default {
-    setup() {
-      const selectedRegion = ref(null);
-      const selectedProvince = ref(null);
-      const selectedDistrict = ref(null);
-      const selectedWard = ref(null);
-      const quantity = ref(1); // Dùng để lưu số lượng nhập vào
-      const comments = ref(""); // Dùng để lưu ghi chú
-      const imagePreview = ref(null); // Dùng để lưu ảnh đã chọn
-      const isDragOver = ref(false); // Để kiểm tra trạng thái kéo thả
-  
-      const regions = ref([
-        {
-          id: 1,
-          name: "直轄市 1",
-          provinces: generateProvinces(5, "1"),
-        },
-        {
-          id: 2,
-          name: "直轄市 2",
-          provinces: generateProvinces(5, "2"),
-        },
-        {
-          id: 3,
-          name: "直轄市 3",
-          provinces: generateProvinces(5, "3"),
-        },
-      ]);
-  
-      const provinces = ref([]);
-      const districts = ref([]);
-      const wards = ref([]);
-  
-      const onRegionChange = () => {
-        const region = regions.value.find((r) => r.id === selectedRegion.value);
-        provinces.value = region ? region.provinces : [];
-        selectedProvince.value = null;
-        selectedDistrict.value = null;
-        selectedWard.value = null;
-        districts.value = [];
-        wards.value = [];
-      };
-  
-      const onProvinceChange = () => {
-        const province = provinces.value.find((p) => p.id === selectedProvince.value);
-        districts.value = province ? province.districts : [];
-        selectedDistrict.value = null;
-        selectedWard.value = null;
-        wards.value = [];
-      };
-  
-      const onDistrictChange = () => {
-        const district = districts.value.find((d) => d.id === selectedDistrict.value);
-        wards.value = district ? district.wards : [];
-        selectedWard.value = null;
-      };
-  
-      const onFileChange = (event) => {
-        const file = event.target.files[0];
-        if (file) {
-          const reader = new FileReader();
-          reader.onload = () => {
-            imagePreview.value = reader.result;
-          };
-          reader.readAsDataURL(file);
-        }
-      };
-  
-      const triggerFileInput = () => {
-        const fileInput = document.getElementById("file-upload");
-        fileInput.click(); // Kích hoạt chọn tệp khi nhấp vào khung
-      };
-  
-      // Helper function to generate provinces
-      function generateProvinces(count, regionName) {
-        return Array.from({ length: count }, (_, i) => ({
-          id: `${regionName}-province-${i + 1}`,
-          name: `縣 ${regionName}-${i + 1}`,
-          districts: generateDistricts(5, `${regionName}-${i + 1}`),
-        }));
+import { ref } from "vue";
+
+export default {
+  setup() {
+    const selectedRegion = ref(null);
+    const selectedProvince = ref(null);
+    const selectedDistrict = ref(null);
+    const selectedWard = ref(null);
+    const quantity = ref(1);
+    const comments = ref("");
+    const imagePreview = ref(null);
+    const isDragOver = ref(false);
+
+    const regions = ref([
+      {
+        id: "1",
+        name: "Miền Bắc",
+        provinces: [
+          {
+            id: "1-1",
+            name: "Hà Nội",
+            districts: [
+              {
+                id: "1-1-1",
+                name: "Quận Hoàn Kiếm",
+                wards: [
+                  { id: "1-1-1-1", name: "Phường Hàng Bạc" },
+                  { id: "1-1-1-2", name: "Phường Cửa Đông" },
+                ],
+              },
+              {
+                id: "1-1-2",
+                name: "Quận Hai Bà Trưng",
+                wards: [
+                  { id: "1-1-2-1", name: "Phường Bạch Mai" },
+                  { id: "1-1-2-2", name: "Phường Minh Khai" },
+                ],
+              },
+            ],
+          },
+          {
+            id: "1-2",
+            name: "Vĩnh Phúc",
+            districts: [
+              {
+                id: "1-2-1",
+                name: "Vĩnh Yên",
+                wards: [
+                  { id: "1-2-1-1", name: "Phường Đống Đa" },
+                  { id: "1-2-1-2", name: "Phường Liên Bảo" },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+      {
+        id: "2",
+        name: "Miền Nam",
+        provinces: [
+          {
+            id: "2-1",
+            name: "TP.HCM",
+            districts: [
+              {
+                id: "2-1-1",
+                name: "Quận 1",
+                wards: [
+                  { id: "2-1-1-1", name: "Phường Bến Nghé" },
+                  { id: "2-1-1-2", name: "Phường Nguyễn Thái Bình" },
+                ],
+              },
+              {
+                id: "2-1-2",
+                name: "Quận 3",
+                wards: [
+                  { id: "2-1-2-1", name: "Phường Võ Thị Sáu" },
+                  { id: "2-1-2-2", name: "Phường Tân Định" },
+                ],
+              },
+            ],
+          },
+          {
+            id: "2-2",
+            name: "Bình Dương",
+            districts: [
+              {
+                id: "2-2-1",
+                name: "Thủ Dầu Một",
+                wards: [
+                  { id: "2-2-1-1", name: "Phường Phú Hòa" },
+                  { id: "2-2-1-2", name: "Phường Hiệp Thành" },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    ]);
+
+    const provinces = ref([]);
+    const districts = ref([]);
+    const wards = ref([]);
+
+    // Lấy danh sách tỉnh khi chọn miền
+    const onRegionChange = () => {
+      const region = regions.value.find((r) => r.id === selectedRegion.value);
+      provinces.value = region ? region.provinces : [];
+      selectedProvince.value = null;
+      selectedDistrict.value = null;
+      selectedWard.value = null;
+      districts.value = [];
+      wards.value = [];
+    };
+
+    // Lấy danh sách huyện khi chọn tỉnh
+    const onProvinceChange = () => {
+      const province = provinces.value.find((p) => p.id === selectedProvince.value);
+      districts.value = province ? province.districts : [];
+      selectedDistrict.value = null;
+      selectedWard.value = null;
+      wards.value = [];
+    };
+
+    // Lấy danh sách xã khi chọn huyện
+    const onDistrictChange = () => {
+      const district = districts.value.find((d) => d.id === selectedDistrict.value);
+      wards.value = district ? district.wards : [];
+      selectedWard.value = null;
+    };
+
+    const onFileChange = (event) => {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          imagePreview.value = reader.result;
+        };
+        reader.readAsDataURL(file);
       }
-  
-      // Helper function to generate districts with 5 wards
-      function generateDistricts(count, provinceName) {
-        return Array.from({ length: count }, (_, i) => ({
-          id: `${provinceName}-district-${i + 1}`,
-          name: `縣轄市 ${provinceName}-${i + 1}`,
-          wards: generateWards(5, `${provinceName}-${i + 1}`),
-        }));
-      }
-  
-      // Helper function to generate wards for each district
-      function generateWards(count, districtName) {
-        return Array.from({ length: count }, (_, i) => ({
-          id: `${districtName}-ward-${i + 1}`,
-          name: `縣轄市 ${districtName}-${i + 1}`,
-        }));
-      }
-  
-      return {
-        regions,
-        provinces,
-        districts,
-        wards,
-        selectedRegion,
-        selectedProvince,
-        selectedDistrict,
-        selectedWard,
-        quantity,
-        comments,
-        onRegionChange,
-        onProvinceChange,
-        onDistrictChange,
-        imagePreview,
-        isDragOver,
-        onFileChange,
-        triggerFileInput,
-      };
-    },
-  };
+    };
+
+    const triggerFileInput = () => {
+      const fileInput = document.getElementById("file-upload");
+      fileInput.click(); // Kích hoạt chọn tệp khi nhấp vào khung
+    };
+
+    return {
+      regions,
+      provinces,
+      districts,
+      wards,
+      selectedRegion,
+      selectedProvince,
+      selectedDistrict,
+      selectedWard,
+      quantity,
+      comments,
+      onRegionChange,
+      onProvinceChange,
+      onDistrictChange,
+      imagePreview,
+      isDragOver,
+      onFileChange,
+      triggerFileInput,
+    };
+  },
+};
+
+
   </script>
   
   <style scoped>
