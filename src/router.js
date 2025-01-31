@@ -14,10 +14,22 @@ import ProfilePage from './components/ProfilePage.vue';
 import AddCategory from './components/AddCategory.vue';
 import WarehouseTransfer from './components/WarehouseTransfer.vue';
 import AllCategory from './components/AllCategory.vue'
+import ChiTietSanPham from './components/ChiTietSanPhamPage.vue';
+import SliderPage from './components/DetailSlider.vue';
 
 import { useCounterStore } from './store';
 
 const routes = [
+  {
+    path: "/SliderPage",
+    name: "SliderPage",
+    component: SliderPage,
+  },
+  {
+    path: "/ChiTietSanPham",
+    name: "ChiTietSanPham",
+    component: ChiTietSanPham,
+  },
   {
     path: "/AllCategory",
     name: "AllCategory",
@@ -44,6 +56,7 @@ const routes = [
     component: AddorEdit,
     meta:{requiresAuth: false}
   },
+  
   {
     path: "/getotp/:email",
     name: "GetOTP",
@@ -72,6 +85,7 @@ const routes = [
       ]
     },
     children: [
+
       {
         path: "TransferPage",
         name: "TransferPage",
