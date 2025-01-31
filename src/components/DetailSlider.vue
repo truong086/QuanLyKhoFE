@@ -1,319 +1,214 @@
 <template>
-    <div class="container">
-      <div class="row">
-        <div class="col-md-9">
-          <h3>Products Showcase with Bootstrap</h3>
-        </div>
-        <div class="col-md-3">
-          <!-- Controls -->
-          <div class="controls pull-right hidden-xs">
-            <button class="left btn btn-primary" @click="prevSlide">
-              <span class="fa fa-chevron-left"></span>
-            </button>
-            <button class="right btn btn-primary" @click="nextSlide">
-              <span class="fa fa-chevron-right"></span>
-            </button>
+  <div id="app">
+    <header>
+      <h3>Products</h3>
+    </header>
+
+    <main>
+      <h6>{{ filteredProducts.length }} results</h6>
+      <p v-if="activeFilters.length">
+        <small class="text-muted">Filtered by {{ activeFilters.join(', ') }}</small>
+      </p>
+      <div class="product-grid">
+        <div class="card" v-for="product in filteredProducts" :key="product.name">
+          <img class="card-img-top" :src="product.image" alt="">
+
+          <div class="card-body">
+            <h5 class="card-title">{{ product.name }}</h5>
+            <p class="card-text">
+              <span>Price: ${{ product.price.toFixed(2) }}</span>
+              <br>
+              <span>DonViTinh: {{ product.donViTinh }}</span>
+              <br>
+              <span>Category: {{ product.CategoryName }}</span>
+            </p>
+            <a class="btn btn-primary" href="#">Chi tiết</a>
           </div>
         </div>
       </div>
+    </main>
+
+    <footer>
+      <p>
+        <small class="text-muted">{{ products.length }} total / {{ filteredProducts.length }} shown</small>
+      </p>
+    </footer>
+  </div>
+</template>
+
+
+
+<script>
+import { ref, computed, watch } from 'vue'
+
+export default {
+  setup() {
+    const products = ref([
+  { name: 'Product 1', CategoryName: 'Home', donViTinh: 'Easy', price: 100.00, image: 'https://images.pexels.com/photos/1308881/pexels-photo-1308881.jpeg?auto=compress&cs=tinysrgb&w=800' },
+  { name: 'Product 2', CategoryName: 'Home', donViTinh: 'Intermediate', price: 120.00, image: 'https://images.pexels.com/photos/1386604/pexels-photo-1386604.jpeg?auto=compress&cs=tinysrgb&w=800' },
+  { name: 'Product 3', CategoryName: 'Office', donViTinh: 'Intermediate', price: 190.00, image: 'https://images.pexels.com/photos/593655/pexels-photo-593655.jpeg?auto=compress&cs=tinysrgb&w=800' },
+  { name: 'Product 4', CategoryName: 'Office', donViTinh: 'Advanced', price: 260.00, image: 'https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg?auto=compress&cs=tinysrgb&w=800' },
+  { name: 'Product 5', CategoryName: 'Warehouse', donViTinh: 'Advanced', price: 320.00, image: 'https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg?auto=compress&cs=tinysrgb&w=800' },
+  { name: 'Product 6', CategoryName: 'Farm', donViTinh: 'Intermediate', price: 120.00, image: 'https://images.pexels.com/photos/593655/pexels-photo-593655.jpeg?auto=compress&cs=tinysrgb&w=800' },
+  { name: 'Product 7', CategoryName: 'Space', donViTinh: 'Advanced', price: 157920.00, image: 'https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg?auto=compress&cs=tinysrgb&w=800' },
+  { name: 'Product 8', CategoryName: 'Bathroom', donViTinh: 'Easy', price: 9.00, image: 'https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg?auto=compress&cs=tinysrgb&w=800' },
+  { name: 'Product 6', CategoryName: 'Farm', donViTinh: 'Intermediate', price: 120.00, image: 'https://images.pexels.com/photos/593655/pexels-photo-593655.jpeg?auto=compress&cs=tinysrgb&w=800' },
+  { name: 'Product 6', CategoryName: 'Farm', donViTinh: 'Intermediate', price: 120.00, image: 'https://images.pexels.com/photos/593655/pexels-photo-593655.jpeg?auto=compress&cs=tinysrgb&w=800' }
+
+
+])
+
+
+    const activeFilters = ref([])
     
-      <div id="carousel-example" class="carousel slide" data-bs-ride="carousel">
-        <!-- Wrapper for slides -->
-        <div class="carousel-inner">
-          <div class="carousel-item" v-for="(slide, index) in slides" :key="index" :class="{ active: index === currentSlide }">
-            <div class="row">
-              <div class="col-sm-4" v-for="product in slide.products" :key="product.id">
-                <div class="col-item">
-                  <div class="info">
-                    <div class="row">
-                      <div class="price col-md-12">
-                        <h5>{{ product.name }}</h5>
-                      </div>
-                    </div>
-                  </div>
-                  <!-- Single product image -->
-                  <div class="photo">
-                    <img :src="product.images[0]" :alt="product.name" class="product-img" />
-                  </div>
-                  <div class="info">
-                    <div class="separator clear-left">
-                      <div class="product-details">
-                        <p><strong>Description:</strong> {{ product.description }}</p>
-                        <p><strong>Price:</strong> {{ product.price }}</p>
-                        <p><strong>Unit:</strong> {{ product.unit }}</p>
-                        <p><strong>Category:</strong> {{ product.categoryName }}</p>
-                        <p><strong>Quantity:</strong> {{ product.quantity }}</p>
-                      </div>
-                      <!-- More Details Button -->
-                      <p class="btn-details">
-                        <button class="btn btn-blinking">More details</button>
-                      </p>
-                    </div>
-                    <div class="clearfix"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </template>
-  
-  <script>
-  export default {
-    data() {
-      return {
-        currentSlide: 0,
-        slides: [
-          {
-            products: [
-              {
-                id: 1,
-                name: 'Product A',
-                price: '$7.99',
-                description: 'Description for product A',
-                unit: 'pcs',
-                categoryName: 'Category 1',
-                quantity: 10,
-                images: [
-                  'https://blogcongnghe247.com/wp-content/uploads/2023/08/tong-hop-anh-3D-my-do-toa-dau-pha-thuong-khung-5.jpg'
-                ]
-              },
-              {
-                id: 2,
-                name: 'Product B',
-                price: '$9.99',
-                description: 'Description for product B',
-                unit: 'pcs',
-                categoryName: 'Category 2',
-                quantity: 5,
-                images: [
-                  'https://picsum.photos/id/423/400/300'
-                ]
-              },
-              {
-                id: 3,
-                name: 'Product C',
-                price: '$7.58',
-                description: 'Description for product C',
-                unit: 'pcs',
-                categoryName: 'Category 3',
-                quantity: 15,
-                images: [
-                  'https://picsum.photos/id/124/400/300'
-                ]
-              }
-            ]
-          },
-          {
-            products: [
-              {
-                id: 4,
-                name: 'Product D',
-                price: '$7.17',
-                description: 'Description for product D',
-                unit: 'pcs',
-                categoryName: 'Category 4',
-                quantity: 20,
-                images: [
-                  'https://picsum.photos/id/423/400/300'
-                ]
-              },
-              {
-                id: 5,
-                name: 'Product E',
-                price: '$19.99',
-                description: 'Description for product E',
-                unit: 'pcs',
-                categoryName: 'Category 5',
-                quantity: 30,
-                images: [
-                  'https://picsum.photos/id/235/400/300'
-                ]
-              },
-              {
-                id: 6,
-                name: 'Product F',
-                price: '$1.99',
-                description: 'Description for product F',
-                unit: 'pcs',
-                categoryName: 'Category 6',
-                quantity: 50,
-                images: [
-                  'https://picsum.photos/id/199/400/300'
-                ]
-              }
-            ]
-          }
-        ]
-      };
-    },
-    methods: {
-      prevSlide() {
-        if (this.currentSlide > 0) {
-          this.currentSlide--;
-        } else {
-          this.currentSlide = this.slides.length - 1;
-        }
-      },
-      nextSlide() {
-        if (this.currentSlide < this.slides.length - 1) {
-          this.currentSlide++;
-        } else {
-          this.currentSlide = 0;
-        }
-      }
+    const uses = computed(() => [...new Set(products.value.map(p => p.CategoryName))])
+    const skills = computed(() => [...new Set(products.value.map(p => p.donViTinh))])
+
+    const filters = computed(() => ({
+      'Category': uses.value,
+      'donViTinh': skills.value
+    }))
+
+    const filteredProducts = computed(() => {
+      if (activeFilters.value.length === 0) return products.value
+      return products.value.filter(prod => 
+        activeFilters.value.includes(prod.skill) || activeFilters.value.includes(prod.usage)
+      )
+    })
+
+    const clearFilters = () => {
+      activeFilters.value = []
     }
-  };
-  </script>
-  
-  <style scoped>
-  /* Global styles */
-  .col-item {
-    border: 2px solid #2323A1;
-    border-radius: 8px;
-    background: #FFF;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-  
-  .col-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
-  }
-  
-  .col-item .photo {
-    width: 100%;
-    height: 250px;
-    overflow: hidden;
-  }
-  
-  .product-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-bottom: 2px solid #2323A1;
-  }
-  
-  .col-item .info .price h5 {
-    text-align: center;
-    font-size: 1.2em;
-    font-weight: bold;
-    margin: 15px 0;
-    color: #2323A1;
-    transition: color 0.3s ease;
-  }
-  
-  .col-item .info .price h5:hover {
-    color: #FF6347;
-  }
-  
-  .col-item .info .product-details p {
-    font-size: 0.9em;
-    margin: 5px 0;
-    color: #555;
-    transition: color 0.3s ease;
-  }
-  
-  .col-item .info .product-details p:hover {
-    color: #007bff;
-  }
-  
-  .col-item .btn-details .btn {
-    background-color: #2323A1;
-    color: #fff;
-    border: 1px solid #2323A1;
-    padding: 10px 20px;
-    font-size: 1em;
-    font-weight: bold;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-  }
-  
-  .col-item .btn-details .btn:hover {
-    background-color: #0a58ca;
-    border-color: #0a58ca;
-    transform: scale(1.05);
-  }
-  
-  /* 7-color Blinking Animation */
-  @keyframes blink {
-    0% {
-      background-color: #ff6347;
-      border-color: #ff6347;
-    }
-    14% {
-      background-color: #ffb3b3;
-      border-color: #ffb3b3;
-    }
-    28% {
-      background-color: #ffcc00;
-      border-color: #ffcc00;
-    }
-    42% {
-      background-color: #ff007f;
-      border-color: #ff007f;
-    }
-    57% {
-      background-color: #32cd32;
-      border-color: #32cd32;
-    }
-    71% {
-      background-color: #00bfff;
-      border-color: #00bfff;
-    }
-    85% {
-      background-color: #9400d3;
-      border-color: #9400d3;
-    }
-    100% {
-      background-color: #ff6347;
-      border-color: #ff6347;
+
+    watch(activeFilters, (newVal) => {
+      location.hash = newVal.join(',')
+    })
+
+    return {
+      products,
+      activeFilters,
+      filters,
+      filteredProducts,
+      clearFilters
     }
   }
-  
-  .btn-blinking {
-    animation: blink 3s linear infinite;
-  }
-  
-  .col-item:hover .photo {
-    border: 2px solid #007bff;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-  }
-  
-  .col-item:hover .info .price h5 {
-    color: #007bff;
-  }
-  
-  /* Controls for carousel */
-  .controls {
-    text-align: right;
-    margin-top: 10px;
-  }
-  
-  .controls button {
-    font-size: 20px;
-    color: #fff;
-    background-color: #2323A1;
-    border: 1px solid #2323A1;
-    padding: 8px 16px;
-    border-radius: 50%;
-    cursor: pointer;
-  }
-  
-  .controls button:hover {
-    background-color: #0a58ca;
-    border-color: #0a58ca;
-  }
-  
-  /* Responsive Design */
-  @media (max-width: 768px) {
-    .col-sm-4 {
-      margin-bottom: 20px;
-    }
-  }
-  </style>
-  
+}
+</script>
+
+<style scoped>
+#app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #f7f7f7;
+  padding: 2rem;
+  font-family: 'Arial', sans-serif;
+}
+
+header {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+h3 {
+  font-size: 2rem;
+  color: #333;
+}
+
+main {
+  background: #fff;
+  padding: 2rem;
+  width: 90%;
+  max-width: 1200px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  margin-bottom: 2rem;
+}
+
+footer {
+  width: 100%;
+  background: #fff;
+  padding: 1rem;
+  text-align: center;
+  box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.card-img-top {
+  max-width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.card-body {
+  padding: 1rem;
+}
+
+.card-title {
+  font-size: 1.25rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.card-text {
+  font-size: 0.875rem;
+  color: #555;
+  font-weight: bold;
+
+}
+
+.card-text span {
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border: none;
+  padding: 0.5rem 1rem;
+  color: white;
+  text-transform: uppercase;
+  font-size: 0.875rem;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+footer small {
+  font-size: 0.875rem;
+  color: #888;
+}
+strong {
+  font-weight: bold;
+}
+
+</style>
+
+
