@@ -16,10 +16,12 @@ import WarehouseTransfer from './components/WarehouseTransfer.vue';
 import AllCategory from './components/AllCategory.vue'
 import ChiTietSanPham from './components/ChiTietSanPhamPage.vue';
 import SliderPage from './components/DetailSlider.vue';
+import AddProduct from './components/AddProduct.vue';
 
 import { useCounterStore } from './store';
 
 const routes = [
+
   {
     path: "/AllCategory",
     name: "AllCategory",
@@ -72,6 +74,11 @@ const routes = [
       ]
     },
     children: [
+      {
+        path: "/AddProduct",
+        name: "AddProduct",
+        component: AddProduct,
+      },
       {
         path: "TransferPage",
         name: "TransferPage",

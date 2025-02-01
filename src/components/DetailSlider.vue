@@ -50,7 +50,7 @@ export default {
   { name: 'Product 4', CategoryName: 'Office', donViTinh: 'Advanced', price: 260.00, image: 'https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg?auto=compress&cs=tinysrgb&w=800' },
   { name: 'Product 5', CategoryName: 'Warehouse', donViTinh: 'Advanced', price: 320.00, image: 'https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg?auto=compress&cs=tinysrgb&w=800' },
   { name: 'Product 6', CategoryName: 'Farm', donViTinh: 'Intermediate', price: 120.00, image: 'https://images.pexels.com/photos/593655/pexels-photo-593655.jpeg?auto=compress&cs=tinysrgb&w=800' },
-  { name: 'Product 7', CategoryName: 'Space', donViTinh: 'Advanced', price: 157920.00, image: 'https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg?auto=compress&cs=tinysrgb&w=800' },
+  { name: 'Product 7', CategoryName: 'Space', donViTinh: 'Advanced', price: 120.00, image: 'https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg?auto=compress&cs=tinysrgb&w=800' },
   { name: 'Product 8', CategoryName: 'Bathroom', donViTinh: 'Easy', price: 9.00, image: 'https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg?auto=compress&cs=tinysrgb&w=800' },
   { name: 'Product 6', CategoryName: 'Farm', donViTinh: 'Intermediate', price: 120.00, image: 'https://images.pexels.com/photos/593655/pexels-photo-593655.jpeg?auto=compress&cs=tinysrgb&w=800' },
   { name: 'Product 6', CategoryName: 'Farm', donViTinh: 'Intermediate', price: 120.00, image: 'https://images.pexels.com/photos/593655/pexels-photo-593655.jpeg?auto=compress&cs=tinysrgb&w=800' }
