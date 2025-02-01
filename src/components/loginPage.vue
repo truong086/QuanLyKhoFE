@@ -77,7 +77,7 @@
   <div v-if="isLoading" class="loading-overlay">
       <div class="spinner"></div>
       <p>Đang tải...</p>
-    </div>
+  </div>
 </template>
 
 <script setup>

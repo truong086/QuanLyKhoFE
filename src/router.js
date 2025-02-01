@@ -88,7 +88,7 @@ const routes = [
         component: SliderPage,
       },
       {
-        path: "/AddorEdit",
+        path: "AddorEdit",
         name: "AddorEdit",
         component: AddorEdit
       },

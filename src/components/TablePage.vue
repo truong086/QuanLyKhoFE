@@ -18,6 +18,7 @@
             <th class="title">Quantity</th>
             <th class="title">Quantity Emty</th>
             <th class="title">Account Create</th>
+            <th class="title">#</th>
           </tr>
         </thead>
         <tbody>
@@ -31,6 +32,12 @@
               <div style="display: flex;">
                 <img :src="row.account_image" style="width: 50px; height: 50px; border-radius: 50%;" alt="">
                 <h3 style="margin: 0 15px; font-weight: bold;">{{ row.account_name }}</h3>
+              </div>
+            </td>
+            <td>
+              <div style="display: flex;">
+                <button class="btn btn-sucess" style="background-color: yellow; font-weight: bold;" @click="NextWarehourse(row.id)">Edit</button>
+                <button class="btn btn-sucess" style="background-color: red; color: white; font-weight: bold;">Delete</button>
               </div>
             </td>
           </tr>
@@ -51,6 +58,7 @@
             <th class="title">Quantity</th>
             <th class="title">Quantity Emty</th>
             <th class="title">Account Create</th>
+            <th class="title">#</th>
           </tr>
         </thead>
         <tbody>
@@ -71,6 +79,12 @@
                 <h3 style="margin: 0 15px; font-weight: bold;">{{ row.account_name }}</h3>
               </div>
             </td>
+            <td>
+              <div style="display: flex;">
+                <button class="btn btn-sucess" style="background-color: yellow; font-weight: bold;">Edit</button>
+                <button class="btn btn-sucess" style="background-color: red; color: white; font-weight: bold;">Delete</button>
+              </div>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -89,6 +103,7 @@
             <th class="title">Quantity</th>
             <th class="title">Quantity Emty</th>
             <th class="title">Account Create</th>
+            <th class="title">#</th>
           </tr>
         </thead>
         <tbody>
@@ -107,6 +122,12 @@
               <div style="display: flex;">
                 <img :src="row.account_image" style="width: 50px; height: 50px; border-radius: 50%;" alt="">
                 <h3 style="margin: 0 15px; font-weight: bold;">{{ row.account_name }}</h3>
+              </div>
+            </td>
+            <td>
+              <div style="display: flex;">
+                <button class="btn btn-sucess" style="background-color: yellow; font-weight: bold;">Edit</button>
+                <button class="btn btn-sucess" style="background-color: red; color: white; font-weight: bold;">Delete</button>
               </div>
             </td>
           </tr>
@@ -128,7 +149,7 @@ import axios from "axios";
 import { ref, getCurrentInstance, watch, onMounted } from "vue";
 import PagesTotal from "./PageList/PagesTotal.vue";
 import { useCounterStore } from "../store";
-
+import {useRouter} from 'vue-router'
 onMounted(() => {
   findAllWarehourse(valueE.value, page.value)
   findAllFloor(valueEFloor.value, pageFloor.value)
@@ -153,6 +174,8 @@ const dataArea = ref([])
 const store = useCounterStore()
 const isLoading = ref(false)
 const dataWarehourse = ref([])
+const router = useRouter()
+
 watch(page.value, (newPage) => {
   findAllWarehourse(valueE.value, newPage)
   
@@ -233,6 +256,10 @@ const changeReload = (event) => {
   const changeReloadArea = (event) => {
     pageSizeArea.value = event
     findAllArea(valueEArea.value, pageArea.value)
+  }
+
+  const NextWarehourse = (id) => {
+    router.push({path: "AddorEdit", query: {id: id, name: "Update"}})
   }
 </script>
 
