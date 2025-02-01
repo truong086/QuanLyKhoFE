@@ -1,197 +1,247 @@
 <template>
-    <div class="container">
-      <!-- Frame 1: Single Product -->
-      <div class="panel panel-primary frame">
-        <!-- Panel Header -->
-        <div class="panel-heading">
-          <h3 class="panel-title title">{{ product.name }}</h3>
-        </div>
-  
-        <!-- Panel Body with Image at the Top -->
-        <div class="panel-body">
-          <div class="text-center">
-            <img :src="product.image" alt="Product Image" class="customimage" />
-          </div>
-          <p><strong>Price:</strong> ${{ product.price }}</p>
-          <p><strong>Description:</strong> {{ product.description }}</p>
-          <p><strong>Features:</strong></p>
-          <div v-for="(feature, idx) in product.features" :key="idx" class="feature">{{ feature }}</div>
-          <div class="text-center">
-            <button @click="viewDetails" class="btn btn-info">Details -></button>
-          </div>
-        </div>
-      </div>
-  
-      <!-- Frame 2: Warehouse Info -->
-      <div class="panel panel-default frame">
-        <div class="panel-body">
-          <div class="row align-items-center">
-            <div class="col-md-3 text-center">
-              <img :src="product.image" alt="Warehouse Product Image" class="customimage-smaller" />
-            </div>
-            <div class="col-md-9">
-              <p class="title">Tên kho: kho1 → tầng3 → khu7</p>
-              <div class="text-end">
-                <button class="btn btn-primary btn-hover">Tìm trên Map</button>
-              </div>
-            </div>
+  <div id="app">
+    <header>
+      <h3>Product Details</h3>
+    </header>
+
+    <main>
+      <div class="product-detail">
+        <div class="card">
+          <img class="card-img-top" :src="product.image" alt="">
+
+          <div class="card-body">
+            <h5 class="card-title">{{ product.name }}</h5>
+            <p class="card-text">
+              <strong>Price: </strong>${{ product.price.toFixed(2) }}
+              <br>
+              <strong>DonViTinh: </strong>{{ product.donViTinh }}
+              <br>
+              <strong>Category: </strong>{{ product.CategoryName }}
+            </p>
+            <a class="btn btn-primary" href="#">Chi tiết</a>
           </div>
         </div>
       </div>
-  
-      <!-- Frame 3: Warehouse Info (Duplicate for another location) -->
-      <div class="panel panel-default frame">
-        <div class="panel-body">
-          <div class="row align-items-center">
-            <div class="col-md-3 text-center">
-              <img :src="product.image" alt="Warehouse Product Image" class="customimage-smaller" />
-            </div>
-            <div class="col-md-9">
-              <p class="title">Tên kho: kho2 → tầng5 → khu9</p>
-              <div class="text-end">
-                <button class="btn btn-primary btn-hover">Tìm trên Map</button>
-              </div>
-            </div>
-          </div>
+
+      <!-- New Frame Below Product - First Warehouse -->
+      <div class="warehouse-frame">
+        <div class="warehouse-img">
+          <img :src="warehouse1.image" alt="Warehouse Image">
         </div>
+        <div class="warehouse-info">
+          <h5>{{ warehouse1.name }}</h5>
+          <p>{{ warehouse1.location }}</p>
+        </div>
+        <button class="btn btn-location">Location</button>
       </div>
-    </div>
-  </template>
-  
-  <script>
-  export default {
-    data() {
-      return {
-        product: {
-          name: "Bikini Red",
-          price: "5.99",
-          description: "Fresh organic tomatoes available in stock.",
-          image: "https://blogcongnghe247.com/wp-content/uploads/2023/08/tong-hop-anh-3D-my-do-toa-dau-pha-thuong-khung-5.jpg",
-          features: ["Rich in vitamins", "Organic", "Farm fresh"],
-        },
-      };
-    },
-    methods: {
-      viewDetails() {
-        alert("Details for " + this.product.name);
-      },
-    },
-  };
-  </script>
-  
-  <style scoped>
-  .container {
-    margin-top: 20px;
-    background-color: #f8f9fa; /* Light gray background */
-    padding: 15px;
-    border-radius: 8px;
-  }
-  
-  .customimage {
-    width: 100%;
-    max-width: 300px;
-    height: auto;
-    margin: 15px auto;
-    display: block;
-    border: 3px solid #ddd;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .customimage-smaller {
-    width: 100%;
-    max-width: 100px;
-    height: auto;
-    border: 3px solid #ddd;
-    border-radius: 5px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .panel-primary .panel-heading {
-    background: linear-gradient(90deg, #0275d8, #0056b3);
-    color: white;
-    font-weight: bold;
-    text-align: center;
-    padding: 10px;
-    font-size: 1.5rem;
-    border-radius: 8px 8px 0 0;
-  }
-  
-  .panel-default {
-    margin-top: 15px;
-    border: 1px solid #ddd;
-    background-color: #ffffff;
-  }
-  
-  .panel-body {
-    padding: 15px;
-  }
-  
-  .btn-info {
-    font-size: 16px;
-    padding: 10px 20px;
-    background-color: #5bc0de;
-    border: none;
-    border-radius: 5px;
-    transition: background-color 0.3s, box-shadow 0.3s;
-  }
-  
-  .btn-info:hover {
-    background-color: #31b0d5;
-    box-shadow: 0 4px 8px rgba(49, 176, 213, 0.4);
-  }
-  
-  .btn-primary {
-    font-size: 14px;
-    padding: 8px 16px;
-    background-color: #0275d8;
-    border: none;
-    border-radius: 5px;
-    color: white;
-    transition: background-color 0.3s, box-shadow 0.3s;
-  }
-  
-  .btn-primary:hover {
-    background-color: #0256a8;
-    box-shadow: 0 4px 8px rgba(2, 86, 168, 0.4);
-  }
-  
-  .btn-hover {
-    animation: pulse 2s infinite;
-  }
-  
-  @keyframes pulse {
-    0%, 100% {
-      box-shadow: 0 0 5px rgba(0, 117, 216, 0.5);
-    }
-    50% {
-      box-shadow: 0 0 15px rgba(0, 117, 216, 0.9);
+
+      <!-- New Frame Below Product - Second Warehouse -->
+      <div class="warehouse-frame">
+        <div class="warehouse-img">
+          <img :src="warehouse2.image" alt="Warehouse Image">
+        </div>
+        <div class="warehouse-info">
+          <h5>{{ warehouse2.name }}</h5>
+          <p>{{ warehouse2.location }}</p>
+        </div>
+        <button class="btn btn-location">Location</button>
+      </div>
+    </main>
+  </div>
+</template>
+
+<script>
+import { ref } from 'vue'
+
+export default {
+  setup() {
+    // Product Data
+    const product = ref({
+      name: 'Product 1',
+      CategoryName: 'Home',
+      donViTinh: 'Easy',
+      price: 100.00,
+      image: 'https://images.pexels.com/photos/1308881/pexels-photo-1308881.jpeg?auto=compress&cs=tinysrgb&w=800'
+    })
+    
+    // Warehouse Data - First Warehouse
+    const warehouse1 = ref({
+      image: 'https://images.pexels.com/photos/1308881/pexels-photo-1308881.jpeg?auto=compress&cs=tinysrgb&w=800',
+      name: 'Main Warehouse',
+      location: 'Kho-1-Tầng-2-Khu-A'
+    })
+
+    // Warehouse Data - Second Warehouse
+    const warehouse2 = ref({
+      image: 'https://images.pexels.com/photos/1308881/pexels-photo-1308881.jpeg?auto=compress&cs=tinysrgb&w=800',
+      name: 'Secondary Warehouse',
+      location: 'Kho-2-Tầng-3-Khu-B'
+    })
+
+    return {
+      product,
+      warehouse1,
+      warehouse2
     }
   }
-  
-  .frame {
-    border: 2px solid #000;
-    border-radius: 10px;
-    margin-bottom: 20px;
-    background-color: white;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 10px;
-  }
-  
-  .title {
-    font-weight: bold;
-    font-size: 1.2rem;
-    color: #333;
-    text-transform: uppercase;
-  }
-  
-  .feature {
-    margin-left: 15px;
-    font-size: 14px;
-  }
-  
-  .text-end {
-    text-align: end;
-  }
-  </style>
-  
+}
+</script>
+
+<style scoped>
+#app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #f7f7f7;
+  padding: 2rem;
+  font-family: 'Arial', sans-serif;
+}
+
+header {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+h3 {
+  font-size: 2rem;
+  color: #333;
+}
+
+main {
+  background: #fff;
+  padding: 2rem;
+  width: 80%;
+  max-width: 1200px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  margin-bottom: 2rem;
+}
+
+footer {
+  width: 100%;
+  background: #fff;
+  padding: 1rem;
+  text-align: center;
+  box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+}
+
+.product-detail {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-img-top {
+  max-width: 100%;
+  height: 300px;
+  object-fit: cover;
+}
+
+.card-body {
+  padding: 1rem;
+}
+
+.card-title {
+  font-size: 1.25rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.card-text {
+  font-size: 0.875rem;
+  color: #555;
+}
+
+.card-text span {
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border: none;
+  padding: 0.5rem 1rem;
+  color: white;
+  text-transform: uppercase;
+  font-size: 0.875rem;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+footer small {
+  font-size: 0.875rem;
+  color: #888;
+}
+
+/* Warehouse Frame */
+.warehouse-frame {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f9f9f9;
+  padding: 1rem;
+  margin-top: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.warehouse-img img {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.warehouse-info {
+  flex-grow: 1;
+  margin-left: 1rem;
+}
+
+.warehouse-info h5 {
+  font-size: 1.25rem;
+  color: #333;
+}
+
+.warehouse-info p {
+  font-size: 0.875rem;
+  color: #555;
+}
+
+.btn-location {
+  background-color: #28a745;
+  border: none;
+  padding: 0.5rem 1rem;
+  color: white;
+  text-transform: uppercase;
+  font-size: 0.875rem;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.btn-location:hover {
+  background-color: #218838;
+}
+
+footer small {
+  font-size: 0.875rem;
+  color: #888;
+}
+</style>
