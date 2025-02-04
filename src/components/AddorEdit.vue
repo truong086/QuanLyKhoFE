@@ -226,26 +226,40 @@ const findOneId = async (id) => {
   const dataRegion = regions.value.find(
     (p) => p.name == res.data.content.country
   );
-  selectedRegion.value = dataRegion.id;
+  if (dataRegion != null) {
+    selectedRegion.value = dataRegion.id;
 
-  const Province = dataRegion.provinces.find(
-    (x) => x.name == res.data.content.city
-  );
-  Regions.value = dataRegion;
-  provinces.value = dataRegion ? dataRegion.provinces : [];
-  selectedProvince.value = Province.id;
+    const Province = dataRegion.provinces.find(
+      (x) => x.name == res.data.content.city
+    );
 
-  const province = provinces.value.find((p) => p.id === selectedProvince.value);
-  districts.value = province ? province.districts : [];
-  selectedDistrict.value = districts.value.find(
-    (x) => x.name == res.data.content.district
-  ).id;
+    if (Province != null) {
+      Regions.value = dataRegion;
+      provinces.value = dataRegion ? dataRegion.provinces : [];
+      selectedProvince.value = Province.id;
+      const province = provinces.value.find(
+        (p) => p.id === selectedProvince.value
+      );
 
-  const district = districts.value.find((d) => d.id === selectedDistrict.value);
-  wards.value = district ? district.wards : [];
-  selectedWard.value = wards.value.find(
-    (x) => x.name == res.data.content.street
-  ).id;
+      if (province != null) {
+        districts.value = province ? province.districts : [];
+        selectedDistrict.value = districts.value.find(
+          (x) => x.name == res.data.content.district
+        ).id;
+
+        const district = districts.value.find(
+          (d) => d.id === selectedDistrict.value
+        );
+        if (district != null) {
+          wards.value = district ? district.wards : [];
+          selectedWard.value = wards.value.find(
+            (x) => x.name == res.data.content.street
+          ).id;
+        }
+      }
+    }
+  }
+
   imagePreview.value = res.data.content.image;
   addDataWarehourse.value.Numberoffloors = res.data.content.numberoffloors;
   addDataWarehourse.value.name = res.data.content.name;

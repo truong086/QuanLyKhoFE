@@ -171,7 +171,8 @@ const dangKyAccount = async () => {
     isLoading.value = false;
     document.body.classList.remove("loading");
     document.body.style.overflow = "auto";
-    router.push({ name: "GetOTP", params: { email: dangky.value.email } });
+    const encodeURI = encodeURIComponent(dangky.value.email)
+    router.push({ name: "GetOTP", params: { email: dangky.value.email }, query: {email: encodeURI} });
     store.setEmailOtp(dangky.value.email)
   } else if (!res.data.success) {
     Toast.error(res.data.error);

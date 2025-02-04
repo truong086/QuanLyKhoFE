@@ -214,7 +214,7 @@ body.loading {
 <script setup>
   import axios from 'axios'
   import {ref, getCurrentInstance, onMounted, onUnmounted, onBeforeUnmount} from 'vue';
-  import {useRouter} from 'vue-router'
+  import {useRouter, useRoute} from 'vue-router'
   import {useToast} from 'vue-toastification'
   import {useCounterStore} from '../store'
 
@@ -245,18 +245,22 @@ body.loading {
   const Toast = useToast()
   const {proxy} = getCurrentInstance()
   const hostname = proxy?.hostname
+  const route = useRoute()
   let interVal = null
   onMounted(() => {
     if(store.getEmailOtp === "" || store.getEmailOtp == null){
       Toast.error("No Email")
       router.push("/login")
     }
+    checkEmail(decodeURIComponent(route.query.email))
     Demnguoc()
     window.addEventListener('beforeunload', handlaner) // Bắt hành động khi người dùng load lại trang hoặc chuyển sang trang khác, sử dụng "beforeunload" để bắt sự kiện
 
     const isRouter = performance.getEntriesByType("navigation")[0].type === "reload"
     if(isRouter){
       router.push("/login")
+      localStorage.clear()
+      store.clearStore()
     }
   })
   onUnmounted(() => {
@@ -268,6 +272,12 @@ body.loading {
     window.removeEventListener('beforeunload', handlaner) // Xóa sự kiện"beforeunload" khi đã chuyển trang hoặc đã load lại trang
   })
 
+  const checkEmail = async (email) => {
+    const res = await axios.post(hostname + `/api/Account/CheckEmail?Email=${email}`)
+    if(!res.data.success){
+      router.push("/login")
+    }
+  }
   const handlaner = async (event) => {
     event.preventDefault();
     localStorage.setItem("number", sodem.value)

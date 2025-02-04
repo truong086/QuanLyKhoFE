@@ -16,6 +16,12 @@ import WarehouseTransfer from './components/WarehouseTransfer.vue';
 import AllCategory from './components/AllCategory.vue'
 import ChiTietSanPham from './components/ChiTietSanPhamPage.vue';
 import SliderPage from './components/DetailSlider.vue';
+import MapPageData from './components/MapPage.vue';
+import AddOrEditAreaPage from './components/AddOrEditArea.vue';
+import AllPlanPage from './components/Plan/AllPlan.vue';
+import DetailPlanPage from './components/Plan/DetailPlan.vue';
+import PlanOfAccountPage from './components/Plan/PlanOfAccount.vue';
+import StatisticsPage from './components/Statistics/StatisticsPage.vue';
 
 import { useCounterStore } from './store';
 
@@ -73,14 +79,44 @@ const routes = [
     },
     children: [
       {
+        path: "PlanOfAccount",
+        name: "planOfAccount",
+        component: PlanOfAccountPage,
+      },
+      {
+        path: "Statistics",
+        name: "statistics",
+        component: StatisticsPage,
+      },
+      {
         path: "TransferPage",
         name: "TransferPage",
         component: WarehouseTransfer,
       },
       {
+        path: "Plan",
+        name: "plan",
+        component: AllPlanPage,
+      },
+      {
+        path: "DetailPlan",
+        name: "detailPlan",
+        component: DetailPlanPage,
+      },
+      {
+        path: "map",
+        name: "Map",
+        component: MapPageData,
+      },
+      {
         path: "/ChiTietSanPham",
         name: "ChiTietSanPham",
         component: ChiTietSanPham,
+      },
+      {
+        path: "/AddOrEditArea",
+        name: "addOrEditArea",
+        component: AddOrEditAreaPage,
       },
       {
         path: "/SliderPage",

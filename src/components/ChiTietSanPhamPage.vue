@@ -7,84 +7,122 @@
     <main>
       <div class="product-detail">
         <div class="card">
-          <img class="card-img-top" :src="product.image" alt="">
-
-          <div class="card-body">
-            <h5 class="card-title">{{ product.name }}</h5>
-            <p class="card-text">
-              <strong>Price: </strong>${{ product.price.toFixed(2) }}
-              <br>
-              <strong>DonViTinh: </strong>{{ product.donViTinh }}
-              <br>
-              <strong>Category: </strong>{{ product.CategoryName }}
-            </p>
-            <a class="btn btn-primary" href="#">Chi tiết</a>
+          <img
+            v-if="product.images?.length > 0"
+            class="card-img-top"
+            :src="product.images[0]"
+            alt=""
+          />
+          <div style="margin-top: 20px;">
+            <img v-on:click="swapImage(item)" v-for="(item, index) in product.images" :key="index" :src="item" style="width: 35px; height: 35px; margin: 0 10px;" alt="">
           </div>
+          <div class="card-body" style="display: flex; justify-content: space-around; margin: 20px 0;">
+           <div>
+            <h5 class="card-title" style="font-weight: bold; margin: 20px 0; color: red;">{{ product.title }}</h5>
+            <p class="card-text">Price: ${{ product.price?.toFixed(2) }}</p>
+            <p class="card-text">Unit of measure: ${{ product.quantity }}</p>
+           </div>
+            <div>
+              <p>DonViTinh: {{ product.donViTinh }}</p>
+            <p>
+              Category: {{ product.categoryName }}
+              <img
+                :src="product.categoryImage"
+                style="
+                  width: 30px;
+                  height: 30px;
+                  border-radius: 50%;
+                  margin: 0 15px;
+                "
+                alt=""
+              />
+            </p>
+            <p>Description: {{ product.description }}</p>
+            </div>
+            
+          </div>
+          <a class="btn btn-primary" href="#">Back</a>
         </div>
       </div>
 
       <!-- New Frame Below Product - First Warehouse -->
-      <div class="warehouse-frame">
+      <div class="warehouse-frame" v-for="(item, index) in product.listAreaOfproducts" :key="index">
         <div class="warehouse-img">
-          <img :src="warehouse1.image" alt="Warehouse Image">
+          <img :src="item.warehouse_image" alt="Warehouse Image" />
         </div>
         <div class="warehouse-info">
-          <h5>{{ warehouse1.name }}</h5>
-          <p>{{ warehouse1.location }}</p>
+          <h2 style="font-weight: bold;">Warehourse Name: {{ item.warehouse_name }}</h2>
+          <p>Location: {{ item.warehouse_name }} => {{ item.floor_name }} => {{ item.area_name }} => {{ item.location }}</p>
+          <h5>Quantity: {{ item.quantity }}</h5>
+          <h5>Account Create: {{ item.account_name }} 
+            <img :src="item.account_image" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
+          </h5>
+          <h5>Address: {{ item.addressWarehouse }} </h5>
         </div>
-        <button class="btn btn-location">Location</button>
+        <button class="btn btn-location" @click="NextMap(item.addressWarehouse)">Location</button>
       </div>
 
-      <!-- New Frame Below Product - Second Warehouse -->
-      <div class="warehouse-frame">
-        <div class="warehouse-img">
-          <img :src="warehouse2.image" alt="Warehouse Image">
-        </div>
-        <div class="warehouse-info">
-          <h5>{{ warehouse2.name }}</h5>
-          <p>{{ warehouse2.location }}</p>
-        </div>
-        <button class="btn btn-location">Location</button>
-      </div>
     </main>
+  </div>
+  <!-- Hiển thị màn hình loading -->
+  <div v-if="isLoading" class="loading-overlay">
+    <div class="spinner"></div>
+    <p>Đang tải...</p>
   </div>
 </template>
 
-<script>
-import { ref } from 'vue'
+<script setup>
+import { ref, onMounted, getCurrentInstance } from "vue";
+import axios from "axios";
+import { useRoute, useRouter } from "vue-router";
+import { useCounterStore } from "../store";
 
-export default {
-  setup() {
-    // Product Data
-    const product = ref({
-      name: 'Product 1',
-      CategoryName: 'Home',
-      donViTinh: 'Easy',
-      price: 100.00,
-      image: 'https://images.pexels.com/photos/1308881/pexels-photo-1308881.jpeg?auto=compress&cs=tinysrgb&w=800'
-    })
-    
-    // Warehouse Data - First Warehouse
-    const warehouse1 = ref({
-      image: 'https://images.pexels.com/photos/1308881/pexels-photo-1308881.jpeg?auto=compress&cs=tinysrgb&w=800',
-      name: 'Main Warehouse',
-      location: 'Kho-1-Tầng-2-Khu-A'
-    })
-
-    // Warehouse Data - Second Warehouse
-    const warehouse2 = ref({
-      image: 'https://images.pexels.com/photos/1308881/pexels-photo-1308881.jpeg?auto=compress&cs=tinysrgb&w=800',
-      name: 'Secondary Warehouse',
-      location: 'Kho-2-Tầng-3-Khu-B'
-    })
-
-    return {
-      product,
-      warehouse1,
-      warehouse2
-    }
+const { proxy } = getCurrentInstance();
+const hostName = proxy?.hostname;
+const store = useCounterStore();
+const route = useRoute();
+const router = useRouter();
+const isLoading = ref(false);
+// Product Data
+const product = ref({});
+const getToken = () => {
+  var token = store.getToken;
+  var result = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
+  return result;
+};
+onMounted(() => {
+  if (route.query.id) {
+    findOneId(route.query.id);
   }
+});
+
+const swapImage = (image) =>{
+  document.querySelector(".card-img-top").src = image
 }
+const NextMap = (data) => {
+  const encodeURI = encodeURIComponent(data) // Mã hóa dữ liệu truyền lên query
+  router.push({path: "map", query: {search: encodeURI, name: "Map"}})
+}
+
+const findOneId = async (id) => {
+  isLoading.value = true;
+  document.body.classList.add("loading"); // Add Lớp "loading"
+  document.body.style.overflow = "hidden";
+  const res = await axios.get(
+    hostName + `/api/Product/FindOneById?id=${id}`,
+    getToken()
+  );
+
+  if (res.data.success) {
+    product.value = res.data.content;
+  }
+  isLoading.value = false;
+  document.body.classList.remove("loading");
+  document.body.style.overflow = "auto";
+  console.log(product.value);
+};
 </script>
 
 <style scoped>
@@ -95,7 +133,7 @@ export default {
   justify-content: center;
   background: #f7f7f7;
   padding: 2rem;
-  font-family: 'Arial', sans-serif;
+  font-family: "Arial", sans-serif;
 }
 
 header {

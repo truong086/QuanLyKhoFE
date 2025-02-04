@@ -12,6 +12,7 @@
   onMounted(() => {
     ivalidate()
   })
+  const Toast = useToast();
   const store = useCounterStore();
 const connection = ref(null)
     const ivalidate = () => {
@@ -38,7 +39,7 @@ const connection = ref(null)
           Toast.success("💯❤❤💟 Account: " + account + " đã Done plan: " + title)
         })
     }
-    const Toast = useToast();
+    
 </script>
 <style>
 #app {

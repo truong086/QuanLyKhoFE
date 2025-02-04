@@ -417,7 +417,6 @@
       page.value = res.data.content.page
       totalPage.value = res.data.content.totalPages
       currentAreaData.value = res.data.content.data
-      console.log(res)
     }
 
     isLoading.value = false
@@ -434,12 +433,24 @@
       }
       const SearchWarehourse = async () => {
         const res = await axios.get(hostName + `/api/Floor/FindByWareHouser?id=${currentWarehouse.value.id}&page=1&pageSize=2000`, getToken())
-        currentFloorData.value = res.data.content.data
-        currentFloor.value = res.data.content.data[0]
-        Warename.value = currentWarehouse.value.name
-        Floorname.value = res.data.content.data[0].name
-        findAllArea(valueE.value, page.value)
-        Toast.success("Success")
+        console.log(res)
+        if(res.data.success){
+          if(res.data.content.data.length > 0){
+            currentFloorData.value = res.data.content.data
+            currentFloor.value = res.data.content.data[0]
+            Warename.value = currentWarehouse.value.name
+            Floorname.value = res.data.content.data[0].name
+            findAllArea(valueE.value, page.value)
+            Toast.success("Success")
+          }else{
+            currentFloorData.value = null
+            currentFloor.value = []
+            Warename.value = ''
+            Floorname.value = ''
+            currentAreaData.value = []
+          }
+          
+        }
       }
   const loadDataWarehouse = async () => {
     const res = await axios.get(hostName + '/api/Warehouse/FindAll?page=1&pageSize=2000', getToken())

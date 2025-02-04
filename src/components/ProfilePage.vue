@@ -16,7 +16,7 @@
           href="https://www.wrappixel.com/templates/adminwrap/"
           class="btn waves-effect waves-light btn btn-info pull-right hidden-sm-down text-white"
         >
-          Upgrade to Pro</a
+          Hello World !!!</a
         >
       </div>
     </div>
@@ -130,7 +130,7 @@
               </div>
               <div class="form-group">
                 <div class="col-sm-12">
-                  <button class="btn btn-success">Update Profile</button>
+                  <button class="btn btn-success">Hello World !!!</button>
                 </div>
               </div>
             </form>

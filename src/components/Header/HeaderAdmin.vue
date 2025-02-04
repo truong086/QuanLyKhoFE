@@ -4,17 +4,17 @@
       <div class="navbar-header">
         <a class="navbar-brand" href="index.html">
           <b>
-            <img 
-              src="https://www.newsoft.com.tw/wp-content/uploads/2023/01/logo_en.png" 
-              alt="homepage" 
-              class="dark-logo" 
+            <img
+              src="https://www.newsoft.com.tw/wp-content/uploads/2023/01/logo_en.png"
+              alt="homepage"
+              class="dark-logo"
             />
           </b>
           <span>
-            <img 
-              src="https://www.tsust.edu.tw/var/file/0/1000/img/95/mlogo.png" 
-              alt="homepage" 
-              class="dark-logo" 
+            <img
+              src="https://www.tsust.edu.tw/var/file/0/1000/img/95/mlogo.png"
+              alt="homepage"
+              class="dark-logo"
             />
           </span>
         </a>
@@ -22,33 +22,31 @@
       <div class="navbar-collapse">
         <ul class="navbar-nav me-auto">
           <li class="nav-item">
-            <a 
-              class="nav-link nav-toggler hidden-md-up waves-effect waves-dark" 
-              href="javascript:void(0)">
+            <a
+              class="nav-link nav-toggler hidden-md-up waves-effect waves-dark"
+              href="javascript:void(0)"
+            >
               <i class="fa fa-bars"></i>
             </a>
           </li>
           <li class="nav-item hidden-xs-down search-box">
-            <a 
-              class="nav-link hidden-sm-down waves-effect waves-dark" 
-              href="javascript:void(0)">
+            <a
+              class="nav-link hidden-sm-down waves-effect waves-dark"
+              href="javascript:void(0)"
+            >
               <i class="fa fa-search"></i>
             </a>
             <form class="app-search">
-              <input 
-                type="text" 
-                class="form-control" 
-                placeholder="Search & enter" 
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Search & enter"
               />
               <a class="srh-btn">
                 <i class="fa fa-times"></i>
               </a>
             </form>
-            <input 
-              type="text" 
-              class="additional-input" 
-              placeholder="Search" 
-            />
+            <input type="text" class="additional-input" placeholder="Search" />
           </li>
         </ul>
         <ul class="navbar-nav my-lg-0">
@@ -58,62 +56,77 @@
                 <!-- Data: {{ testData }} -->
               </div>
               <div
-                v-for="(profile, index) in accountOnline" 
-                :key="index" 
-                class="profile-item" 
+                v-for="(profile, index) in accountOnline"
+                :key="index"
+                class="profile-item"
                 @click="openChatBox(profile.id_account)"
               >
-              <div v-if="profile.id_account != idACcount">
-                {{ profile.id }}
-                <img 
-                  :src="profile.account_image" 
-                  alt="Profile" 
-                  class="profile-img"
-                />
-                <span :class="{'status-online': profile.isOnline === true, 'status-offline': profile.isOnline === false}"></span>
-              </div>
+                <div v-if="profile.id_account != idACcount" style="margin: 0 15px;">
+                  {{ profile.account_name }}
+                  <img
+                    :src="profile.account_image"
+                    alt="Profile"
+                    class="profile-img"
+                  />
+                  <span style="margin: 0 15px;"
+                    :class="{
+                      'status-online': profile.isOnline === true,
+                      'status-offline': profile.isOnline === false,
+                    }"
+                  ></span>
+                </div>
               </div>
             </div>
           </li>
           <li class="nav-item dropdown me-3">
-            <a 
-              class="nav-link dropdown-toggle waves-effect waves-dark" 
-              href="#" 
-              id="notificationDropdown" 
-              data-bs-toggle="dropdown" 
-              aria-haspopup="true" 
-              aria-expanded="false">
+            <a
+              class="nav-link dropdown-toggle waves-effect waves-dark"
+              href="#"
+              id="notificationDropdown"
+              data-bs-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
               <i class="fa fa-bell"></i>
               <span class="badge bg-danger">3</span>
             </a>
-            <ul class="dropdown-menu notification-menu" aria-labelledby="notificationDropdown">
+            <ul
+              class="dropdown-menu notification-menu"
+              aria-labelledby="notificationDropdown"
+            >
               <li><a class="dropdown-item" href="#">Notification 1</a></li>
               <li><a class="dropdown-item" href="#">Notification 2</a></li>
               <li><a class="dropdown-item" href="#">Notification 3</a></li>
             </ul>
           </li>
           <li class="nav-item dropdown u-pro">
-            <a 
-              class="nav-link dropdown-toggle waves-effect waves-dark profile-pic" 
-              href="#" 
-              id="navbarDropdown" 
-              data-bs-toggle="dropdown" 
-              aria-haspopup="true" 
-              aria-expanded="false">
-              <img 
-                :src="accountImage" 
-                alt="Pro" 
-                class="profile-img" 
-                style="width: 50px; height: 50px; border-radius: 50%;"
+            <a
+              class="nav-link dropdown-toggle waves-effect waves-dark profile-pic"
+              href="#"
+              id="navbarDropdown"
+              data-bs-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              <img
+                :src="accountImage"
+                alt="Pro"
+                class="profile-img"
+                style="width: 50px; height: 50px; border-radius: 50%"
               />
-              <span style="font-size: 15px; font-weight: bold; margin: 0 15px;" class="hidden-md-down">{{ accountName }} &nbsp;</span>
+              <span
+                style="font-size: 15px; font-weight: bold; margin: 0 15px"
+                class="hidden-md-down"
+                >{{ accountName }} &nbsp;</span
+              >
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
               <li>
-                <a 
-                  class="dropdown-item" 
-                  href="javascript:void(0)" 
-                  @click="logout">
+                <a
+                  class="dropdown-item"
+                  href="javascript:void(0)"
+                  @click="logout"
+                >
                   <i class="fa fa-sign-out-alt"></i> Log out
                 </a>
               </li>
@@ -124,251 +137,320 @@
     </nav>
   </header>
 
-  <div v-if="chatBoxVisible" class="chat-box" style="width: 500px;">
-  <div class="chat-box-header">
-    <div class="profile-info">
-      <img :src="messages.image" alt="Profile" class="profile-img" />
-      <h5>Chat With {{ messages.username }}</h5>
-    </div >
-    <button  @click="closeChatBox"  >X</button>
-  </div>
-  <div class="chat-box-content" ref="messageContainer">
-    <div class="messages">
-      <div v-for="(message, index) in messages.dataItem" :key="index" style="position: relative;" class="chat-container">
-        <div v-if="message.idUser2 == idACcount" style="background-color: yellow; margin-left: 200px;" class="message">
-          <div @click="showImage(message.imagedata)" v-if="message.imagedata !== null" class="message-author"><img width="60px" :src="message.imagedata" alt=""></div>
-          <div class="message-author"><p>{{ message.message }}</p></div>
-          <p style="font-size: 12px; margin-top: 20px;">{{ getTimeFromDateTimeOffset(message.createAt) }}</p>
-        </div>
-        <div v-else  class="messageData" style="display: flex;">
-          <div style="margin-right: 30px;">
-            <img v-if="message.image_user1" style="width: 20px; height: 20px; border-radius: 50%;" :src="message.image_user1" alt="">
+  <div v-if="chatBoxVisible" class="chat-box" style="width: 500px">
+    <div class="chat-box-header">
+      <div class="profile-info">
+        <img :src="messages.image" alt="Profile" class="profile-img" />
+        <h5>Chat With {{ messages.username }}</h5>
+      </div>
+      <button @click="closeChatBox">X</button>
+    </div>
+    <div class="chat-box-content" ref="messageContainer">
+      <div class="messages">
+        <div
+          v-for="(message, index) in messages.dataItem"
+          :key="index"
+          style="position: relative"
+          class="chat-container"
+        >
+          <div
+            v-if="message.idUser2 == idACcount"
+            style="background-color: yellow; margin-left: 200px"
+            class="message"
+          >
+            <div
+              @click="showImage(message.imagedata)"
+              v-if="message.imagedata !== null"
+              class="message-author"
+            >
+              <img width="60px" :src="message.imagedata" alt="" />
+            </div>
+            <div class="message-author">
+              <p>{{ message.message }}</p>
+            </div>
+            <p style="font-size: 12px; margin-top: 20px">
+              {{ getTimeFromDateTimeOffset(message.createAt) }}
+            </p>
           </div>
-          <div>
-            <div @click="showImage(message.imagedata)" v-if="message.imagedata !== null" class="message-author"><img width="60px" :src="message.imagedata" alt=""></div>
-            <div class="message-author">{{ message.message }}</div>
-            <p style="font-size: 12px; margin-top: 20px;">{{ getTimeFromDateTimeOffset(message.createAt) }}</p>
+          <div v-else class="messageData" style="display: flex">
+            <div style="margin-right: 30px">
+              <img
+                v-if="message.image_user1"
+                style="width: 20px; height: 20px; border-radius: 50%"
+                :src="message.image_user1"
+                alt=""
+              />
+            </div>
+            <div>
+              <div
+                @click="showImage(message.imagedata)"
+                v-if="message.imagedata !== null"
+                class="message-author"
+              >
+                <img width="60px" :src="message.imagedata" alt="" />
+              </div>
+              <div class="message-author">{{ message.message }}</div>
+              <p style="font-size: 12px; margin-top: 20px">
+                {{ getTimeFromDateTimeOffset(message.createAt) }}
+              </p>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <div class="chat-box-footer message-box">
-    <!-- Input tin nhắn -->
-    <input
-      v-model="messageInput"
-      type="text"
-      class="chat-input"
-      placeholder="Nhập tin nhắn..."
-      @keydown.enter="sendMessage"
-      :disabled="isLoadingMessage"  
-    />
+    <div class="chat-box-footer message-box">
+      <!-- Input tin nhắn -->
+      <input
+        v-model="messageInput"
+        type="text"
+        class="chat-input"
+        placeholder="Nhập tin nhắn..."
+        @keydown.enter="sendMessage"
+        :disabled="isLoadingMessage"
+      />
 
-    <!-- Phần upload ảnh -->
-    <div class="image-upload-container">
-      <label class="image-upload">
-        <span>Click to upload your profile picture</span>
-        <input type="file" accept="image/*" id="profile-pic" style="display:none;" @change="previewImageLoad">
-      </label>
+      <!-- Phần upload ảnh -->
+      <div class="image-upload-container">
+        <label class="image-upload">
+          <span>Click to upload your profile picture</span>
+          <input
+            type="file"
+            accept="image/*"
+            id="profile-pic"
+            style="display: none"
+            @change="previewImageLoad"
+          />
+        </label>
+      </div>
+      <div class="preview-container" id="image-preview"></div>
+
+      <!-- Nút gửi tin nhắn -->
+      <button
+        class="send-btn"
+        @click="sendMessage"
+        :disabled="isLoadingMessage"
+      >
+        Gửi
+      </button>
+
+      <!-- Hiệu ứng loading -->
+      <div v-if="isLoadingMessage" class="loading-spinner">
+        <div class="spinner"></div>
+        <p>Đang gửi...</p>
+      </div>
     </div>
-    <div class="preview-container" id="image-preview"></div>
 
-    <!-- Nút gửi tin nhắn -->
-    <button class="send-btn" @click="sendMessage" :disabled="isLoadingMessage">Gửi</button>
-
-    <!-- Hiệu ứng loading -->
-    <div v-if="isLoadingMessage" class="loading-spinner">
-      <div class="spinner"></div>
-      <p>Đang gửi...</p>
-    </div>
-  </div>
-
-  <!-- Hiển thị màn hình loading -->
-  <div v-if="isLoading" class="loading-overlay">
+    <!-- Hiển thị màn hình loading -->
+    <div v-if="isLoading" class="loading-overlay">
       <div class="spinnerData"></div>
       <p>Đang tải...</p>
     </div>
 
-<!-- Popup hiển thị ảnh lớn -->
-<div v-if="selectedImage" class="image-modal" @click.self="closeImage">
+    <!-- Popup hiển thị ảnh lớn -->
+    <div v-if="selectedImage" class="image-modal" @click.self="closeImage">
       <img :src="selectedImage" class="image-full" alt="Full Image" />
     </div>
-
-</div>
-
+  </div>
 </template>
 
 <script setup>
-  import {ref, onMounted, getCurrentInstance, onUnmounted} from 'vue'
-  import * as signalR from "@microsoft/signalr";
-  import {useCounterStore} from "../../store";
-  import axios from 'axios'
-  import {useToast} from 'vue-toastification'
-  import {useRouter} from 'vue-router'
+import { ref, onMounted, getCurrentInstance, onUnmounted } from "vue";
+import * as signalR from "@microsoft/signalr";
+import { useCounterStore } from "../../store";
+import axios from "axios";
+import { useToast } from "vue-toastification";
+import { useRouter } from "vue-router";
 
-  const previewImage = ref(null)
-  const chatBoxVisible = ref(false)
-  const activeProfile = ref('')
-  const activeProfileImage = ref('')
-  const messages = ref({})
-  const messageInput= ref('')
-  const accountOnline = ref(null)
-  const idACcount = ref(0)
-  const store = useCounterStore()
-  const connection = ref(null)
-  const messageTest = ref({})
-  const messageContainer = ref(null);
-  const imageMessage = ref(null)
-  const selectedImage = ref(null)
-  const preview = ref(null)
-  const isLoadingMessage = ref(false)
-  const isLoading = ref(false)
-  const accountName = ref('')
-  const accountImage = ref('')
+const previewImage = ref(null);
+const chatBoxVisible = ref(false);
+const activeProfile = ref("");
+const activeProfileImage = ref("");
+const messages = ref({});
+const messageInput = ref("");
+const accountOnline = ref(null);
+const idACcount = ref(0);
+const store = useCounterStore();
+const connection = ref(null);
+const messageTest = ref({});
+const messageContainer = ref(null);
+const imageMessage = ref(null);
+const selectedImage = ref(null);
+const preview = ref(null);
+const isLoadingMessage = ref(false);
+const isLoading = ref(false);
+const accountName = ref("");
+const accountImage = ref("");
+const currentReceiverId = ref(null);
 
-  const getTokens = () => {
-        var token = store.getToken
-            var result = {
-                headers: {Authorization: `Bearer ${token}`}
-            }
-            return result
+const getTokens = () => {
+  var token = store.getToken;
+  var result = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
+  return result;
+};
+const previewImageLoad = (event) => {
+  const file = event.target.files[0];
+
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      imageMessage.value = reader.result.split(",")[1];
+      preview.value = document.getElementById("image-preview");
+      preview.value.innerHTML = `<img src="${e.target.result}" width="60px" alt="Profile Picture Preview">`;
+    };
+    reader.readAsDataURL(file);
   }
-  const previewImageLoad = (event)  =>{
-            const file = event.target.files[0];
-            
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    imageMessage.value = reader.result.split(",")[1];
-                    preview.value = document.getElementById('image-preview');
-                    preview.value.innerHTML = `<img src="${e.target.result}" width="60px" alt="Profile Picture Preview">`;
-                };
-                reader.readAsDataURL(file);
-            }
-        }
+};
 
-
-      const getTimeFromDateTimeOffset = (dateTimeOffset) => {
-        const date = new Date(dateTimeOffset); // Chuyển đổi DateTimeOffset thành Date đối tượng
-        const hours = date.getHours().toString().padStart(2, '0'); // Lấy giờ và đảm bảo có 2 chữ số
-        const minutes = date.getMinutes().toString().padStart(2, '0'); // Lấy phút và đảm bảo có 2 chữ số
-        return `${hours}:${minutes}`; // Trả về giờ và phút
-      }
-  onMounted(() => {
-    idACcount.value = store.getIdAccount
-    accountImage.value = store.getIdAccountImage
-    accountName.value = store.getIdAccountName
-    ivalidate()
-      
+const getTimeFromDateTimeOffset = (dateTimeOffset) => {
+  const date = new Date(dateTimeOffset); // Chuyển đổi DateTimeOffset thành Date đối tượng
+  const hours = date.getHours().toString().padStart(2, "0"); // Lấy giờ và đảm bảo có 2 chữ số
+  const minutes = date.getMinutes().toString().padStart(2, "0"); // Lấy phút và đảm bảo có 2 chữ số
+  return `${hours}:${minutes}`; // Trả về giờ và phút
+};
+onMounted(() => {
+  idACcount.value = store.getIdAccount;
+  accountImage.value = store.getIdAccountImage;
+  accountName.value = store.getIdAccountName;
+  ivalidate();
+});
+onUnmounted(() => {
+  if (connection.value) {
+    connection.value.stop();
+  }
+});
+const ivalidate = () => {
+  connection.value = new signalR.HubConnectionBuilder()
+    .withUrl("https://localhost:44376/notificationHub", {
+      accessTokenFactory: () => store.getToken,
     })
-    onUnmounted(() => {
-      if(connection.value){
-        connection.value.stop()
-      }
+    .withAutomaticReconnect() // Tự động kết nối lại khi bị mất kết nối
+    .build();
+
+  connection.value
+    .start()
+    .then(() => {
+      console.log("Connection started");
     })
-    const ivalidate = () => {
-     connection.value = new signalR.HubConnectionBuilder()
-      .withUrl("https://localhost:44376/notificationHub", {
-        accessTokenFactory: () => store.getToken
-      })
-      .withAutomaticReconnect() // Tự động kết nối lại khi bị mất kết nối
-      .build();
-    
-      connection.value.start().then(() => {
-          console.log("Connection started");
-        }).catch(err => console.log("SignalR Connection Error:", err));
+    .catch((err) => console.log("SignalR Connection Error:", err));
 
-        connection.value.on("UserData", (user) => {
-          accountOnline.value = user
-        })
+  connection.value.on("UserData", (user) => {
+    accountOnline.value = user;
+  });
 
-        connection.value.on("logoutData", (user) => {
-          accountOnline.value = user
-        })
-        
-        connection.value.on("ReceiveMessage", (data) => {
-          if(data.name_user2 != null){
-            if(chatBoxVisible.value === false)
-                Toast.success("Có thông báo mới từ " + data.name_user2 + ", Message: " + data.message)
-          }
-          messages.value.dataItem.push(data)
+  connection.value.on("logoutData", (user) => {
+    accountOnline.value = user;
+  });
 
-          // Cuộn xuống cuối danh sách
-          const container = messageContainer.value;
-          if (container) {
-            container.scrollTop = container.scrollHeight;
-          }
-          messageTest.value = data
-          isLoadingMessage.value = false
-        })
+  connection.value.on("ReceiveMessage", (data) => {
+    // if(data.name_user2 != null){
+    //   if(chatBoxVisible.value === false && data.idUser2 !== messages.value.id)
+    //       Toast.success("Có thông báo mới từ " + data.name_user2 + ", Message: " + data.message)
+    // }
+    console.log(currentReceiverId.value + " " + data.idUser1);
+    if (
+      parseInt(data.idUser1) === parseInt(currentReceiverId.value) ||
+      parseInt(data.idUser2) === parseInt(currentReceiverId.value)
+    ) {
+      messages.value.dataItem.push(data);
+    } else {
+      Toast.success(
+        "💨💫💨💨💥Có thông báo mới từ " +
+          data.name_user2 +
+          ", Message: " +
+          data.message
+      );
     }
 
-    const showImage = (image) => {
-      selectedImage.value = image; // Hiển thị ảnh khi click
+    // Cuộn xuống cuối danh sách
+    const container = messageContainer.value;
+    if (container) {
+      container.scrollTop = container.scrollHeight;
     }
-    const closeImage = () => {
-      selectedImage.value = null; // Đóng popup khi click ngoài
-    }
-    const router = useRouter()
-    const Toast = useToast()
-    const {proxy} = getCurrentInstance()
-    const hostName = proxy?.hostname
-    const logout = async () => {
-      const res = await axios.post(hostName + "/api/Account/Logout", {}, getTokens())
-      if(res.data.success){
-        Toast.success("Thành công")
-      }
-      router.push('/login')
-      store.clearStore()
-    }
-    const openChatBox = async (id) => {
-      // activeProfile.value = profileName;
-      // const profile = this.profiles.find(p => p.name === profileName);
-      // activeProfileImage.value = profile.image;
-      isLoading.value = true
-      document.body.classList.add('loading') // Add Lớp "loading"
-      const res = await axios.get(hostName + `/api/Message/FindAll?user1=${id}`, getTokens())
-      messages.value = res.data.content
-      chatBoxVisible.value = true;
-      isLoading.value = false
-      document.body.classList.remove('loading') // Add Lớp "loading"
-      
-    }
-    const closeChatBox = () => {
-      chatBoxVisible.value = false;
-      activeProfile.value = '';
-      activeProfileImage.value = '';
-    }
+    messageTest.value = data;
+    isLoadingMessage.value = false;
+  });
+};
 
-    
-    const sendMessage = (event) => {
-      
-        if (event && event.shiftKey) {
-          // Nếu người dùng nhấn Shift + Enter, không gửi tin nhắn mà xuống dòng
-          return;
-        }
-        isLoadingMessage.value = true
-          connection.value.invoke("sendMessageToUser", messages.value.id, messageInput.value, imageMessage.value  || null)
-          .catch(err => console.error("Faild: ", err))
+const showImage = (image) => {
+  selectedImage.value = image; // Hiển thị ảnh khi click
+};
+const closeImage = () => {
+  selectedImage.value = null; // Đóng popup khi click ngoài
+};
+const router = useRouter();
+const Toast = useToast();
+const { proxy } = getCurrentInstance();
+const hostName = proxy?.hostname;
+const logout = async () => {
+  const res = await axios.post(
+    hostName + "/api/Account/Logout",
+    {},
+    getTokens()
+  );
+  if (res.data.success) {
+    Toast.success("Thành công");
+  }
+  router.push("/login");
+  store.clearStore();
+};
+const openChatBox = async (id) => {
+  // activeProfile.value = profileName;
+  // const profile = this.profiles.find(p => p.name === profileName);
+  // activeProfileImage.value = profile.image;
+  currentReceiverId.value = id;
+  isLoading.value = true;
+  document.body.classList.add("loading"); // Add Lớp "loading"
+  const res = await axios.get(
+    hostName + `/api/Message/FindAll?user1=${id}`,
+    getTokens()
+  );
+  messages.value = res.data.content;
+  console.log(messages.value);
+  chatBoxVisible.value = true;
+  isLoading.value = false;
+  document.body.classList.remove("loading"); // Add Lớp "loading"
+};
+const closeChatBox = () => {
+  chatBoxVisible.value = false;
+  activeProfile.value = "";
+  activeProfileImage.value = "";
+};
 
-          previewImage.value = null
-          imageMessage.value = null
-          // preview.value.innerHTML = 'no'
-          
-        scrollToBottom();
-        isLoadingMessage.value = true
-      }
-    const scrollToBottom = () => {
-      messageContainer.value.scrollTop = messageContainer.value.scrollHeight;
-    }
+const sendMessage = (event) => {
+  if (event && event.shiftKey) {
+    // Nếu người dùng nhấn Shift + Enter, không gửi tin nhắn mà xuống dòng
+    return;
+  }
+  isLoadingMessage.value = true;
+  connection.value
+    .invoke(
+      "sendMessageToUser",
+      messages.value.id,
+      messageInput.value,
+      imageMessage.value || null
+    )
+    .catch((err) => console.error("Faild: ", err));
+
+  previewImage.value = null;
+  imageMessage.value = null;
+  // preview.value.innerHTML = 'no'
+
+  scrollToBottom();
+  isLoadingMessage.value = true;
+};
+const scrollToBottom = () => {
+  messageContainer.value.scrollTop = messageContainer.value.scrollHeight;
+};
 </script>
 
 <style scoped>
 .send-btn {
   margin-top: 10px;
   padding: 10px 20px;
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
   border: none;
   cursor: pointer;
@@ -405,8 +487,12 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 .image-gallery {
   display: flex;
@@ -463,20 +549,20 @@
   padding: 5px;
 }
 .preview-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 10px;
-  }
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
 
-  .preview-container img {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  }
+.preview-container img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
 /* CSS cũ */
 .nav-item.hidden-xs-down .additional-input {
   margin-top: 10px;
@@ -700,7 +786,7 @@
   max-width: 80%; /* Giới hạn chiều rộng tối đa nếu muốn */
   margin-left: auto; /* Đẩy div về bên trái */
 }
-.messageData{
+.messageData {
   background-color: #e1f3ff;
   padding: 10px;
   font-size: 14px;
@@ -817,8 +903,8 @@
   z-index: 10;
 }
 
- /* Màn hình chờ */
- .loading-overlay {
+/* Màn hình chờ */
+.loading-overlay {
   position: fixed;
   top: 0;
   left: 0;

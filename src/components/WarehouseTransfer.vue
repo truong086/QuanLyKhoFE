@@ -2,11 +2,11 @@
   <div class="container">
     <!-- Form Kho cũ -->
     <div class="form-section">
-      <h2 class="title">Kho cũ</h2>
+      <h2 class="title">Warehourse old</h2>
 
       <!-- Kho Select -->
       <div class="form-group">
-        <label for="region">Kho:</label>
+        <label for="region">Warehourse:</label>
         <select class="form-select" v-model="currentWarehouse" @change="SearchWarehourse('old')">
           <option value="" disabled selected>Chọn kho</option>
           <option v-for="(item, index) in warehouseData" :key="index" :value="item">{{ item.name }}</option>
@@ -15,7 +15,7 @@
 
       <!-- Tầng Select -->
       <div class="form-group">
-        <label for="province">Tầng:</label>
+        <label for="province">Floor:</label>
         <select class="form-select" v-model="currentFloor" @change="SearchFloor('old')">
           <option v-for="(item, index) in currentFloorData" :key="index" :value="item">{{item.name}}</option>
         </select>
@@ -23,7 +23,7 @@
 
       <!-- Khu Select -->
       <div class="form-group">
-        <label for="district">Khu:</label>
+        <label for="district">Area:</label>
         <select class="form-select" v-model="DataOneArea" @change="searchArea('old')">
           <option value="" disabled selected>Chọn khu</option>
           <option v-for="(item, index) in currentAreaData" :key="index" :value="item">{{ item.name }}</option>
@@ -32,7 +32,7 @@
 
       <!-- Vị trí Select -->
       <div class="form-group">
-        <label for="ward">Vị trí:</label>
+        <label for="ward">Location:</label>
         <div class="dropdown-container">
           <button class="form-select">Chọn vị trí</button>
 
@@ -140,15 +140,15 @@
 
     <!-- Swap Button -->
     <button class="swap-button" @click="toggleKhoMoi">
-      <i class="fas fa-exchange-alt"></i> Chuyển sang kho mới
+      <i class="fas fa-exchange-alt"></i> Swap Warehourse New
     </button>
 
     <!-- Form Kho mới -->
     <div class="form-section" v-if="isKhoMoiVisible">
-      <h2 class="title">Kho mới</h2>
+      <h2 class="title">Warehourse New</h2>
 
       <div class="form-group">
-        <label for="region">Kho:</label>
+        <label for="region">Warehourse:</label>
         <select class="form-select" v-model="currentWarehouseNew" @change="SearchWarehourse('new')">
           <option value="" disabled selected>Chọn kho</option>
           <option v-for="(item, index) in warehouseDataNew" :key="index" :value="item">{{ item.name }}</option>
@@ -157,7 +157,7 @@
 
       <!-- Tầng Select -->
       <div class="form-group">
-        <label for="province">Tầng:</label>
+        <label for="province">Floor:</label>
         <select class="form-select" v-model="currentFloorNew" @change="SearchFloor('new')">
           <option v-for="(item, index) in currentFloorDataNew" :key="index" :value="item">{{item.name}}</option>
         </select>
@@ -165,7 +165,7 @@
 
       <!-- Khu Select -->
       <div class="form-group">
-        <label for="district">Khu:</label>
+        <label for="district">Area:</label>
         <select class="form-select" v-model="DataOneAreaNew" @change="searchArea('new')">
           <option value="" disabled selected>Chọn khu</option>
           <option v-for="(item, index) in currentAreaDataNew" :key="index" :value="item">{{ item.name }}</option>
@@ -174,7 +174,7 @@
 
       <!-- Vị trí Select -->
       <div class="form-group">
-        <label for="ward">Vị trí:</label>
+        <label for="ward">Location:</label>
         <div class="dropdown-container">
           <button class="form-select">Chọn vị trí</button>
 
@@ -420,6 +420,7 @@ const classNameData = ref('')
 const classNameDataOld = ref('')
 const classNameDataNew = ref('')
 const classNameNew = ref('')
+const classNamSwapOrNew = ref('')
 const locationCheck = ref({
   id_Area: 0,
   location: 0
@@ -441,6 +442,10 @@ const hostName = proxy?.hostname;
 const frameVisible = ref(false);
 
 const addPlan = async () => {
+  isLoading.value = true;
+  document.body.classList.add("loading"); // Add Lớp "loading"
+  document.body.style.overflow = "hidden";
+  console.log(planNew.value)
   const res = await axios.post(hostName + "/api/Plan/Add", planNew.value, getToken())
   if(res.data.success){
     Toast.success("Add Success !!!")
@@ -448,8 +453,14 @@ const addPlan = async () => {
   }else{
     Toast.info(res.data.error)
   }
+
+  isLoading.value = false;
+  document.body.classList.remove("loading");
+  document.body.style.overflow = "auto";
 }
 const updateData = async () => {
+  classNameDataOld.value = classNameData.value
+  classNameData.value = classNamSwapOrNew.value
    const res = await axios.post(hostName + "/api/Product/checkLocationTotal", locationCheck.value, getToken())
    if(res.data.content){
     Toast.success("Success !!!")
@@ -469,6 +480,8 @@ const updateDataLocationNew = async () => {
   planNew.value.locationOld = locationCheck.value.location
   planNew.value.areaOld = locationCheck.value.id_Area
 
+  classNameNew.value = classNameDataNew.value
+  classNameDataNew.value = classNamSwapOrNew.value
   if(classNameNew.value != null && classNameNew.value != '')
         document.querySelector('.' + classNameNew.value).style.backgroundColor = 'transparent'
 
@@ -495,12 +508,14 @@ const closeFrame = () => {
 // };
 const openFrame = (id, location, list, listPlan, type, classData) =>{
   
+  classNamSwapOrNew.value = classData
     frameVisible.value = true;
     if(type === 'new'){
       planNew.value.area = id
       planNew.value.localtionNew = location
-      classNameNew.value = classNameDataNew.value
-      classNameDataNew.value = classData
+      
+      // classNameNew.value = classNameDataNew.value
+      // classNameDataNew.value = classData
     }
     frameData.value = []
     let check = false
@@ -511,8 +526,8 @@ const openFrame = (id, location, list, listPlan, type, classData) =>{
         if(type === 'old'){
           locationCheck.value.id_Area = id
           locationCheck.value.location = location
-          classNameDataOld.value = classNameData.value
-          classNameData.value = classData
+          // classNameDataOld.value = classNameData.value
+          // classNameData.value = classData
         }
         check = true
 
@@ -540,11 +555,13 @@ const openFrame = (id, location, list, listPlan, type, classData) =>{
     if(!check && type === 'old' && frameData.value.length > 0){
       widthDom.value = 1500
       isCloseNoProduct.value = true
+      isSwapNew.value = false
       isSwap.value = false
       // updateFrameSize()
     }else if(frameData.value.length <= 0 && type === 'old'){
       widthDom.value = 300
       isCloseNoProduct.value = true
+      isSwapNew.value = false
       isSwap.value = false
     }
     else if(frameData.value.length <= 0 && type === 'new'){
@@ -569,6 +586,11 @@ const SearchFloor = (type) => {
   findAllArea(type);
 };
 const searchArea = (type) => {
+  classNamSwapOrNew.value = ''
+  classNameNew.value = ''
+  classNameDataNew.value = ''
+  classNameDataOld.value = ''
+  classNameData.value = ''
   findOneArea(type)
 }
 const findOneArea = async (type) => {
@@ -576,7 +598,7 @@ const findOneArea = async (type) => {
   document.body.classList.add("loading"); // Add Lớp "loading"
   document.body.style.overflow = "hidden";
 
-  if(DataOneArea.value != null && DataOneAreaNew.value != null){
+  if(DataOneArea.value != null || DataOneAreaNew.value != null){
     const res = await axios.get(
       hostName +
         `/api/Product/FindOneByArea?id=${type === 'old' ? DataOneArea.value.id : DataOneAreaNew.value.id}`,
@@ -612,15 +634,17 @@ const findAllArea = async (type) => {
         getToken()
       );
       if (res.data.success) {
-        if(type === 'old'){
-          currentAreaData.value = res.data.content.data;
-          DataOneArea.value = res.data.content.data[0]
-        }else{
-          currentAreaDataNew.value = res.data.content.data;
-          DataOneAreaNew.value = res.data.content.data[0]
-        }
+        if(res.data.content.data.length > 0){
+          if(type === 'old'){
+            currentAreaData.value = res.data.content.data;
+            DataOneArea.value = res.data.content.data[0]
+          }else{
+            currentAreaDataNew.value = res.data.content.data;
+            DataOneAreaNew.value = res.data.content.data[0]
+          }
         
         findOneArea(type)
+        }
       }
 
   }
@@ -642,17 +666,49 @@ const SearchWarehourse = async (type) => {
       `/api/Floor/FindByWareHouser?id=${type === 'old' ? currentWarehouse.value.id : currentWarehouseNew.value.id}&page=1&pageSize=2000`,
     getToken()
   );
-  if(type === 'old'){
-    currentFloorData.value = res.data.content.data;
-    currentFloor.value = res.data.content.data[0];
-  }else{
-    currentFloorDataNew.value = res.data.content.data;
-    currentFloorNew.value = res.data.content.data[0];
+  if(res.data.success){
+    if(res.data.content.data.length > 0){
+      if(type === 'old'){
+        currentFloorData.value = res.data.content.data;
+        currentFloor.value = res.data.content.data[0];
+        currentAreaData.value = res.data.content.data;
+        DataOneArea.value = res.data.content.data[0]
+      }else{
+        currentFloorDataNew.value = res.data.content.data;
+        currentFloorNew.value = res.data.content.data[0];
+        currentAreaDataNew.value = res.data.content.data;
+        DataOneAreaNew.value = res.data.content.data[0]
+      }
+
+      Warename.value = currentWarehouse.value.name;
+      Floorname.value = res.data.content.data[0].name;
+      findAllArea(type);
+      Toast.success("Success");
+    }else{
+      currentFloorData.value = []
+      currentFloor.value = null
+      currentAreaData.value = []
+      DataOneArea.value = null
+      currentFloorDataNew.value = [];
+      currentFloorNew.value = null;
+      currentAreaDataNew.value = [];
+      DataOneAreaNew.value = null
+      // quantityLocationNew.value = 0
+      // quantityLocation.value = 0
+    }
   }
-  Warename.value = currentWarehouse.value.name;
-  Floorname.value = res.data.content.data[0].name;
-  findAllArea(type);
-  Toast.success("Success");
+  else{
+      currentFloorData.value = []
+      currentFloor.value = null
+      currentAreaData.value = []
+      DataOneArea.value = null
+      currentFloorDataNew.value = [];
+      currentFloorNew.value = null;
+      currentAreaDataNew.value = [];
+      DataOneAreaNew.value = null
+      // quantityLocationNew.value = 0
+      // quantityLocation.value = 0
+    }
 };
 const loadDataWarehouse = async (type) => {
   const res = await axios.get(

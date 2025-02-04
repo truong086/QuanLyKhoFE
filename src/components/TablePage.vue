@@ -1,10 +1,10 @@
 <template>
   <div class="table-page">
-    <h1>Quản lý Kho</h1>
+    <h1>Manager</h1>
 
     <!-- Bảng Kho -->
     <div class="table-container">
-      <h2 class="table-title">Thông tin Kho</h2>
+      <h2 class="table-title">Warehourse Manager</h2>
       <router-link to="/AddorEdit" class="waves-effect waves-dark" aria-expanded="false">
         <i class="fa fa-tachometer"></i>
         <span class="hide-menu">Add Warehourse</span>
@@ -48,7 +48,7 @@
 
     <!-- Bảng Tầng -->
     <div class="table-container">
-      <h2 class="table-title">Thông tin Tầng</h2>
+      <h2 class="table-title">Floor Manager</h2>
       <table class="table">
         <thead>
           <tr>
@@ -93,7 +93,11 @@
 
     <!-- Bảng Khu -->
     <div class="table-container">
-      <h2 class="table-title">Thông tin Khu</h2>
+      <h2 class="table-title">Arera Manager</h2>
+      <router-link to="/AddOrEditArea" class="waves-effect waves-dark" aria-expanded="false">
+        <i class="fa fa-tachometer"></i>
+        <span class="hide-menu">Add Area</span>
+      </router-link>
       <table class="table">
         <thead>
           <tr>
@@ -126,7 +130,7 @@
             </td>
             <td>
               <div style="display: flex;">
-                <button class="btn btn-sucess" style="background-color: yellow; font-weight: bold;">Edit</button>
+                <button class="btn btn-sucess" style="background-color: yellow; font-weight: bold;" @click="NextAreaUpdate(row.id)">Edit</button>
                 <button class="btn btn-sucess" style="background-color: red; color: white; font-weight: bold;">Delete</button>
               </div>
             </td>
@@ -151,24 +155,25 @@ import PagesTotal from "./PageList/PagesTotal.vue";
 import { useCounterStore } from "../store";
 import {useRouter} from 'vue-router'
 onMounted(() => {
+  findAllArea(valueEArea.value, pageArea.value)
   findAllWarehourse(valueE.value, page.value)
   findAllFloor(valueEFloor.value, pageFloor.value)
-  findAllArea(valueEArea.value, pageArea.value)
+  
 })
 const { proxy } = getCurrentInstance();
 const hostName = proxy?.hostname;
 const page = ref(1);
 const totalPage = ref(0);
-const pageSize = ref(5);
+const pageSize = ref(2);
 const valueE = ref("");
 const pageFloor = ref(1);
 const totalPageFloor = ref(0);
-const pageSizeFloor = ref(5);
+const pageSizeFloor = ref(2);
 const valueEFloor = ref("");
 const dataFloor = ref([])
 const pageArea = ref(1);
 const totalPageArea = ref(0);
-const pageSizeArea = ref(5);
+const pageSizeArea = ref(2);
 const valueEArea = ref("");
 const dataArea = ref([])
 const store = useCounterStore()
@@ -242,8 +247,7 @@ const changeReload = (event) => {
     document.body.style.overflow = 'hidden'
     const res = search === '' ? await axios.get(hostName + `/api/Area/FindAll?page=${pageData}&pageSize=${pageSizeArea.value}`, getToken()) 
                               : await axios.get(hostName + `/api/Area/FindAll?name=${search}&page=${pageData}&pageSize=${pageSizeArea.value}`, getToken())
-
-    console.log(res)          
+  
     if (res.data.success) {
       dataArea.value = res.data.content.data
       pageArea.value = res.data.content.page;
@@ -260,6 +264,10 @@ const changeReload = (event) => {
 
   const NextWarehourse = (id) => {
     router.push({path: "AddorEdit", query: {id: id, name: "Update"}})
+  }
+
+  const NextAreaUpdate = (id) => {
+    router.push({path: "/AddOrEditArea", query: {id: id, name: "Update"}})
   }
 </script>
 
