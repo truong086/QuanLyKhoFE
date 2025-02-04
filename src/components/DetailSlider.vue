@@ -1,66 +1,60 @@
 <template>
-  <div id="app">
-    <header>
-      <h3>Products</h3>
-    </header>
+<main>
+  <h6>{{ filteredProducts.length }} results</h6>
+  <p v-if="activeFilters.length">
+    <small class="text-muted"
+      >Filtered by {{ activeFilters.join(", ") }}</small
+    >
+  </p>
+  <div class="product-grid">
+    <div
+      class="card"
+      v-for="(product, index) in products"
+      :key="index"
+    >
+      <img class="card-img-top" :src="product.images[0]" alt="" />
 
-    <main>
-      <h6>{{ filteredProducts.length }} results</h6>
-      <p v-if="activeFilters.length">
-        <small class="text-muted"
-          >Filtered by {{ activeFilters.join(", ") }}</small
-        >
-      </p>
-      <div class="product-grid">
-        <div
-          class="card"
-          v-for="(product, index) in products"
-          :key="index"
-        >
-          <img class="card-img-top" :src="product.images[0]" alt="" />
-
-          <div class="card-body">
-            <h5 class="card-title" style="margin: 25px 0; font-weight: bold; color: red;">{{ product.title }}</h5>
-            <p class="card-text">
-              <span>Price: ${{ product.price.toFixed(2) }}</span>
-              <br />
-              <span>DonViTinh: {{ product.donViTinh }}</span>
-              <br />
-              <span>Quantity: {{ product.quantity }}</span>
-              <br />
-              <span style="color: violet;">Category: {{ product.categoryName }}
-                <img style="width: 30px; height: 30px; border-radius: 50%;" :src="product.categoryImage" alt="">
-              </span>
-            </p>
-            <a class="btn btn-primary" @click="Next(product.id)" href="#">Chi tiết</a>
-          </div>
-        </div>
-        
+      <div class="card-body">
+        <h5 class="card-title" style="margin: 25px 0; font-weight: bold; color: red;">{{ product.title }}</h5>
+        <p class="card-text">
+          <span>Price: ${{ product.price.toFixed(2) }}</span>
+          <br />
+          <span>DonViTinh: {{ product.donViTinh }}</span>
+          <br />
+          <span>Quantity: {{ product.quantity }}</span>
+          <br />
+          <span style="color: violet;">Category: {{ product.categoryName }}
+            <img style="width: 30px; height: 30px; border-radius: 50%;" :src="product.categoryImage" alt="">
+          </span>
+        </p>
+        <a class="btn btn-primary" @click="Next(product.id)" href="#">Chi tiết</a>
       </div>
-      <PagesTotal
-          :page="page"
-          :totalPage="totalPage"
-          :valueE="valueE"
-          @pageChange="findAllProduct"
-          @pageSizeChange="changeReload"
-        ></PagesTotal>
-    </main>
-
-    <footer>
-      <p>
-        <small class="text-muted"
-          >{{ products.length }} total /
-          {{ filteredProducts.length }} shown</small
-        >
-      </p>
-    </footer>
+    </div>
+    
   </div>
+  <PagesTotal
+      :page="page"
+      :totalPage="totalPage"
+      :valueE="valueE"
+      @pageChange="findAllProduct"
+      @pageSizeChange="changeReload"
+    ></PagesTotal>
+</main>
 
-  <!-- Hiển thị màn hình loading -->
-  <div v-if="isLoading" class="loading-overlay">
-    <div class="spinner"></div>
-    <p>Đang tải...</p>
-  </div>
+<footer>
+  <p>
+    <small class="text-muted"
+      >{{ products.length }} total /
+      {{ filteredProducts.length }} shown</small
+    >
+  </p>
+</footer>
+
+<!-- Hiển thị màn hình loading -->
+<div v-if="isLoading" class="loading-overlay">
+<div class="spinner"></div>
+<p>Đang tải...</p>
+</div>
 </template>
 
 <script setup>
@@ -83,56 +77,56 @@ const pageSize = ref(5);
 const isLoading = ref(false);
 const valueE = ref("");
 onMounted(() => {
-  findAllProduct(valueE.value, page.value);
+findAllProduct(valueE.value, page.value);
 });
 watch(page.value, (newPage) => {
-  findAllProduct(valueE.value, newPage);
+findAllProduct(valueE.value, newPage);
 });
 const findAllProduct = async (search, pageData) => {
-  isLoading.value = true;
-  document.body.classList.add("loading"); // Add Lớp "loading"
-  document.body.style.overflow = "hidden";
-  const res =
-    search === ""
-      ? await axios.get(
-          hostName +
-            `/api/Product/FindAll?page=${pageData}&pageSize=${pageSize.value}`,
-          getToken()
-        )
-      : await axios.get(
-          hostName +
-            `/api/Product/FindAll?page=${pageData}&name=${search}&pageSize=${pageSize.value}`,
-          getToken()
-        );
+isLoading.value = true;
+document.body.classList.add("loading"); // Add Lớp "loading"
+document.body.style.overflow = "hidden";
+const res =
+search === ""
+  ? await axios.get(
+      hostName +
+        `/api/Product/FindAll?page=${pageData}&pageSize=${pageSize.value}`,
+      getToken()
+    )
+  : await axios.get(
+      hostName +
+        `/api/Product/FindAll?page=${pageData}&name=${search}&pageSize=${pageSize.value}`,
+      getToken()
+    );
 
-  if (res.data.success) {
-    page.value = res.data.content.page;
-    totalPage.value = res.data.content.totalPages;
-    products.value = res.data.content.data;
-  }
-  isLoading.value = false;
-  document.body.classList.remove("loading");
-  document.body.style.overflow = "auto";
-  console.log(res);
-  Toast.success("Sucess");
-  console.log(router);
+if (res.data.success) {
+page.value = res.data.content.page;
+totalPage.value = res.data.content.totalPages;
+products.value = res.data.content.data;
+}
+isLoading.value = false;
+document.body.classList.remove("loading");
+document.body.style.overflow = "auto";
+console.log(res);
+Toast.success("Sucess");
+console.log(router);
 };
 
 const getToken = () => {
-  var token = store.getToken;
-  var result = {
-    headers: { Authorization: `Bearer ${token}` },
-  };
-  return result;
+var token = store.getToken;
+var result = {
+headers: { Authorization: `Bearer ${token}` },
+};
+return result;
 };
 const changeReload = (event) => {
-  pageSize.value = event;
-  findAllProduct(valueE.value, page.value);
+pageSize.value = event;
+findAllProduct(valueE.value, page.value);
 };
 const activeFilters = ref([]);
 
 const Next = (id) => {
-  router.push({path: "/ChiTietSanPham", query: {id: id, name: "Details"}})
+router.push({path: "/ChiTietSanPham", query: {id: id, name: "Details"}})
 }
 // const uses = computed(() => [...new Set(products.value.map(p => p.CategoryName))])
 // const skills = computed(() => [...new Set(products.value.map(p => p.donViTinh))])
@@ -143,12 +137,12 @@ const Next = (id) => {
 // }))
 
 const filteredProducts = computed(() => {
-  if (activeFilters.value.length === 0) return products.value;
-  return products.value.filter(
-    (prod) =>
-      activeFilters.value.includes(prod.skill) ||
-      activeFilters.value.includes(prod.usage)
-  );
+if (activeFilters.value.length === 0) return products.value;
+return products.value.filter(
+(prod) =>
+  activeFilters.value.includes(prod.skill) ||
+  activeFilters.value.includes(prod.usage)
+);
 });
 
 // const clearFilters = () => {
@@ -156,8 +150,9 @@ const filteredProducts = computed(() => {
 // }
 
 watch(activeFilters, (newVal) => {
-  location.hash = newVal.join(",");
+location.hash = newVal.join(",");
 });
+
 </script>
 
 <style scoped>

@@ -22,10 +22,12 @@ import AllPlanPage from './components/Plan/AllPlan.vue';
 import DetailPlanPage from './components/Plan/DetailPlan.vue';
 import PlanOfAccountPage from './components/Plan/PlanOfAccount.vue';
 import StatisticsPage from './components/Statistics/StatisticsPage.vue';
+import AddProduct from './components/AddProduct.vue';
 
 import { useCounterStore } from './store';
 
 const routes = [
+
   {
     path: "/AllCategory",
     name: "AllCategory",
@@ -87,6 +89,12 @@ const routes = [
         path: "Statistics",
         name: "statistics",
         component: StatisticsPage,
+
+      },
+      {
+        path: "/AddProduct",
+        name: "AddProduct",
+        component: AddProduct,
       },
       {
         path: "TransferPage",
