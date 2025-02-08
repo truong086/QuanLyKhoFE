@@ -9,21 +9,20 @@
           <div class="header-container">
             <div class="header-title">
               <h2 class="warehouse-title">
-                Kho: {{ Warename }} - Tầng:  {{ Floorname }} - Khu: {{ Areaname}}
+                Warehouse: {{ Warename }} - Floor:  {{ Floorname }}
               </h2>
             </div>
             <div class="selectors-container">
               <div class="warehouse-select-container">
-                <label for="warehouse-select" class="warehouse-label">Chọn kho:</label>
+                <label for="warehouse-select" class="warehouse-label">WWarehourse:</label>
                 <select id="warehouse-select" v-model="currentWarehouse" @change="SearchWarehourse">
                   <option v-for="(item, index) in warehouseData" :key="index" :value="item">
                     {{ item.name }}
                   </option>
                 </select>
               </div>
-
               <div class="floor-select-container">
-                <label for="floor-select" class="floor-label">Chọn tầng:</label>
+                <label for="floor-select" class="floor-label">Floor:</label>
                 <select id="floor-select" v-model="currentFloor" @change="SearchFloor">
                   <option
                     v-for="(floor, index) in currentFloorData"
@@ -40,7 +39,7 @@
           <div class="grid-wrapper">
             <div v-for="(row, rowIndex) in currentAreaData" :key="rowIndex" class="grid-item">
               <div class="row-container">
-                <div v-if="row.totalLocationExsis <= 20">
+                <div v-if="row.totalLocationExsis <= 19">
                   <div class="row-header" style="animation: AlmostFullHeader 0.5s ease-in-out infinite; flex-direction: column;">
                     <h3>排 {{ rowIndex + 1 }}</h3>
                     <p style="font-size: 10px; animation: AlmostFull 0.5s ease-in-out infinite;">Almost full !!!</p>
@@ -278,7 +277,6 @@
   }
   const Warename = ref("")
   const Floorname = ref("")
-  const Areaname = ref("")
   const warehouseData = ref([])
   const currentFloor = ref({})
   const currentFloorData = ref([])

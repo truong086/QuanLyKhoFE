@@ -37,7 +37,7 @@
                 style="width: 30px; height: 30px; border-radius: 50%"
                 alt=""
               />
-              {{ data.areaOld }} ({{ data.localtionOldCode }})
+              {{ data.areaOld }} => {{ data.localtionOld }} ({{ data.localtionOldCode }})
             </p>
             <p class="card-text" style="font-size: 20px">⏬</p>
             <p style="font-size: 18px" class="card-text">
@@ -62,7 +62,7 @@
                 style="width: 30px; height: 30px; border-radius: 50%"
                 alt=""
               />
-              {{ data.area }} ({{ data.localtionNewCode }})
+              {{ data.area }} => {{ data.localtionNew }} ({{ data.localtionNewCode }})
             </p>
             <p style="font-weight: bold; margin: 30px 0; color: blueviolet">
               Account creat Plan: {{ data.account_creatPlan }}
@@ -154,7 +154,7 @@
                 style="width: 30px; height: 30px; border-radius: 50%"
                 alt=""
               />
-              {{ data.areaOld }} ({{ data.localtionOldCode }})
+              {{ data.areaOld }} => {{ data.localtionOld }} ({{ data.localtionOldCode }})
             </p>
             <p class="card-text" style="font-size: 20px">⏬</p>
             <p style="font-size: 18px" class="card-text">
@@ -179,7 +179,7 @@
                 style="width: 30px; height: 30px; border-radius: 50%"
                 alt=""
               />
-              {{ data.area }} ({{ data.localtionNewCode }})
+              {{ data.area }} => {{ data.localtionNew }} ({{ data.localtionNewCode }})
             </p>
             <p style="font-weight: bold; margin: 30px 0; color: blueviolet">
               Account creat Plan: {{ data.account_creatPlan }}
@@ -271,7 +271,7 @@
                 style="width: 30px; height: 30px; border-radius: 50%"
                 alt=""
               />
-              {{ data.areaOld }} ({{ data.localtionOldCode }})
+              {{ data.areaOld }} => {{ data.localtionOld }} ({{ data.localtionOldCode }})
             </p>
             <p class="card-text" style="font-size: 20px">⏬</p>
             <p style="font-size: 18px" class="card-text">
@@ -296,7 +296,7 @@
                 style="width: 30px; height: 30px; border-radius: 50%"
                 alt=""
               />
-              {{ data.area }} ({{ data.localtionNewCode }})
+              {{ data.area }} => {{ data.localtionNew }} ({{ data.localtionNewCode }})
             </p>
             <p style="font-weight: bold; margin: 30px 0; color: blueviolet">
               Account creat Plan: {{ data.account_creatPlan }}

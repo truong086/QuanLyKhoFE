@@ -23,6 +23,7 @@ import DetailPlanPage from './components/Plan/DetailPlan.vue';
 import PlanOfAccountPage from './components/Plan/PlanOfAccount.vue';
 import StatisticsPage from './components/Statistics/StatisticsPage.vue';
 import AddProduct from './components/AddProduct.vue';
+import DetailProductWarehoursePage from './components/DetailProductWarehourse.vue';
 
 import { useCounterStore } from './store';
 
@@ -48,7 +49,7 @@ const routes = [
     name: "WareTest",
     component: WarehouseManagement,
     meta:{
-      css: ['"/AdminTemplatePage/css/statusCss.css"']
+      css: ['/AdminTemplatePage/css/statusCss.css']
     }
   },
   {
@@ -84,6 +85,11 @@ const routes = [
         path: "PlanOfAccount",
         name: "planOfAccount",
         component: PlanOfAccountPage,
+      },
+      {
+        path: "detailProductWarehourse",
+        name: "DetailProductWarehourse",
+        component: DetailProductWarehoursePage,
       },
       {
         path: "Statistics",

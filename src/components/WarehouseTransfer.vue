@@ -465,10 +465,10 @@ const updateData = async () => {
    if(res.data.content){
     Toast.success("Success !!!")
     Swal.fire("Success !!!")
-    document.querySelector('.' + classNameData.value).style.backgroundColor = 'yellow'
-
     if(classNameDataOld.value != null && classNameDataOld.value != '')
         document.querySelector('.' + classNameDataOld.value).style.backgroundColor = 'transparent'
+
+    document.querySelector('.' + classNameData.value).style.backgroundColor = 'yellow'
    }else{
     Toast.error(res.data.error)
    }

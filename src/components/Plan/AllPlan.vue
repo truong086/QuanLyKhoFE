@@ -1,12 +1,12 @@
 <template>
   <div class="container">
     <div class="button-group">
-      <button class="all" @click="showData('all', 'all')">Tất cả Plan</button>
+      <button class="all" @click="showData('all', 'all')">All Plan</button>
       <button class="lichsu" @click="showData('lichsu', 'lichsu')">
-        Lịch sử
+        History
       </button>
       <button class="NoReceiver" @click="showData('NoReceiver', 'NoReceiver')">
-        Plan chưa có người nhận
+        Plan No recipient yet
       </button>
     </div>
 

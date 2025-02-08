@@ -7,6 +7,7 @@
           class="shipment-wrapper"
           v-for="(shipment, index) in shipments"
           :key="shipment.id"
+          style="width: 1000px;"
         >
           <div class="shipment-info">
             <p><strong>Title:</strong> {{ shipment.plan_tile }}</p>
@@ -18,10 +19,10 @@
             <p>Code Location New: {{ shipment.codeLocationNew }}</p>
             <h3>Status: <a style="font-size: 15px; color: red;"><strong>{{ shipment.statusPlan }}</strong></a></h3> 
             <div class="actions">
-              <button class="main-btn" @click="toggleStatusMenu(index)">
+              <!-- <button class="main-btn" @click="toggleStatusMenu(index)">
                 +
-              </button>
-              <select v-model="shipment.statusPlan" @change="updateDataStatusPlan(shipment.statusPlan, shipment.id_status)">
+              </button> -->
+              <select v-model="shipment.statusPlan" @change="updateDataStatusPlan(shipment.statusPlan, shipment.id_status)" style="width: 250px;">
                 <option v-for="(itemStatus, indexStatus) in statusDataItem" :key="indexStatus" :value="itemStatus.toLowerCase()">{{ itemStatus }}</option>
               </select>
 
@@ -65,7 +66,7 @@
               </div>
             </div>
           </div>
-          <div class="shipment-status" style="width: 300px; height: 350px; overflow-y: auto; border: 1px solid #ccc; padding: 10px;">
+          <!-- <div class="shipment-status" style="width: 300px; height: 350px; overflow-y: auto; border: 1px solid #ccc; padding: 10px;">
             <p><strong>Status Description:</strong></p>
             <div class="status-list" v-for="(item, indexData) in shipment.statusItemPlans" :key="indexData">
               <div class="status-item" style="display: flex; width: 100%; flex-wrap: wrap;">
@@ -81,7 +82,7 @@
               </div>
             </div>
             <p><strong>Total Price:</strong> {{ shipment.price }}</p>
-          </div>
+          </div> -->
 
           <div class="shipper-info">
             <div class="delivery-man-image">
@@ -239,10 +240,10 @@ const changeReload = (event) => {
   pageSize.value = event;
   findAllData(valueE.value, page.value);
 };
-const toggleStatusMenu = (index) => {
-  // Chuyển đổi trạng thái hiển thị menu trạng thái khi nhấn "+"
-  statusMenuVisible.value[index] = !statusMenuVisible.value[index];
-};
+// const toggleStatusMenu = (index) => {
+//   // Chuyển đổi trạng thái hiển thị menu trạng thái khi nhấn "+"
+//   statusMenuVisible.value[index] = !statusMenuVisible.value[index];
+// };
 const addStatus = async (shipmentId, id) => {
   
   if(imageList.value.length <= 0){
@@ -293,9 +294,9 @@ const showList = (shipmentId) => {
   // Chuyển đổi trạng thái hiển thị danh sách icon khi nhấn "List Icon"
   iconListVisible.value[shipmentId] = !iconListVisible.value[shipmentId];
 };
-const showImage = (image) => {
-      selectedImage.value = image; // Hiển thị ảnh khi click
-    }
+// const showImage = (image) => {
+//       selectedImage.value = image; // Hiển thị ảnh khi click
+//     }
 
     const closeImage = () => {
       selectedImage.value = null; // Đóng popup khi click ngoài

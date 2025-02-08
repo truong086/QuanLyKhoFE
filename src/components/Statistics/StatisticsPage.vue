@@ -15,6 +15,9 @@ onMounted(() => {
   findAllCustomerByProduct()
   findAllDataProductDelivenote()
   findAllProductSuplier()
+  findAllProductImportFrom()
+  findAllProductByCustomer()
+  findAllSupplierProduct()
 })
 
 const type = ref('Month')
@@ -29,19 +32,24 @@ const color2 = ref('#f27a02')
 const color3 = ref('#03ff03')
 const color4 = ref('#d00cf2')
 const text1 = ref('Số lượng mua')
+const dataMonthTable = ref([])
+const dataproductImportFrom = ref([])
+const dataproductByCustomer = ref([])
+const dataproductSupplier = ref([])
 
 const findAllDataMonth = async () => {
   const res = await axios.get(hostName + '/api/Statistical/GetMonthlyProductStatistics', getToken())
   if(res.data.success){
+    dataMonthTable.value = res.data.content
     res.data.content.forEach(element => {
       if(!store.getCheck.includes(element.month)){
         store.setStatistic({month: element.month, sales: element.totalQuantitySold})
         store.setCheck(element.month)
       }
     });
+    
     type.value = 'Tháng'
   }
-  
 }
 const getToken = () => {
   var token = store.getToken;
@@ -86,8 +94,6 @@ const findAllCustomerByProduct = async () =>{
          store.setCheckStatictisTotalProductByCustomer(element.id)
        }
      })
-
-     console.log(store.getCheckStatictisTotalProductByCustomer)
   }
 }
 
@@ -100,7 +106,6 @@ const findAllDataProductDelivenote = async () => {
         store.setcheckStatictisTotalProductDelivenote(element.id)
       }
     });
-    console.log(store.getdataTotalProductDelivenote)
     type.value = 'Product Name: '
   }
 }
@@ -117,6 +122,26 @@ const findAllProductSuplier = async () => {
   }
 }
 
+const findAllProductImportFrom = async () =>{
+  const res = await axios.get(hostName + '/api/Statistical/SetDayAndMonthAnhYearlyProductStatistics', getToken())
+  if(res.data.success){
+    dataproductImportFrom.value = res.data.content
+  }
+}
+
+const findAllProductByCustomer = async () => {
+  const res = await axios.get(hostName + '/api/Statistical/GetTotalProductsSoldByCustomer', getToken())
+  if(res.data.success){
+    dataproductByCustomer.value = res.data.content
+  }
+}
+
+const findAllSupplierProduct = async () => {
+  const res = await axios.get(hostName + '/api/Statistical/SetTotalProductsSoldBySupplier', getToken())
+  if(res.data.success){
+    dataproductSupplier.value = res.data.content
+  }
+}
 </script>
 
 <template>
@@ -129,9 +154,167 @@ const findAllProductSuplier = async () => {
     <SalesChartAccount :salesData="store.getStatistic" :text="type" :backgroudColorData="backColor"/>
     <h2>Top buyers</h2>
     <SalesChartAccount :salesData="store.getdataTotalProductDelivenote" :text="typeSuplier" :backgroudColorData="backColor2"/>
+    <h2>Monthly Statistics Import From table</h2>
+    <div>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Month</th>
+            <th>Product</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(item, index) in dataproductImportFrom" :key="index">
+            <td>Month: {{ item.month }}</td>
+            <td v-if="item.data">
+              <div v-for="(itemP, indexP) in item.data" :key="indexP">
+                <h3>Product name: {{ itemP.title }}</h3>
+                <div v-if="itemP.image" style="margin-bottom: 20px;">
+                  <img v-for="(imageItem, indexItem) in itemP.image" :key="indexItem" :src="imageItem" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
+                </div>
+                <p style="color: red; font-weight: bold;">Total product: {{ itemP.totalProduct }}</p>
+              </div>
+            </td>
+            <td>Total: {{ item.total }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    </div>
     <h2>Most Supplier</h2>
     <SalesChartPage :products="store.getdataTotalProductSupplier" :colorData="color3" :text="text1"/>
-    <h2>Most purchased users</h2>
+    <h2>Top Exporter</h2>
     <SalesChartPage :products="store.getDataAccountByProduct" :colorData="color4" :text="text1"/>
-  </div>
+    <h2>Export products by month of the year</h2>
+    <div>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Month</th>
+            <th>Product</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(item, index) in dataMonthTable" :key="index">
+            <td>Month: {{ item.month }}</td>
+            <td v-if="item.producSalesData">
+              <div v-for="(itemP, indexP) in item.producSalesData" :key="indexP">
+                <h3>Product name: {{ itemP.productName }}</h3>
+                <div v-if="itemP.images" style="margin-bottom: 20px;">
+                  <img v-for="(imageItem, indexItem) in itemP.images" :key="indexItem" :src="imageItem" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
+                </div>
+                <p style="color: red; font-weight: bold;">Total product: {{ itemP.quantity }}</p>
+              </div>
+            </td>
+            <td>Total: {{ item.totalQuantitySold }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <h2>Customer By Product table</h2>
+    <div>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Product</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(item, index) in dataproductByCustomer" :key="index">
+            <td>Name: {{ item.customer_name }}</td>
+            <td>Email: {{ item.customer_email }}</td>
+            <td v-if="item.producSalesData">
+              <div v-for="(itemP, indexP) in item.producSalesData" :key="indexP">
+                <h3>Product name: {{ itemP.productName }}</h3>
+                <div v-if="itemP.images" style="margin-bottom: 20px;">
+                  <img v-for="(imageItem, indexItem) in itemP.images" :key="indexItem" :src="imageItem" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
+                </div>
+                <p style="color: red; font-weight: bold;">Total product: {{ itemP.quantity }}</p>
+              </div>
+            </td>
+            <td>Total: {{ item.total }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Supplier of Product table</h2>
+    <div>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Address</th>
+            <th>Image</th>
+            <th>Product</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(item, index) in dataproductSupplier" :key="index">
+            <td>Name: {{ item.name }}</td>
+            <td>Address: {{ item.address }}</td>
+            <td><img v-if="item.image" :src="item.image" style="width: 30px; height: 30px; border-radius: 50%;" alt=""></td>
+            <td v-if="item.data">
+              <div v-for="(itemP, indexP) in item.data" :key="indexP">
+                <h3>Product name: {{ itemP.title }}</h3>
+                <p>Price: {{ itemP.price }}</p>
+                <div v-if="itemP.image" style="margin-bottom: 20px;">
+                  <img v-for="(imageItem, indexItem) in itemP.image" :key="indexItem" :src="imageItem" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
+                </div>
+                <p style="color: red; font-weight: bold;">Total product: {{ itemP.quantity }}</p>
+              </div>
+            </td>
+            <td>Total: {{ item.total }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 </template>
+
+<style scoped>
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+.title {
+  text-align: center;
+  font-size: 1.1rem;
+  color: #555;
+  background-color: #f2f2f2;
+  padding: 10px;
+  font-weight: bold;
+  border-radius: 10px;
+}
+
+.table th,
+.table td {
+  padding: 12px;
+  text-align: center;
+  border: 1px solid #ddd;
+  font-size: 1rem;
+}
+
+.table td {
+  background-color: #fff;
+  color: #666;
+}
+
+.table tr:nth-child(even) td {
+  background-color: #f9f9f9;
+}
+
+.table tr:hover td {
+  background-color: #e1e1e1;
+  cursor: pointer;
+}
+</style>

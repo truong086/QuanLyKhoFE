@@ -59,9 +59,9 @@
           </h5>
           <h5>Address: {{ item.addressWarehouse }} </h5>
         </div>
-        <button class="btn btn-location" @click="NextMap(item.addressWarehouse)">Location</button>
+        <button class="btn btn-location" @click="nextSearchWarehourse(item)">Details</button>
+        <!-- <button class="btn btn-location" @click="NextMap(item.addressWarehouse)">Location</button> -->
       </div>
-
     </main>
   </div>
   <!-- Hiển thị màn hình loading -->
@@ -101,9 +101,16 @@ onMounted(() => {
 const swapImage = (image) =>{
   document.querySelector(".card-img-top").src = image
 }
-const NextMap = (data) => {
-  const encodeURI = encodeURIComponent(data) // Mã hóa dữ liệu truyền lên query
-  router.push({path: "map", query: {search: encodeURI, name: "Map"}})
+// const NextMap = (data) => {
+//   const encodeURI = encodeURIComponent(data) // Mã hóa dữ liệu truyền lên query
+//   router.push({path: "map", query: {search: encodeURI, name: "Map"}})
+// }
+
+const nextSearchWarehourse = (data) =>{
+  console.log(data)
+  router.push({path: "detailProductWarehourse", query: {id: encodeURIComponent(data.idArea), 
+    warehoure: encodeURIComponent(data.warehouse_name), 
+    floor: encodeURIComponent(data.floor_name)}})
 }
 
 const findOneId = async (id) => {

@@ -33,13 +33,12 @@
                         </router-link>
                            
                         </li>
-                        <li v-on:click="SwapBackGroupColor('b6')" class="b6"> <router-link class="waves-effect waves-dark" to="/map" aria-expanded="false"><i
+                        <!-- <li v-on:click="SwapBackGroupColor('b6')" class="b6"> <router-link class="waves-effect waves-dark" to="/map" aria-expanded="false"><i
                                     class="fa fa-globe"></i><span class="hide-menu">Map</span></router-link>
-                        </li>
+                        </li> -->
                         <li class="b7" v-on:click="SwapBackGroupColor('b7')">
                         <router-link to="/ware" class="waves-effect waves-dark" aria-expanded="false">
                             <i class="fa fa-bookmark-o"></i>
-                            <span class="hide-menu">Status</span>
                             <span class="hide-menu">Status</span>
                         </router-link>
                         </li>

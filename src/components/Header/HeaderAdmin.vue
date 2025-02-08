@@ -61,14 +61,18 @@
                 class="profile-item"
                 @click="openChatBox(profile.id_account)"
               >
-                <div v-if="profile.id_account != idACcount" style="margin: 0 15px;">
+                <div
+                  v-if="profile.id_account != idACcount"
+                  style="margin: 0 15px"
+                >
                   {{ profile.account_name }}
                   <img
                     :src="profile.account_image"
                     alt="Profile"
                     class="profile-img"
                   />
-                  <span style="margin: 0 15px;"
+                  <span
+                    style="margin: 0 15px"
                     :class="{
                       'status-online': profile.isOnline === true,
                       'status-offline': profile.isOnline === false,
@@ -351,8 +355,9 @@ const ivalidate = () => {
     // }
     console.log(currentReceiverId.value + " " + data.idUser1);
     if (
-      parseInt(data.idUser1) === parseInt(currentReceiverId.value) ||
-      parseInt(data.idUser2) === parseInt(currentReceiverId.value)
+      (parseInt(data.idUser1) === parseInt(currentReceiverId.value) ||
+      parseInt(data.idUser2) === parseInt(currentReceiverId.value)) &&
+      chatBoxVisible.value === true
     ) {
       messages.value.dataItem.push(data);
     } else {
@@ -371,6 +376,22 @@ const ivalidate = () => {
     }
     messageTest.value = data;
     isLoadingMessage.value = false;
+  });
+
+  connection.value.on("thongbao", (title, account) => {
+    Toast.success(
+      "💨💫💫💌Có thông báo mới: " + title + " " + "người tạo là " + account
+    );
+  });
+
+  connection.value.on("confirm", (account, title) => {
+    Toast.success(
+      "💯⁉💯Có thông báo mới: " + account + " đã nhận plan: " + title
+    );
+  });
+
+  connection.value.on("DonePlan", (title, account) => {
+    Toast.success("💯❤❤💟 Account: " + account + " đã Done plan: " + title);
   });
 };
 
