@@ -46,20 +46,28 @@
       </div>
 
       <!-- New Frame Below Product - First Warehouse -->
-      <div class="warehouse-frame" v-for="(item, index) in product.listAreaOfproducts" :key="index">
+      <div class="warehouse-frame" v-for="(item, index) in product.oneDataShelfOfProducts" :key="index">
         <div class="warehouse-img">
           <img :src="item.warehouse_image" alt="Warehouse Image" />
         </div>
         <div class="warehouse-info">
           <h2 style="font-weight: bold;">Warehourse Name: {{ item.warehouse_name }}</h2>
-          <p>Location: {{ item.warehouse_name }} => {{ item.floor_name }} => {{ item.area_name }} => {{ item.location }}</p>
+          <div v-if="item.listShelfOfproducts">
+            <div v-for="(itemWarehouse, indexWarehouse) in item.listShelfOfproducts" :key="indexWarehouse">
+              <div style="display: flex; margin-left: 50px;">
+                <p>Location {{ indexWarehouse + 1 }}: {{ itemWarehouse.warehouse_name }} => {{ itemWarehouse.floor_name }} => {{ itemWarehouse.area_name }} => {{ itemWarehouse.shelf_name }} => {{ itemWarehouse.location }} ({{ itemWarehouse.code }})</p>
+                <button class="btn btn-location" style="font-size: 10px; padding: 2px 15px; height: 25px; margin-left: 10px;" @click="nextSearchWarehourse(itemWarehouse)">Details</button>
+              </div>
+              <span v-if="indexWarehouse !== item.listShelfOfproducts.length - 1">🔽</span> <!--Kiểm tra xem đã lặp đến phần tử cuối cùng chưa-->
+            </div>
+            
+          </div>
           <h5>Quantity: {{ item.quantity }}</h5>
           <h5>Account Create: {{ item.account_name }} 
             <img :src="item.account_image" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
           </h5>
           <h5>Address: {{ item.addressWarehouse }} </h5>
         </div>
-        <button class="btn btn-location" @click="nextSearchWarehourse(item)">Details</button>
         <!-- <button class="btn btn-location" @click="NextMap(item.addressWarehouse)">Location</button> -->
       </div>
     </main>
@@ -107,10 +115,10 @@ const swapImage = (image) =>{
 // }
 
 const nextSearchWarehourse = (data) =>{
-  console.log(data)
-  router.push({path: "detailProductWarehourse", query: {id: encodeURIComponent(data.idArea), 
+  router.push({path: "detailProductWarehourse", query: {id: encodeURIComponent(data.idShelf), 
     warehoure: encodeURIComponent(data.warehouse_name), 
-    floor: encodeURIComponent(data.floor_name)}})
+    floor: encodeURIComponent(data.floor_name),
+    area: encodeURIComponent(data.area_name)}})
 }
 
 const findOneId = async (id) => {
@@ -121,6 +129,8 @@ const findOneId = async (id) => {
     hostName + `/api/Product/FindOneById?id=${id}`,
     getToken()
   );
+
+  console.log(res)
 
   if (res.data.success) {
     product.value = res.data.content;
@@ -141,6 +151,10 @@ const findOneId = async (id) => {
   background: #f7f7f7;
   padding: 2rem;
   font-family: "Arial", sans-serif;
+}
+
+img {
+    mix-blend-mode: multiply; /* Hoặc screen tùy vào màu nền */
 }
 
 header {

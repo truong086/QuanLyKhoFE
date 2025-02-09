@@ -6,15 +6,17 @@
         <div
           class="frame"
         >
-          <div class="header-container">
-            <div class="header-title">
-              <h2 class="warehouse-title">
-                Warehouse: {{ Warename }} - Floor:  {{ Floorname }}
+        <div>
+          <div class="header-title">
+              <h2 class="warehouse-title" style="width: 850px;">
+                Warehouse: {{ Warename }} => Floor: {{ Floorname }} => Area: {{ areaName }}
               </h2>
             </div>
+        </div>
+          <div class="header-container" style="margin: 50px;">
             <div class="selectors-container">
               <div class="warehouse-select-container">
-                <label for="warehouse-select" class="warehouse-label">WWarehourse:</label>
+                <label for="warehouse-select" class="warehouse-label">Warehourse:</label>
                 <select id="warehouse-select" v-model="currentWarehouse" @change="SearchWarehourse">
                   <option v-for="(item, index) in warehouseData" :key="index" :value="item">
                     {{ item.name }}
@@ -33,13 +35,25 @@
                   </option>
                 </select>
               </div>
+              <div class="floor-select-container">
+                <label for="floor-select" class="floor-label">Area:</label>
+                <select id="floor-select" v-model="currentAreaFindOne" @change="SearchArea">
+                  <option
+                    v-for="(item, index) in currentAreaData"
+                    :key="index"
+                    :value="item"
+                  >
+                    {{ item.name }} 
+                  </option>
+                </select>
+              </div>
             </div>
           </div>
-
-          <div class="grid-wrapper">
-            <div v-for="(row, rowIndex) in currentAreaData" :key="rowIndex" class="grid-item">
+          
+          <div class="grid-wrapper" v-if="currentShelfData.length > 0">
+            <div v-for="(row, rowIndex) in currentShelfData" :key="rowIndex" class="grid-item">
               <div class="row-container">
-                <div v-if="row.totalLocationExsis <= 19">
+                <div v-if="row.totalLocationExsis <= 17">
                   <div class="row-header" style="animation: AlmostFullHeader 0.5s ease-in-out infinite; flex-direction: column;">
                     <h3>排 {{ rowIndex + 1 }}</h3>
                     <p style="font-size: 10px; animation: AlmostFull 0.5s ease-in-out infinite;">Almost full !!!</p>
@@ -65,95 +79,95 @@
                   <div v-else-if="row.totalQuantityUseds.some(d => d.location == cell && d.quantityUsed <= 0)" style="position: absolute;">
                     <p style="font-size: 10px; font-weight: bold; animation: Full 0.5s ease-in-out infinite;">Full !!!</p>
                   </div>
-                    <div v-if="row.productArea.productPlans.some(x => x.location == cell)">
+                    <div v-if="row.productShefl.productPlans.some(x => x.location == cell)">
                         <button 
                             :key="cellIndex"
                             :class="['cell', { occupied: cell }]"
-                            @click="(event) => openFrame(row.id, cell, row.productArea.productLocationAreas, row.productArea.productPlans)"
+                            @click="(event) => openFrame(row.id, cell, row.productShefl.productLocationAreas, row.productShefl.productPlans)"
                             style="animation: planData 0.1s ease-in-out infinite;"
                           >
-                          {{ row.productArea.productLocationAreas.some(x => x.location == cell) || row.productArea.productPlans.some(x => x.location == cell) ? cell + " - " + row.name + " (Có sản phẩm)" : cell + " - " + row.name }}
+                          {{ row.productShefl.productLocationAreas.some(x => x.location == cell) || row.productShefl.productPlans.some(x => x.location == cell) ? cell + " - " + row.name + " (Có sản phẩm)" : cell + " - " + row.name }}
                         </button>
                     </div>
-                    <div v-else-if="hasvalue(row.productArea.locationTotal)">
-                      <div v-if="row.productArea.locationTotal.hasOwnProperty(cell)"> <!--Tìm Key, sử dụng hàm "hasOwnProperty()"-->
-                          <button v-if=" row.productArea.locationTotal[cell] <= 3"
+                    <div v-else-if="hasvalue(row.productShefl.locationTotal)">
+                      <div v-if="row.productShefl.locationTotal.hasOwnProperty(cell)"> <!--Tìm Key, sử dụng hàm "hasOwnProperty()"-->
+                          <button v-if=" row.productShefl.locationTotal[cell] <= 3"
                             :class="['cell', { occupied: cell }]"
-                            @click="(event) => openFrame(row.id, cell, row.productArea.productLocationAreas, row.productArea.productPlans)"
+                            @click="(event) => openFrame(row.id, cell, row.productShefl.productLocationAreas, row.productShefl.productPlans)"
                             style="background-color: red;"
                           >
-                            {{ row.productArea.productLocationAreas.some(x => x.location == cell) || row.productArea.productPlans.some(x => x.location == cell) ? cell + " - " + row.name + " (Có sản phẩm)" : cell + " - " + row.name }}
+                            {{ row.productShefl.productLocationAreas.some(x => x.location == cell) || row.productShefl.productPlans.some(x => x.location == cell) ? cell + " - " + row.name + " (Có sản phẩm)" : cell + " - " + row.name }}
                           </button>
-                          <button v-else-if="row.productArea.locationTotal[cell] >= 5 && row.productArea.locationTotal[cell] <= 10"
+                          <button v-else-if="row.productShefl.locationTotal[cell] >= 5 && row.productShefl.locationTotal[cell] <= 10"
                               :class="['cell', { occupied: cell }]"
-                              @click="(event) => openFrame(row.id, cell, row.productArea.productLocationAreas, row.productArea.productPlans)"
+                              @click="(event) => openFrame(row.id, cell, row.productShefl.productLocationAreas, row.productShefl.productPlans)"
                               style="background-color: yellow;"
                             >
-                            {{ row.productArea.productLocationAreas.some(x => x.location == cell) || row.productArea.productPlans.some(x => x.location == cell) ? cell + " - " + row.name + " (Có sản phẩm)" : cell + " - " + row.name }}
+                            {{ row.productShefl.productLocationAreas.some(x => x.location == cell) || row.productShefl.productPlans.some(x => x.location == cell) ? cell + " - " + row.name + " (Có sản phẩm)" : cell + " - " + row.name }}
                           </button>
                           <button v-else
                               :class="['cell', { occupied: cell }]"
-                              @click="(event) => openFrame(row.id, cell, row.productArea.productLocationAreas, row.productArea.productPlans)"
+                              @click="(event) => openFrame(row.id, cell, row.productShefl.productLocationAreas, row.productShefl.productPlans)"
                               style="background-color: pink;"
                             >
-                            {{ row.productArea.productLocationAreas.some(x => x.location == cell) || row.productArea.productPlans.some(x => x.location == cell) ? cell + " - " + row.name + " (Có sản phẩm)" : cell + " - " + row.name }}
+                            {{ row.productShefl.productLocationAreas.some(x => x.location == cell) || row.productShefl.productPlans.some(x => x.location == cell) ? cell + " - " + row.name + " (Có sản phẩm)" : cell + " - " + row.name }}
                           </button>
                       </div>
                       <div v-else>
-                        <button v-if="checkQuantityLocationProduct(row.productArea.productLocationAreas, cell) > 0 && checkQuantityLocationProduct(row.productArea.productLocationAreas, cell) <=  4"
+                        <button v-if="checkQuantityLocationProduct(row.productShefl.productLocationAreas, cell) > 0 && checkQuantityLocationProduct(row.productShefl.productLocationAreas, cell) <=  4"
                             :key="cellIndex"
                             :class="['cell', { occupied: cell }]"
-                            @click="(event) => openFrame(row.id, cell, row.productArea.productLocationAreas, row.productArea.productPlans)"
+                            @click="(event) => openFrame(row.id, cell, row.productShefl.productLocationAreas, row.productShefl.productPlans)"
                             style="background-color: blueviolet;"
                           >
-                          {{ row.productArea.productLocationAreas.some(x => x.location == cell) || row.productArea.productPlans.some(x => x.location == cell) ? cell + " - " + row.name + " (Có sản phẩm)" : cell + " - " + row.name }}
+                          {{ row.productShefl.productLocationAreas.some(x => x.location == cell) || row.productShefl.productPlans.some(x => x.location == cell) ? cell + " - " + row.name + " (Có sản phẩm)" : cell + " - " + row.name }}
                           </button>
-                          <button v-if="checkQuantityLocationProduct(row.productArea.productLocationAreas, cell) <= 0"
+                          <button v-if="checkQuantityLocationProduct(row.productShefl.productLocationAreas, cell) <= 0"
                               :key="cellIndex"
                               :class="['cell', { occupied: cell }]"
-                              @click="(event) => openFrame(row.id, cell, row.productArea.productLocationAreas, row.productArea.productPlans)"
+                              @click="(event) => openFrame(row.id, cell, row.productShefl.productLocationAreas, row.productShefl.productPlans)"
                               style="background-color: grey; opacity: 0.5;"
                             >
-                            {{ row.productArea.productLocationAreas.some(x => x.location == cell) || row.productArea.productPlans.some(x => x.location == cell) ? cell + " - " + row.name + " (Có sản phẩm)" : cell + " - " + row.name }}
+                            {{ row.productShefl.productLocationAreas.some(x => x.location == cell) || row.productShefl.productPlans.some(x => x.location == cell) ? cell + " - " + row.name + " (Có sản phẩm)" : cell + " - " + row.name }}
                           </button>
                           <!-- <button
                               :class="['cell', { occupied: cell }]"
-                              @click="(event) => openFrame(row.id, cell, row.productArea.productLocationAreas, row.productArea.productPlans)"
+                              @click="(event) => openFrame(row.id, cell, row.productShefl.productLocationAreas, row.productShefl.productPlans)"
                               style="background-color: gray;"
                             >
-                            {{ row.productArea.productLocationAreas.some(x => x.location == cell) || row.productArea.productPlans.some(x => x.location == cell) ? cell + " - " + row.name + " (Có sản phẩm)" : cell + " - " + row.name }}
+                            {{ row.productShefl.productLocationAreas.some(x => x.location == cell) || row.productShefl.productPlans.some(x => x.location == cell) ? cell + " - " + row.name + " (Có sản phẩm)" : cell + " - " + row.name }}
                           </button> -->
                         </div>
                     </div>
                     <div v-else>
-                      <div v-if="checkQuantityLocationProduct(row.productArea.productLocationAreas, cell) > 0 && checkQuantityLocationProduct(row.productArea.productLocationAreas, cell) <=  4">
+                      <div v-if="checkQuantityLocationProduct(row.productShefl.productLocationAreas, cell) > 0 && checkQuantityLocationProduct(row.productShefl.productLocationAreas, cell) <=  4">
                         <button 
                           :key="cellIndex"
                           :class="['cell', { occupied: cell }]"
-                          @click="(event) => openFrame(row.id, cell, row.productArea.productLocationAreas, row.productArea.productPlans)"
+                          @click="(event) => openFrame(row.id, cell, row.productShefl.productLocationAreas, row.productShefl.productPlans)"
                           style="background-color: blueviolet;"
                         >
-                        {{ row.productArea.productLocationAreas.some(x => x.location == cell) || row.productArea.productPlans.some(x => x.location == cell) ? cell + " - " + row.name + " (Có sản phẩm)" : cell + " - " + row.name }}
+                        {{ row.productShefl.productLocationAreas.some(x => x.location == cell) || row.productShefl.productPlans.some(x => x.location == cell) ? cell + " - " + row.name + " (Có sản phẩm)" : cell + " - " + row.name }}
                         </button>
                       </div>
-                      <div v-else-if="checkQuantityLocationProduct(row.productArea.productLocationAreas, cell) > 0 && checkQuantityLocationProduct(row.productArea.productLocationAreas, cell) <=  5">
+                      <div v-else-if="checkQuantityLocationProduct(row.productShefl.productLocationAreas, cell) > 0 && checkQuantityLocationProduct(row.productShefl.productLocationAreas, cell) <=  5">
                         <button
                           :key="cellIndex"
                           :class="['cell', { occupied: cell }]"
-                          @click="(event) => openFrame(row.id, cell, row.productArea.productLocationAreas, row.productArea.productPlans)"
+                          @click="(event) => openFrame(row.id, cell, row.productShefl.productLocationAreas, row.productShefl.productPlans)"
                           style="background-color: blueviolet;"
                         >
-                        {{ row.productArea.productLocationAreas.some(x => x.location == cell) || row.productArea.productPlans.some(x => x.location == cell) ? cell + " - " + row.name + " (Có sản phẩm)" : cell + " - " + row.name }}
+                        {{ row.productShefl.productLocationAreas.some(x => x.location == cell) || row.productShefl.productPlans.some(x => x.location == cell) ? cell + " - " + row.name + " (Có sản phẩm)" : cell + " - " + row.name }}
                         </button>
                       </div>
                       <div v-else>
                         <button
                             :key="cellIndex"
                             :class="['cell', { occupied: cell }]"
-                            @click="(event) => openFrame(row.id, cell, row.productArea.productLocationAreas, row.productArea.productPlans)"
+                            @click="(event) => openFrame(row.id, cell, row.productShefl.productLocationAreas, row.productShefl.productPlans)"
                             style="background-color: grey; opacity: 0.5;"
                           >
-                          {{ row.productArea.productLocationAreas.some(x => x.location == cell) || row.productArea.productPlans.some(x => x.location == cell) ? cell + " - " + row.name + " (Có sản phẩm)" : cell + " - " + row.name }}
+                          {{ row.productShefl.productLocationAreas.some(x => x.location == cell) || row.productShefl.productPlans.some(x => x.location == cell) ? cell + " - " + row.name + " (Có sản phẩm)" : cell + " - " + row.name }}
                         </button>
                       </div>
                     </div>
@@ -162,7 +176,7 @@
               </div>
             </div>
           </div>
-          <PagesTotal :page="page" :totalPage="totalPage" :valueE="valueE" @pageChange="findAllArea" @pageSizeChange="changeReload"></PagesTotal>
+          <PagesTotal :page="page" :totalPage="totalPage" :valueE="valueE" @pageChange="findAllShelfByArea" @pageSizeChange="changeReload"></PagesTotal>
         </div>
       </div>
       <div
@@ -190,7 +204,7 @@
                 </div>
                 <div class="info-line">
                   <span class="info-title">Quantity:</span>
-                  <span class="info-content">{{ item?.quantity }}</span>
+                  <span :class="'info-content' + '_' + item?.id">{{ item?.quantity }}</span>
                 </div>
                 <div class="info-line"><span class="info-title">inventory:</span> {{ item?.inventory }}</div>
                 <div class="info-line"><span class="info-title">price:</span> {{ item?.price }}</div>
@@ -282,6 +296,8 @@
   const currentFloorData = ref([])
   const valueE = ref("")
   const currentAreaData = ref([])
+  const currentAreaFindOne = ref({})
+  const currentShelfData = ref([])
   const currentWarehouse = ref({})
   const isLoading = ref(false)
   const store = useCounterStore()
@@ -291,11 +307,12 @@
   const pageSize = ref(5)
   const frameData = ref([])
   const id_area = ref(0)
+  const areaName = ref('')
   const quantityProduct = ref(0)
   const quantityProductReduceQuantity = ref(0)
   const updateDataQuantity = ref({
     id_product: 0,
-    id_area: 0,
+    id_shefl: 0,
     location: 0,
     quantity: 0
   })
@@ -304,6 +321,29 @@
   const hostName = proxy?.hostname
   const popupPosition = ref({})
   const frameVisible = ref(false)
+
+  const SearchArea = () =>{
+    findAllShelfByArea(valueE.value, page.value)
+  }
+  const findAllShelfByArea = async (search, pageData) => {
+    console.log(search)
+    isLoading.value = true
+    document.body.classList.add('loading') // Add Lớp "loading"
+    document.body.style.overflow = 'hidden'
+
+    const res = await axios.get(hostName + `/api/Shelf/FindByArea?id=${currentAreaFindOne.value.id}&page=${pageData}&pageSize=${pageSize.value}`, getToken())
+    if(res.data.success){
+      page.value = res.data.content.page
+      totalPage.value = res.data.content.totalPages
+      currentShelfData.value = res.data.content.data
+      console.log(res)
+    }
+
+    isLoading.value = false
+    document.body.classList.remove('loading')
+    document.body.style.overflow = 'auto'
+    
+  }
   const closeFrame = () => {
     frameVisible.value = false
   }
@@ -315,13 +355,20 @@
     }
     updateDataQuantity.value.id_product = id_product
     updateDataQuantity.value.location = location
-    updateDataQuantity.value.id_area = id_area.value
+    updateDataQuantity.value.id_shefl = id_area.value
     updateDataQuantity.value.quantity = quantityProduct.value
 
+    console.log(updateDataQuantity.value)
     const res = await axios.put(hostName + `/api/Product/UpdateArea?id=${id}`, updateDataQuantity.value, getToken())
     if(res.data.success){
       Toast.success("Update Success !!!")
-      findAllArea(valueE.value, page.value)
+     const element = document.querySelector('.info-content' + '_' + id)
+     if(element){
+      let totalData = parseInt(element.textContent) + quantityProduct.value
+
+      element.textContent = totalData
+     }
+      findAllArea()
     }else{
       Toast.error(res.data.error)
     }
@@ -334,13 +381,18 @@
     }
     updateDataQuantity.value.id_product = id_product
     updateDataQuantity.value.location = location
-    updateDataQuantity.value.id_area = id_area.value
+    updateDataQuantity.value.id_shefl = id_area.value
     updateDataQuantity.value.quantity = quantityProductReduceQuantity.value
 
     const res = await axios.put(hostName + `/api/Product/UpdateAreaQuantity?id=${id}`, updateDataQuantity.value, getToken())
     if(res.data.success){
       Toast.success("Update Success !!!")
-      findAllArea(valueE.value, page.value)
+      const element = document.querySelector('.info-content' + '_' + id)
+      if(element){
+        let total = parseInt(element.textContent) - quantityProductReduceQuantity.value
+        element.textContent = total
+      }
+      findAllArea()
     }else{
       Toast.error(res.data.error)
     }
@@ -395,31 +447,24 @@
     }
 }
   watch(page.value, (newPage) => {
-    findAllArea(valueE.value, newPage)
+    findAllShelfByArea(valueE.value, newPage)
   })
   const changeReload = (event) => {
     pageSize.value = event
-    findAllArea(valueE.value, page.value)
+    findAllShelfByArea(valueE.value, page.value)
   }
   const SearchFloor = async () => {
-    findAllArea(valueE.value, page.value)
+    findAllArea()
   }
-  const findAllArea = async (search, pageData) => {
-    console.log(search)
-    isLoading.value = true
-    document.body.classList.add('loading') // Add Lớp "loading"
-    document.body.style.overflow = 'hidden'
+  const findAllArea = async () => {
 
-    const res = await axios.get(hostName + `/api/Area/FindByFloor?id=${currentFloor.value.id}&page=${pageData}&pageSize=${pageSize.value}`, getToken())
+    const res = await axios.get(hostName + `/api/Area/FindOneByFloor?id=${currentFloor.value.id}`, getToken())
     if(res.data.success){
-      page.value = res.data.content.page
-      totalPage.value = res.data.content.totalPages
       currentAreaData.value = res.data.content.data
+      currentAreaFindOne.value = res.data.content.data[0]
+      areaName.value = currentAreaFindOne.value.name
+      findAllShelfByArea(valueE.value, page.value)
     }
-
-    isLoading.value = false
-    document.body.classList.remove('loading')
-    document.body.style.overflow = 'auto'
     
   }
   const getToken = () => {
@@ -438,7 +483,7 @@
             currentFloor.value = res.data.content.data[0]
             Warename.value = currentWarehouse.value.name
             Floorname.value = res.data.content.data[0].name
-            findAllArea(valueE.value, page.value)
+            findAllArea()
             Toast.success("Success")
           }else{
             currentFloorData.value = null
@@ -464,7 +509,7 @@
     currentFloorData.value = res.data.content.data
     currentFloor.value = res.data.content.data[0]
     Floorname.value = res.data.content.data[0].name
-    findAllArea(valueE.value, page.value)
+    findAllArea()
     Toast.success("Success")
   }
 

@@ -12,10 +12,10 @@
           <div class="shipment-info">
             <p><strong>Title:</strong> {{ shipment.plan_tile }}</p>
             <p style="font-weight: bold;"><strong>Location Old:</strong> </p>
-            <p>{{ shipment.warehourseOld }} -> {{ shipment.floorOld }} -> {{ shipment.areaOld }} -> {{ shipment.locationOld }}</p>
+            <p>{{ shipment.warehourseOld }} -> {{ shipment.floorOld }} -> {{ shipment.areaOld }} -> {{ shipment.shelfOld }} -> {{ shipment.locationOld }}</p>
             <p>Code Location Old: {{ shipment.codeLocationOld }}</p>
             <p style="font-weight: bold;"><strong>Location New:</strong></p>
-            <p>{{ shipment.warehourseNew }} -> {{ shipment.floorNew }} -> {{ shipment.areaNew }} -> {{ shipment.locationNew }}</p>
+            <p>{{ shipment.warehourseNew }} -> {{ shipment.floorNew }} -> {{ shipment.areaNew }} -> {{ shipment.shelfNew }} -> {{ shipment.locationNew }}</p>
             <p>Code Location New: {{ shipment.codeLocationNew }}</p>
             <h3>Status: <a style="font-size: 15px; color: red;"><strong>{{ shipment.statusPlan }}</strong></a></h3> 
             <div class="actions">
@@ -231,6 +231,7 @@ const findAllData = async (search, pageData) => {
       totalPage.value = res.data.content.totalPages;
     }
 
+    console.log(res)
   isLoading.value = false
     document.body.classList.remove('loading')
     document.body.style.overflow = 'auto'

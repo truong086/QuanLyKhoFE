@@ -22,12 +22,12 @@
             <h2 style="font-weight: bold">Plan Name: {{ item.title }}</h2>
             <p>
               Location Old: {{ item.warehouseOld }} => {{ item.floorOld }} =>
-              {{ item.areaOld }} => {{ item.localtionOld }}
+              {{ item.areaOld }} => {{ item.shelfOld }} => {{ item.localtionOld }}
             </p>
             <p style="font-size: 20px">⏬</p>
             <p>
               Location New: {{ item.warehouse }} => {{ item.floor }} =>
-              {{ item.area }} => {{ item.localtionNew }}
+              {{ item.area }} => {{ item.shelf }} => {{ item.localtionNew }}
             </p>
             <h5>Account Create: {{ item.account_creatPlan }}</h5>
             <h5>
@@ -83,12 +83,12 @@
             <h2 style="font-weight: bold">Plan Name: {{ item.title }}</h2>
             <p>
               Location Old: {{ item.warehouseOld }} => {{ item.floorOld }} =>
-              {{ item.areaOld }} => {{ item.localtionOld }}
+              {{ item.areaOld }} => {{ item.shelfOld }} => {{ item.localtionOld }}
             </p>
             <p style="font-size: 20px">⏬</p>
             <p>
               Location New: {{ item.warehouse }} => {{ item.floor }} =>
-              {{ item.area }} => {{ item.localtionNew }}
+              {{ item.area }} => {{ item.shelf }} => {{ item.localtionNew }}
             </p>
             <h5>Account Create: {{ item.account_creatPlan }}</h5>
             <h5>
@@ -140,12 +140,12 @@
             <h2 style="font-weight: bold">Plan Name: {{ item.title }}</h2>
             <p>
               Location Old: {{ item.warehouseOld }} => {{ item.floorOld }} =>
-              {{ item.areaOld }} => {{ item.localtionOld }}
+              {{ item.areaOld }} => {{ item.shelfOld }} => {{ item.localtionOld }}
             </p>
             <p style="font-size: 20px">⏬</p>
             <p>
               Location New: {{ item.warehouse }} => {{ item.floor }} =>
-              {{ item.area }} => {{ item.localtionNew }}
+              {{ item.area }} => {{ item.shelf }} => {{ item.localtionNew }}
             </p>
             <h5>Account Create: {{ item.account_creatPlan }}</h5>
             <h5>
@@ -282,6 +282,8 @@ const findAllData = async (search, pageData) => {
       totalPage.value = 0
       currentPlanData.value = []
     }
+
+    console.log(res)
   } else if (typePlan.value === "lichsu") {
     const res =
       search === ""

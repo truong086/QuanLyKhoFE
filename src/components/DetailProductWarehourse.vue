@@ -4,12 +4,13 @@
       <div>
         <button class="button">{{ warehourseName }}</button> =>
         <button class="button">{{ floorName }}</button> =>
+        <button class="button">{{ areaName }} </button> =>
         <button class="button">{{ productDetail.name }}</button>
       </div>
     </div>
     <div
       v-if="productDetail"
-      style="margin: 50px 0; padding-left: 60px; display: flex; flex-wrap: wrap"
+      style="margin: 50px 0; padding-left: 60px; display: flex; flex-wrap: wrap;"
     >
       <div
         v-for="(item, index) in productDetail.productLocationAreas"
@@ -25,7 +26,7 @@
       >
         <img
           v-if="item.image"
-          style="width: 300px"
+          style="width: 300px; height: 300px;"
           :src="item.image"
           :class="'card-img-top' + '_' + item.id"
           alt=""
@@ -85,11 +86,17 @@
         <a
           class="btn btn-primary"
           href="#"
-          @click="backDetail(productDetail.id)"
+          @click="backDetail(item.id_product)"
           >Back</a
         >
       </div>
     </div>
+  </div>
+
+  <!-- Hiển thị màn hình loading -->
+  <div v-if="isLoading" class="loading-overlay">
+    <div class="spinner"></div>
+    <p>Đang tải...</p>
   </div>
 </template>
 
@@ -105,6 +112,8 @@ const router = useRouter();
 const productDetail = ref({});
 const warehourseName = ref('')
 const floorName = ref('')
+const areaName = ref('')
+const isLoading = ref(false)
 
 const getToken = () => {
   var token = store.getToken;
@@ -116,10 +125,11 @@ const getToken = () => {
 const { proxy } = getCurrentInstance();
 const hostName = proxy?.hostname;
 onMounted(() => {
-  if (route.query.id && route.query.warehoure && route.query.floor) {
+  if (route.query.id && route.query.warehoure && route.query.floor && route.query.area) {
     findOneWarehourse(decodeURIComponent(route.query.id));
     warehourseName.value = decodeURIComponent(route.query.warehoure)
     floorName.value = decodeURIComponent(route.query.floor)
+    areaName.value = decodeURIComponent(route.query.area)
   }else{
     router.push({path: "SliderPage"})
   }
@@ -129,11 +139,21 @@ const swapImage = (classData, image) => {
   document.querySelector("." + classData).src = image;
 };
 const findOneWarehourse = async (id) => {
+  isLoading.value = true;
+  document.body.classList.add("loading"); // Add Lớp "loading"
+  document.body.style.overflow = "hidden";
   const res = await axios.get(
     hostName + `/api/Product/FindOneByArea?id=${id}`,
     getToken()
   );
-  productDetail.value = res.data.content;
+  if(res.data.success){
+    productDetail.value = res.data.content;
+  }
+
+  console.log(res)
+  isLoading.value = false;
+  document.body.classList.remove("loading");
+  document.body.style.overflow = "auto";
   console.log(res);
 };
 
@@ -152,5 +172,8 @@ const backDetail = (id) => {
   font-weight: bold;
   color: blue;
   width: 200px;
+}
+img {
+    mix-blend-mode: multiply; /* Hoặc screen tùy vào màu nền */
 }
 </style>

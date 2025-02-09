@@ -30,6 +30,15 @@
         </select>
       </div>
 
+      <!-- Keej Select -->
+      <div class="form-group">
+        <label for="district">Shelf:</label>
+        <select class="form-select" v-model="shelfCurrentOld" @change="searchShelf('old')">
+          <option value="" disabled selected>Chọn khu</option>
+          <option v-for="(item, index) in shelfOld" :key="index" :value="item">{{ item.name }}</option>
+        </select>
+      </div>
+
       <!-- Vị trí Select -->
       <div class="form-group">
         <label for="ward">Location:</label>
@@ -169,6 +178,15 @@
         <select class="form-select" v-model="DataOneAreaNew" @change="searchArea('new')">
           <option value="" disabled selected>Chọn khu</option>
           <option v-for="(item, index) in currentAreaDataNew" :key="index" :value="item">{{ item.name }}</option>
+        </select>
+      </div>
+
+       <!-- Khu Select -->
+       <div class="form-group">
+        <label for="district">Shelf:</label>
+        <select class="form-select" v-model="shelfCurrentNew" @change="searchShelf('new')">
+          <option value="" disabled selected>Chọn khu</option>
+          <option v-for="(item, index) in shelfNew" :key="index" :value="item">{{ item.name }}</option>
         </select>
       </div>
 
@@ -421,17 +439,22 @@ const classNameDataOld = ref('')
 const classNameDataNew = ref('')
 const classNameNew = ref('')
 const classNamSwapOrNew = ref('')
+const shelfOld = ref([])
+const shelfCurrentOld = ref([])
+const shelfNew = ref([])
+const shelfCurrentNew = ref([])
 const locationCheck = ref({
-  id_Area: 0,
+  id_Shelf: 0,
   location: 0
 })
 const planNew = ref({
   title: "",
   description: "",
   isWarehourse: true,
-  areaOld: 0,
+  shelfOld: 0,
   localtionNew: 0,
   warehouse: 0,
+  shelf: 0,
   area: 0,
   floor: 0,
   locationOld: 0
@@ -477,8 +500,9 @@ const updateData = async () => {
 const updateDataLocationNew = async () => {
   planNew.value.floor = currentFloorNew.value.id
   planNew.value.warehouse = currentWarehouseNew.value.id
+  planNew.value.area = DataOneArea.value.id
   planNew.value.locationOld = locationCheck.value.location
-  planNew.value.areaOld = locationCheck.value.id_Area
+  planNew.value.shelfOld = locationCheck.value.id_Shelf
 
   classNameNew.value = classNameDataNew.value
   classNameDataNew.value = classNamSwapOrNew.value
@@ -511,7 +535,7 @@ const openFrame = (id, location, list, listPlan, type, classData) =>{
   classNamSwapOrNew.value = classData
     frameVisible.value = true;
     if(type === 'new'){
-      planNew.value.area = id
+      planNew.value.shelf = id
       planNew.value.localtionNew = location
       
       // classNameNew.value = classNameDataNew.value
@@ -524,7 +548,7 @@ const openFrame = (id, location, list, listPlan, type, classData) =>{
       const checkListTotal = list.filter(l => l.location == location)
       if(checkListTotal.length > 0){
         if(type === 'old'){
-          locationCheck.value.id_Area = id
+          locationCheck.value.id_Shelf = id
           locationCheck.value.location = location
           // classNameDataOld.value = classNameData.value
           // classNameData.value = classData
@@ -586,6 +610,10 @@ const SearchFloor = (type) => {
   findAllArea(type);
 };
 const searchArea = (type) => {
+  findAllShelf(type)
+}
+
+const searchShelf = (type) => {
   classNamSwapOrNew.value = ''
   classNameNew.value = ''
   classNameDataNew.value = ''
@@ -598,10 +626,10 @@ const findOneArea = async (type) => {
   document.body.classList.add("loading"); // Add Lớp "loading"
   document.body.style.overflow = "hidden";
 
-  if(DataOneArea.value != null || DataOneAreaNew.value != null){
+  if(shelfCurrentOld.value != null || shelfCurrentNew.value != null){
     const res = await axios.get(
       hostName +
-        `/api/Product/FindOneByArea?id=${type === 'old' ? DataOneArea.value.id : DataOneAreaNew.value.id}`,
+        `/api/Product/FindOneByArea?id=${type === 'old' ? shelfCurrentOld.value.id : shelfCurrentNew.value.id}`,
       getToken()
     );
     if (res.data.success) {
@@ -622,15 +650,37 @@ const findOneArea = async (type) => {
   document.body.classList.remove("loading");
   document.body.style.overflow = "auto";
 };
-const findAllArea = async (type) => {
+const findAllShelf = async (type) =>{
   isLoading.value = true;
   document.body.classList.add("loading"); // Add Lớp "loading"
   document.body.style.overflow = "hidden";
 
+  if(DataOneArea.value != null || DataOneAreaNew.value != null){
+    const res = await axios.get(hostName + `/api/Shelf/FindByArea?id=${type === 'old' ? DataOneArea.value.id 
+    : DataOneAreaNew.value.id}&page=1&pageSize=2000`, getToken())
+    if (res.data.success) {
+        if(res.data.content.data.length > 0){
+          if(type === 'old'){
+            shelfOld.value = res.data.content.data;
+            shelfCurrentOld.value = res.data.content.data[0]
+          }else{
+            shelfNew.value = res.data.content.data;
+            shelfCurrentNew.value = res.data.content.data[0]
+          }
+        
+        findOneArea(type)
+        }
+      }
+  }
+  isLoading.value = false;
+  document.body.classList.remove("loading");
+  document.body.style.overflow = "auto";
+}
+const findAllArea = async (type) => {
   if(currentFloor.value != null || currentFloorNew.value != null){
     const res = await axios.get(
     hostName +
-      `/api/Area/FindByFloor?id=${type === 'old' ? currentFloor.value.id : currentFloorNew.value.id}&page=1&pageSize=2000`,
+      `/api/Area/FindOneByFloor?id=${type === 'old' ? currentFloor.value.id : currentFloorNew.value.id}`,
         getToken()
       );
       if (res.data.success) {
@@ -642,16 +692,11 @@ const findAllArea = async (type) => {
             currentAreaDataNew.value = res.data.content.data;
             DataOneAreaNew.value = res.data.content.data[0]
           }
-        
-        findOneArea(type)
+          findAllShelf(type)
         }
       }
 
   }
-  
-  isLoading.value = false;
-  document.body.classList.remove("loading");
-  document.body.style.overflow = "auto";
 };
 const getToken = () => {
   var token = store.getToken;

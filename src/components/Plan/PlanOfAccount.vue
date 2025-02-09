@@ -21,14 +21,14 @@
             <div class="warehouse-info" style="z-index: 1000">
               <h2 style="font-weight: bold">Plan Name: {{ item.title }}</h2>
               <p>
-                Location Old: {{ item.warehouseOld }} => {{ item.floorOld }} =>
-                {{ item.areaOld }} => {{ item.localtionOld }}
-              </p>
-              <p style="font-size: 20px">⏬</p>
-              <p>
-                Location New: {{ item.warehouse }} => {{ item.floor }} =>
-                {{ item.area }} => {{ item.localtionNew }}
-              </p>
+              Location Old: {{ item.warehouseOld }} => {{ item.floorOld }} =>
+              {{ item.areaOld }} => {{ item.shelfOld }} => {{ item.localtionOld }}
+            </p>
+            <p style="font-size: 20px">⏬</p>
+            <p>
+              Location New: {{ item.warehouse }} => {{ item.floor }} =>
+              {{ item.area }} => {{ item.shelf }} => {{ item.localtionNew }}
+            </p>
               <h5>Account Create: {{ item.account_creatPlan }}</h5>
               <h5>
                 Status:
@@ -82,14 +82,14 @@
             <div class="warehouse-info" style="z-index: 1000">
               <h2 style="font-weight: bold">Plan Name: {{ item.title }}</h2>
               <p>
-                Location Old: {{ item.warehouseOld }} => {{ item.floorOld }} =>
-                {{ item.areaOld }} => {{ item.localtionOld }}
-              </p>
-              <p style="font-size: 20px">⏬</p>
-              <p>
-                Location New: {{ item.warehouse }} => {{ item.floor }} =>
-                {{ item.area }} => {{ item.localtionNew }}
-              </p>
+              Location Old: {{ item.warehouseOld }} => {{ item.floorOld }} =>
+              {{ item.areaOld }} => {{ item.shelfOld }} => {{ item.localtionOld }}
+            </p>
+            <p style="font-size: 20px">⏬</p>
+            <p>
+              Location New: {{ item.warehouse }} => {{ item.floor }} =>
+              {{ item.area }} => {{ item.shelf }} => {{ item.localtionNew }}
+            </p>
               <h5>Account Create: {{ item.account_creatPlan }}</h5>
               <h5>
                 Status:
@@ -139,14 +139,14 @@
             <div class="warehouse-info" style="z-index: 1000">
               <h2 style="font-weight: bold">Plan Name: {{ item.title }}</h2>
               <p>
-                Location Old: {{ item.warehouseOld }} => {{ item.floorOld }} =>
-                {{ item.areaOld }} => {{ item.localtionOld }}
-              </p>
-              <p style="font-size: 20px">⏬</p>
-              <p>
-                Location New: {{ item.warehouse }} => {{ item.floor }} =>
-                {{ item.area }} => {{ item.localtionNew }}
-              </p>
+              Location Old: {{ item.warehouseOld }} => {{ item.floorOld }} =>
+              {{ item.areaOld }} => {{ item.shelfOld }} => {{ item.localtionOld }}
+            </p>
+            <p style="font-size: 20px">⏬</p>
+            <p>
+              Location New: {{ item.warehouse }} => {{ item.floor }} =>
+              {{ item.area }} => {{ item.shelf }} => {{ item.localtionNew }}
+            </p>
               <h5>Account Create: {{ item.account_creatPlan }}</h5>
               <h5>
                 Status:
