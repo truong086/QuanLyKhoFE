@@ -62,7 +62,7 @@
               <img
                 v-if="item.supplier_image"
                 style="width: 30px; height: 30px; border-radius: 50%"
-                src=""
+                :src="item.supplier_image"
                 alt=""
               />
             </p>
@@ -146,6 +146,8 @@ const findOneWarehourse = async (id) => {
     hostName + `/api/Product/FindOneByArea?id=${id}`,
     getToken()
   );
+  
+  console.log(res)
   if(res.data.success){
     productDetail.value = res.data.content;
   }

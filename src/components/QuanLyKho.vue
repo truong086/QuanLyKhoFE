@@ -73,7 +73,7 @@
                 
                 <div class="grid" style="width: 1200px; display: flex; flex-wrap: wrap;">
                   <div v-for="(cell, cellIndex) in row.quantity" :key="cellIndex">
-                  <div v-if="row.totalQuantityUseds.some(d => d.location == cell && d.quantityUsed > 5 && d.quantityUsed < 30)" style="position: absolute;">
+                  <div v-if="row.totalQuantityUseds.some(d => d.location == cell && d.quantityUsed <= 15 && d.quantityUsed > 1)" style="position: absolute;">
                     <p style="font-size: 10px; font-weight: bold; animation: AlmostFull 0.5s ease-in-out infinite;">Almost full !!!</p>
                   </div>
                   <div v-else-if="row.totalQuantityUseds.some(d => d.location == cell && d.quantityUsed <= 0)" style="position: absolute;">

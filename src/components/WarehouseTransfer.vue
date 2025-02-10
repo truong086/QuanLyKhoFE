@@ -1,5 +1,69 @@
 <template>
-  <div class="container">
+  <div style="display: flex;">
+    <div ref="scrollContainer" style="width: 1500px; height: 300px; padding: 20px; box-shadow: 3px 2px 8px gray; margin-top: 20px; overflow-y: auto" v-if="dataPercentage.length > 0">
+      <div v-for="(item, index) in dataPercentage" :key="index">
+        <p v-if="index + 1 === 1" style="font-weight: bold; animation: index1 0.5s ease-in-out infinite;">
+          <img :src="item.warehouseImage" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
+          {{ item.warehouseName }} => 
+
+          <img :src="item.floorImage" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
+          {{ item.floorName }} => 
+
+          <img :src="item.areaImage" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
+          {{ item.areaName }} => 
+
+          <img :src="item.shelfImage" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
+          {{ item.shelfName }} => 
+          {{ item.location }} ({{ item.code }}) : {{ getTwoDecimals(item.percentage) }}%
+        </p>
+
+        <p v-else-if="index + 1 === 2" style="font-weight: bold; color: blue;">
+          <img :src="item.warehouseImage" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
+          {{ item.warehouseName }} => 
+
+          <img :src="item.floorImage" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
+          {{ item.floorName }} => 
+
+          <img :src="item.areaImage" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
+          {{ item.areaName }} => 
+
+          <img :src="item.shelfImage" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
+          {{ item.shelfName }} => 
+          {{ item.location }} ({{ item.code }}) : {{ getTwoDecimals(item.percentage) }}%
+        </p>
+
+        <p v-else-if="index + 1 === 3" style="font-weight: bold; color: blueviolet;">
+          <img :src="item.warehouseImage" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
+          {{ item.warehouseName }} => 
+
+          <img :src="item.floorImage" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
+          {{ item.floorName }} => 
+
+          <img :src="item.areaImage" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
+          {{ item.areaName }} => 
+
+          <img :src="item.shelfImage" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
+          {{ item.shelfName }} => 
+          {{ item.location }} ({{ item.code }}) : {{ getTwoDecimals(item.percentage) }}%
+        </p>
+
+        <p v-else style="font-weight: bold;">
+          <img :src="item.warehouseImage" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
+          {{ item.warehouseName }} => 
+
+          <img :src="item.floorImage" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
+          {{ item.floorName }} => 
+
+          <img :src="item.areaImage" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
+          {{ item.areaName }} => 
+
+          <img :src="item.shelfImage" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
+          {{ item.shelfName }} => 
+          {{ item.location }} ({{ item.code }}) : {{ getTwoDecimals(item.percentage) }}%
+        </p>
+      </div>
+    </div>
+    <div class="container">
     <!-- Form Kho cũ -->
     <div class="form-section">
       <h2 class="title">Warehourse old</h2>
@@ -354,6 +418,8 @@
       </div>
     </div>
   </div>
+  </div>
+  
 
   <!-- Hiển thị màn hình loading -->
   <div v-if="isLoading" class="loading-overlay">
@@ -363,7 +429,7 @@
 </template>
 <script setup>
 import { useCounterStore } from "../store";
-import { ref, getCurrentInstance, onMounted } from "vue";
+import { ref, getCurrentInstance, onMounted, nextTick } from "vue";
 import axios from "axios";
 import { useToast } from "vue-toastification";
 import { useRouter } from "vue-router";
@@ -372,6 +438,10 @@ import Swal from 'sweetalert2';
 onMounted(() => {
   loadDataWarehouse('old');
   loadDataWarehouse('new')
+  loadDataPercentage()
+  if (scrollContainer.value) {
+    scrollContainer.value.scrollTop = scrollContainer.value.scrollHeight;
+  }
   setInterval(() => {
     if (!checkTokenData()) {
       store.clearStore();
@@ -381,6 +451,9 @@ onMounted(() => {
   }, 20000);
 });
 
+const getTwoDecimals  = (value) => {
+  return parseFloat(value).toFixed(2) // Giữ 2 số sau dấu "."
+}
 const checkQuantityLocationProduct = (data, location) => {
   var count = data.filter((p) => p.location == location).length;
   return count;
@@ -443,6 +516,8 @@ const shelfOld = ref([])
 const shelfCurrentOld = ref([])
 const shelfNew = ref([])
 const shelfCurrentNew = ref([])
+const dataPercentage = ref([])
+const scrollContainer = ref(null);
 const locationCheck = ref({
   id_Shelf: 0,
   location: 0
@@ -464,6 +539,25 @@ const { proxy } = getCurrentInstance();
 const hostName = proxy?.hostname;
 const frameVisible = ref(false);
 
+const loadDataPercentage = async () => {
+  const res = await axios.get(hostName + '/api/Deliverynote/GetWarehouseSalesPercentage', getToken())
+  if(res.data.success){
+    dataPercentage.value = res.data.content
+
+    const dataPhanTram = dataPercentage.value.some(x => x.percentage > 0.4)
+    if(dataPhanTram){
+      Swal.fire("Có bản ghi phần trăm lớp  hơn 0.4")
+      Toast.success("Đã có Data")
+    }
+  }
+  console.log(res)
+}
+
+nextTick(() => {
+  if (scrollContainer.value) {
+    scrollContainer.value.scrollTop = scrollContainer.value.scrollHeight;
+  }
+})
 const addPlan = async () => {
   isLoading.value = true;
   document.body.classList.add("loading"); // Add Lớp "loading"
@@ -625,7 +719,6 @@ const findOneArea = async (type) => {
   isLoading.value = true;
   document.body.classList.add("loading"); // Add Lớp "loading"
   document.body.style.overflow = "hidden";
-
   if(shelfCurrentOld.value != null || shelfCurrentNew.value != null){
     const res = await axios.get(
       hostName +
@@ -644,16 +737,12 @@ const findOneArea = async (type) => {
     quantityLocation.value = {}
     quantityLocationNew.value = {}
   }
-  
 
   isLoading.value = false;
   document.body.classList.remove("loading");
   document.body.style.overflow = "auto";
 };
 const findAllShelf = async (type) =>{
-  isLoading.value = true;
-  document.body.classList.add("loading"); // Add Lớp "loading"
-  document.body.style.overflow = "hidden";
 
   if(DataOneArea.value != null || DataOneAreaNew.value != null){
     const res = await axios.get(hostName + `/api/Shelf/FindByArea?id=${type === 'old' ? DataOneArea.value.id 
@@ -672,11 +761,8 @@ const findAllShelf = async (type) =>{
         }
       }
   }
-  isLoading.value = false;
-  document.body.classList.remove("loading");
-  document.body.style.overflow = "auto";
 }
-const findAllArea = async (type) => {
+const findAllArea = async (type) => { 
   if(currentFloor.value != null || currentFloorNew.value != null){
     const res = await axios.get(
     hostName +
@@ -756,6 +842,9 @@ const SearchWarehourse = async (type) => {
     }
 };
 const loadDataWarehouse = async (type) => {
+  isLoading.value = true;
+  document.body.classList.add("loading"); // Add Lớp "loading"
+  document.body.style.overflow = "hidden";
   const res = await axios.get(
     hostName + "/api/Warehouse/FindAll?page=1&pageSize=2000",
     getToken()
@@ -791,6 +880,17 @@ const loadDataFloor = async (id, type) => {
   Toast.success("Success");
 };
 </script>
+
+<style>
+@keyframes index1 {
+  0%{
+    color: red;
+  }
+  100%{
+    color: yellow;
+  }
+}
+</style>
 <style scoped>
   .frame-popup {
   display: flex;

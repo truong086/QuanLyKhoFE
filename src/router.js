@@ -24,6 +24,7 @@ import PlanOfAccountPage from './components/Plan/PlanOfAccount.vue';
 import StatisticsPage from './components/Statistics/StatisticsPage.vue';
 import AddProduct from './components/AddProduct.vue';
 import DetailProductWarehoursePage from './components/DetailProductWarehourse.vue';
+import productwarehousePage from './components/productwarehouse/productwarehousePage.vue';
 
 import { useCounterStore } from './store';
 
@@ -85,6 +86,11 @@ const routes = [
         path: "PlanOfAccount",
         name: "planOfAccount",
         component: PlanOfAccountPage,
+      },
+      {
+        path: "Productwarehouse",
+        name: "productwarehouse",
+        component: productwarehousePage,
       },
       {
         path: "detailProductWarehourse",
