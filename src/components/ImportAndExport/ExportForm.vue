@@ -20,16 +20,14 @@
           placeholder="Nhập mô tả"
         ></textarea>
       </div>
-
-      <div class="checkbox form-group">
-        <label for="isRetailcustomers">Khách lẻ:</label>
-        <div class="checkbox-parent">
-          <input
-            type="checkbox"
-            id="isRetailcustomers"
-            v-model="form.isRetailcustomers"
-          />
-        </div>
+      <!-- Title and Checkbox under "Mô tả" -->
+      <div class="form-group">
+        <label for="descriptionOption">Chọn tùy chọn mô tả:</label>
+        <input
+          type="checkbox"
+          id="descriptionOption"
+          v-model="form.descriptionOption"
+        />
       </div>
 
       <div class="form-group">
@@ -100,6 +98,7 @@
           placeholder="Nhập địa chỉ giao hàng"
         />
       </div>
+
       <div class="product-show">
         <label for="products">Sản phẩm:</label>
         <div
@@ -109,31 +108,31 @@
         >
           <div>
             <label>ID sản phẩm:</label>
-            <input
-              type="number"
-              v-model="product.id_product"
-              placeholder="ID sản phẩm"
-            />
+            <select v-model="product.id_product">
+              <option value="" disabled selected>Chọn ID sản phẩm</option>
+              <option v-for="id in productIds" :key="id" :value="id">{{ id }}</option>
+            </select>
           </div>
           <div>
             <label>Số lượng:</label>
-            <input
-              type="number"
-              v-model="product.quantity"
-              placeholder="Số lượng"
-            />
+            <select v-model="product.quantity">
+              <option value="" disabled selected>Chọn số lượng</option>
+              <option v-for="n in quantityOptions" :key="n" :value="n">{{ n }}</option>
+            </select>
           </div>
           <div>
             <label>Vị trí:</label>
-            <input
-              type="number"
-              v-model="product.location"
-              placeholder="Vị trí"
-            />
+            <select v-model="product.location">
+              <option value="" disabled selected>Chọn vị trí</option>
+              <option v-for="loc in locationOptions" :key="loc" :value="loc">{{ loc }}</option>
+            </select>
           </div>
           <div>
             <label>Khu:</label>
-            <input type="number" v-model="product.area" placeholder="Khu" />
+            <select v-model="product.area">
+              <option value="" disabled selected>Chọn khu</option>
+              <option v-for="area in areaOptions" :key="area" :value="area">{{ area }}</option>
+            </select>
           </div>
           <button type="button" @click="removeProduct(index)">
             Xóa sản phẩm
@@ -169,17 +168,16 @@
           placeholder="Nhập thuế"
         />
       </div>
-
-      <div class="checkbox form-group">
-        <label for="isPercentage">Thuế theo tỷ lệ:</label>
-        <div class="checkbox-parent">
-          <input
-            type="checkbox"
-            id="isPercentage"
-            v-model="form.isPercentage"
-          />
-        </div>
+      <!-- Title and Checkbox under "Thuế" -->
+      <div class="form-group">
+        <label for="taxOption">Chọn tùy chọn thuế:</label>
+        <input
+          type="checkbox"
+          id="taxOption"
+          v-model="form.taxOption"
+        />
       </div>
+
       <div class="form-group">
         <label for="total">Tổng tiền:</label>
         <input
@@ -199,10 +197,10 @@
 <script setup>
   import { ref, watch } from "vue";
 
-  // Dữ liệu mẫu
   const form = ref({
     title: "",
     description: "",
+    descriptionOption: false,  // Added descriptionOption
     isRetailcustomers: false,
     retailcustomersOld: 0,
     name: "",
@@ -215,6 +213,7 @@
     deliveryAddress: "",
     code: "",
     tax: 0,
+    taxOption: false,  // Added taxOption
     isPercentage: false,
     products: [
       {
@@ -226,7 +225,11 @@
     ],
   });
 
-  // Tính toán tổng tiền (ví dụ có thể tính toán thêm nếu cần)
+  const productIds = ref([1, 2, 3, 4, 5]);
+  const quantityOptions = ref([1, 2, 3, 4, 5, 10, 20]);
+  const locationOptions = ref([101, 102, 103, 104, 105]);
+  const areaOptions = ref([1, 2, 3, 4, 5]);
+
   watch(
     () => form.value.price * form.value.quantity,
     (newTotal) => {
@@ -234,7 +237,6 @@
     }
   );
 
-  // Thêm sản phẩm mới vào mảng
   const addProduct = () => {
     form.value.products.push({
       id_product: 0,
@@ -244,15 +246,12 @@
     });
   };
 
-  // Xóa sản phẩm khỏi mảng
   const removeProduct = (index) => {
     form.value.products.splice(index, 1);
   };
 
-  // Gửi form
   const handleSubmit = () => {
     console.log("Phiếu xuất đã gửi:", form.value);
-    // Thực hiện API call ở đây (VD: axios.post('/api/phi-xuat', form.value))
   };
 </script>
 
@@ -270,8 +269,6 @@
     font-weight: bold;
     color: red;
   }
-  /* .product-show {
-  } */
   .form-group {
     display: flex;
     align-items: center;
@@ -300,6 +297,7 @@
     transition: all 0.3s ease;
     box-sizing: border-box;
   }
+
   .form-group select,
   .form-group input,
   .form-group textarea:focus {
@@ -307,11 +305,13 @@
     box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
     outline: none;
   }
+
   .form-group select,
   .form-group input,
   .form-group textarea:focus::placeholder {
     font-style: italic;
   }
+
   .form-group button {
     padding: 8px 16px;
     background-color: #007bff;
@@ -324,49 +324,7 @@
   .form-group button:hover {
     background-color: #0056b3;
   }
-  /* ********** */
-  /* css for checkbox */
-  .form-group .checkbox-parent {
-    flex: 2;
-    align-items: center;
-  }
-  #isRetailcustomers,
-  #isPercentage {
-    flex: none;
-    float: left;
-    left: 0;
-  }
-  /* set check box to square */
-  .form-group input[type="checkbox"] {
-    appearance: none;
-    border: 2px solid #007bff; /* Đặt màu viền cho checkbox */
-    width: 30px; /* Chiều rộng của checkbox */
-    height: 30px; /* Chiều cao của checkbox */
-    border-radius: 0; /* Bỏ border-radius để có hình vuông */
-    margin-right: 10px;
-    transition: all 0.3s ease;
-    position: relative;
-  }
 
-  /* when checkbox have chosese */
-  .form-group input[type="checkbox"]:checked {
-    background-color: #007bff;
-    border-color: #007bff;
-  }
-  .form-group input[type="checkbox"]:checked::after {
-    content: "✓";
-    color: white;
-    font-size: 18px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
-
-  /* hover for checkbox */
-  .form-group:hover input[type="checkbox"] {
-    border-color: #0056b3;
-  }
   .product-item {
     display: flex;
     gap: 10px;

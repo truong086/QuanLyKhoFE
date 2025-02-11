@@ -31,11 +31,7 @@ import { useCounterStore } from "./store";
 // import { compose } from "ramda";
 
 const routes = [
-  {
-    path: "ImportExportForm",
-    name: "ImportExportForm",
-    component: ImportExportForm,
-  },
+  
   {
     path: "/AllCategory",
     name: "AllCategory",
@@ -87,6 +83,11 @@ const routes = [
       ],
     },
     children: [
+      {
+        path: "/ImportExportForm",
+        name: "ImportExportForm",
+        component: ImportExportForm,
+      },
       {
         path: "PlanOfAccount",
         name: "planOfAccount",

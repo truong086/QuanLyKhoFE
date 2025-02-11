@@ -80,28 +80,98 @@
 </template>
 
 <style scoped>
-/* Căn các phần tử trong sidebar sang trái */
-.left-sidebar .sidebar-nav ul#sidebarnav {
-  padding-left: 0; /* Loại bỏ padding bên trái nếu có */
-  text-align: left; /* Căn nội dung sang trái */
+/* Thiết lập Glassmorphism */
+.left-sidebar {
+  width: 250px;
+  height: 100vh;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: all 0.3s ease-in-out;
 }
 
-.left-sidebar .sidebar-nav ul#sidebarnav li {
-  list-style: none; /* Ẩn ký hiệu danh sách nếu cần */
-  text-align: left; /* Đảm bảo nội dung bên trong li được căn trái */
+/* Scroll sidebar */
+.scroll-sidebar {
+  overflow-y: auto;
+  height: calc(100vh - 20px);
+  padding: 10px;
 }
 
-.left-sidebar .sidebar-nav ul#sidebarnav li a,
-.left-sidebar .sidebar-nav ul#sidebarnav li router-link {
-  display: flex; /* Giúp căn chỉnh icon và text trên cùng một hàng */
-  align-items: center; /* Căn giữa icon và text theo chiều dọc */
-  text-align: left; /* Căn chữ sang trái */
-  padding: 10px 15px; /* Tùy chỉnh khoảng cách bên trong */
-  text-decoration: none; /* Loại bỏ gạch chân (nếu có) */
+/* Sidebar navigation */
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
-.left-sidebar .sidebar-nav ul#sidebarnav li a i {
-  margin-right: 10px; /* Thêm khoảng cách giữa icon và text */
+#sidebarnav {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}
+
+/* Sidebar items */
+#sidebarnav li {
+  width: 100%;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+#sidebarnav li a {
+  display: flex;
+  align-items: center;
+  padding: 12px 15px;
+  color: rgb(14, 2, 2);
+  text-decoration: none;
+  font-weight: 500;
+  border-radius: 8px;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+/* Icon chỉnh đẹp hơn */
+#sidebarnav li a i {
+  margin-right: 12px;
+  font-size: 18px;
+  transition: transform 0.2s ease-in-out;
+}
+
+/* Hover effect */
+#sidebarnav li:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateX(5px);
+}
+
+#sidebarnav li a:hover i {
+  transform: scale(1.1);
+}
+
+/* Click hiệu ứng màu */
+#sidebarnav li.active {
+  background: linear-gradient(45deg, rgba(79, 232, 232, 0.7), rgba(0, 128, 255, 0.6));
+}
+
+/* Căn giữa nút ở cuối */
+.text-center {
+  text-align: center;
+  margin-top: 20px;
+}
+
+/* Nút trong sidebar */
+.text-center a {
+  display: inline-block;
+  padding: 10px 20px;
+  background: linear-gradient(45deg, #4fe8e8, #0080ff);
+  color: white;
+  font-weight: bold;
+  border-radius: 8px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.text-center a:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(0, 128, 255, 0.4);
 }
 
 </style>
