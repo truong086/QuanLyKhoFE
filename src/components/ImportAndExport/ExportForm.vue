@@ -1,350 +1,343 @@
 <template>
   <div class="form-container">
-    <h2 style="margin-bottom: 20px">Phiếu Xuất</h2>
-    <form @submit.prevent="handleSubmit">
-      <div class="form-group">
-        <label for="title">Tiêu đề:</label>
-        <input
-          type="text"
-          id="title"
-          v-model="form.title"
-          placeholder="Nhập tiêu đề"
-        />
-      </div>
-
-      <div class="form-group">
-        <label for="description">Mô tả:</label>
-        <textarea
-          id="description"
-          v-model="form.description"
-          placeholder="Nhập mô tả"
-        ></textarea>
-      </div>
-      <!-- Title and Checkbox under "Mô tả" -->
-      <div class="form-group">
-        <label for="descriptionOption">Chọn tùy chọn mô tả:</label>
-        <input
-          type="checkbox"
-          id="descriptionOption"
-          v-model="form.descriptionOption"
-        />
-      </div>
-
-      <div class="form-group">
-        <label for="retailcustomersOld">Khách hàng cũ:</label>
-        <select v-model="retailcustomersOld" id="retailcustomersOld">
-          <option value="" disabled selected>Chọn mã kh..</option>
-          <option value="1">Bác A</option>
-          <option value="2">Cô B</option>
-          <option value="1">Chị C</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label for="name">Tên khách hàng:</label>
-        <input
-          type="text"
-          id="name"
-          v-model="form.name"
-          placeholder="Nhập tên khách hàng"
-        />
-      </div>
-
-      <div class="form-group">
-        <label for="address">Địa chỉ:</label>
-        <input
-          type="text"
-          id="address"
-          v-model="form.address"
-          placeholder="Nhập địa chỉ"
-        />
-      </div>
-
-      <div class="form-group">
-        <label for="phone">Số điện thoại:</label>
-        <input
-          type="text"
-          id="phone"
-          v-model="form.phone"
-          placeholder="Nhập số điện thoại"
-        />
-      </div>
-
-      <div class="form-group">
-        <label for="email">Email:</label>
-        <input
-          type="email"
-          id="email"
-          v-model="form.email"
-          placeholder="Nhập email"
-        />
-      </div>
-      <div class="form-group">
-        <label for="code">Mã phiếu:</label>
-        <input
-          type="text"
-          id="code"
-          v-model="form.code"
-          placeholder="Nhập mã phiếu"
-        />
-      </div>
-
-      <div class="form-group">
-        <label for="deliveryAddress">Địa chỉ giao hàng:</label>
-        <input
-          type="text"
-          id="deliveryAddress"
-          v-model="form.deliveryAddress"
-          placeholder="Nhập địa chỉ giao hàng"
-        />
-      </div>
-
-      <div class="product-show">
-        <label for="products">Sản phẩm:</label>
-        <div
-          v-for="(product, index) in form.products"
-          :key="index"
-          class="product-item"
-        >
-          <div>
-            <label>ID sản phẩm:</label>
-            <select v-model="product.id_product">
-              <option value="" disabled selected>Chọn ID sản phẩm</option>
-              <option v-for="id in productIds" :key="id" :value="id">{{ id }}</option>
-            </select>
+    <!-- Khung bên trái chứa danh sách sản phẩm -->
+    <div class="form-left-frame">
+      <div class="product-list">
+        <h3>Danh sách sản phẩm</h3>
+        <div class="product-item" :class="{ selected: selectedProduct === 'product1', saved: productQuantitySaved.product1 }" @click="selectProduct('product1')">
+          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQzg1GZ2NStg8tlcudDsvglynQmdW6nqq2wUA&s" alt="Product 1" />
+          <span>Tên sản phẩm 1</span>
+          <span>Vị trí: Kho 1</span>
+          <div v-if="selectedProduct === 'product1'">
+            <div v-if="!productQuantitySaved.product1" class="quantity-input">
+              <input type="number" v-model="form.quantity['product1']" placeholder="Nhập số lượng" />
+              <button @click="saveQuantity('product1')">Lưu</button>
+            </div>
+            <div v-if="productQuantitySaved.product1">
+              <span>Số lượng: {{ form.quantity['product1'] }}</span>
+            </div>
           </div>
-          <div>
-            <label>Số lượng:</label>
-            <select v-model="product.quantity">
-              <option value="" disabled selected>Chọn số lượng</option>
-              <option v-for="n in quantityOptions" :key="n" :value="n">{{ n }}</option>
-            </select>
-          </div>
-          <div>
-            <label>Vị trí:</label>
-            <select v-model="product.location">
-              <option value="" disabled selected>Chọn vị trí</option>
-              <option v-for="loc in locationOptions" :key="loc" :value="loc">{{ loc }}</option>
-            </select>
-          </div>
-          <div>
-            <label>Khu:</label>
-            <select v-model="product.area">
-              <option value="" disabled selected>Chọn khu</option>
-              <option v-for="area in areaOptions" :key="area" :value="area">{{ area }}</option>
-            </select>
-          </div>
-          <button type="button" @click="removeProduct(index)">
-            Xóa sản phẩm
-          </button>
         </div>
-        <button type="button" @click="addProduct">Thêm sản phẩm</button>
-      </div>
 
-      <div class="form-group">
-        <label for="quantity">Số lượng:</label>
-        <input
-          type="number"
-          id="quantity"
-          v-model="form.quantity"
-          placeholder="Nhập số lượng"
-        />
-      </div>
-      <div class="form-group">
-        <label for="price">Giá trước thuế:</label>
-        <input
-          type="number"
-          id="price"
-          v-model="form.price"
-          placeholder="Nhập giá"
-        />
-      </div>
-      <div class="form-group">
-        <label for="tax">Thuế:</label>
-        <input
-          type="number"
-          id="tax"
-          v-model="form.tax"
-          placeholder="Nhập thuế"
-        />
-      </div>
-      <!-- Title and Checkbox under "Thuế" -->
-      <div class="form-group">
-        <label for="taxOption">Chọn tùy chọn thuế:</label>
-        <input
-          type="checkbox"
-          id="taxOption"
-          v-model="form.taxOption"
-        />
-      </div>
+        <div class="product-item" :class="{ selected: selectedProduct === 'product2', saved: productQuantitySaved.product2 }" @click="selectProduct('product2')">
+          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQzg1GZ2NStg8tlcudDsvglynQmdW6nqq2wUA&s" alt="Product 2" />
+          <span>Tên sản phẩm 2</span>
+          <span>Vị trí: Kho 2</span>
+          <div v-if="selectedProduct === 'product2'">
+            <div v-if="!productQuantitySaved.product2" class="quantity-input">
+              <input type="number" v-model="form.quantity['product2']" placeholder="Nhập số lượng" />
+              <button @click="saveQuantity('product2')">Lưu</button>
+            </div>
+            <div v-if="productQuantitySaved.product2">
+              <span>Số lượng: {{ form.quantity['product2'] }}</span>
+            </div>
+          </div>
+        </div>
 
-      <div class="form-group">
-        <label for="total">Tổng tiền:</label>
-        <input
-          type="number"
-          id="total"
-          v-model="form.total"
-          placeholder="Tổng tiền"
-          disabled
-        />
+        <div class="product-item" :class="{ selected: selectedProduct === 'product3', saved: productQuantitySaved.product3 }" @click="selectProduct('product3')">
+          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQzg1GZ2NStg8tlcudDsvglynQmdW6nqq2wUA&s" alt="Product 3" />
+          <span>Tên sản phẩm 3</span>
+          <span>Vị trí: Kho 3</span>
+          <div v-if="selectedProduct === 'product3'">
+            <div v-if="!productQuantitySaved.product3" class="quantity-input">
+              <input type="number" v-model="form.quantity['product3']" placeholder="Nhập số lượng" />
+              <button @click="saveQuantity('product3')">Lưu</button>
+            </div>
+            <div v-if="productQuantitySaved.product3">
+              <span>Số lượng: {{ form.quantity['product3'] }}</span>
+            </div>
+          </div>
+        </div>
       </div>
+    </div>
 
-      <button type="submit">Lưu phiếu xuất</button>
-    </form>
+    <!-- Khung bên phải chứa form -->
+    <div class="form-right-frame">
+      <h2 class="form-title">Phiếu Xuất</h2>
+      <form @submit.prevent="handleSubmit">
+        <div class="form-group">
+          <label for="title">Tiêu đề:</label>
+          <input type="text" id="title" v-model="form.title" placeholder="Nhập tiêu đề" />
+        </div>
+
+        <div class="form-group">
+          <label for="description">Mô tả:</label>
+          <textarea id="description" v-model="form.description" placeholder="Nhập mô tả"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Loại khách hàng:</label>
+          <div class="radio-group">
+            <input type="radio" id="oldCustomer" value="old" v-model="form.customerType" />
+            <label for="oldCustomer">Khách hàng cũ</label>
+            <input type="radio" id="newCustomer" value="new" v-model="form.customerType" />
+            <label for="newCustomer">Khách hàng mới</label>
+          </div>
+        </div>
+
+        <div v-if="form.customerType === 'new'" class="customer-new-frame">
+          <div class="form-group">
+            <label for="name">Tên khách hàng:</label>
+            <input type="text" id="name" v-model="form.name" placeholder="Nhập tên khách hàng" />
+          </div>
+
+          <div class="form-group">
+            <label for="address">Địa chỉ:</label>
+            <input type="text" id="address" v-model="form.address" placeholder="Nhập địa chỉ" />
+          </div>
+
+          <div class="form-group">
+            <label for="phone">Số điện thoại:</label>
+            <input type="text" id="phone" v-model="form.phone" placeholder="Nhập số điện thoại" />
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" v-model="form.email" placeholder="Nhập email" />
+          </div>
+        </div>
+
+        <div v-if="form.customerType === 'old'" class="customer-old-frame">
+          <h3>Danh sách khách hàng cũ</h3>
+          <input type="text" v-model="selectedCustomer" placeholder="Chọn khách hàng" class="customer-input" disabled />
+          <ul>
+            <li v-for="customer in oldCustomers" :key="customer.id" @click="selectCustomer(customer.name)">
+              <img :src="customer.image" alt="Avatar" class="customer-avatar" />
+              <span>{{ customer.name }}</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="form-group">
+          <label for="code">Mã phiếu:</label>
+          <input type="text" id="code" v-model="form.code" placeholder="Nhập mã phiếu" />
+        </div>
+
+        <div class="form-group">
+          <label for="deliveryAddress">Địa chỉ giao hàng:</label>
+          <input type="text" id="deliveryAddress" v-model="form.deliveryAddress" placeholder="Nhập địa chỉ giao hàng" />
+        </div>
+
+        <div v-if="selectedProduct" class="form-group">
+          <label for="quantity">Số lượng:</label>
+          <input type="number" id="quantity" v-model="form.quantity[selectedProduct]" placeholder="Nhập số lượng" />
+        </div>
+
+        <div class="form-group">
+          <label for="price">Giá trước thuế:</label>
+          <input type="number" id="price" v-model="form.price" placeholder="Nhập giá" />
+        </div>
+
+        <div class="form-group">
+          <label for="tax">Thuế:</label>
+          <input type="number" id="tax" v-model="form.tax" placeholder="Nhập thuế" />
+        </div>
+
+        <button type="submit" class="submit-button">Lưu phiếu xuất</button>
+      </form>
+    </div>
   </div>
 </template>
 
 <script setup>
-  import { ref, watch } from "vue";
+import { ref } from "vue";
 
-  const form = ref({
-    title: "",
-    description: "",
-    descriptionOption: false,  // Added descriptionOption
-    isRetailcustomers: false,
-    retailcustomersOld: 0,
-    name: "",
-    address: "",
-    phone: "",
-    email: "",
-    price: 0,
-    quantity: 0,
-    total: 0,
-    deliveryAddress: "",
-    code: "",
-    tax: 0,
-    taxOption: false,  // Added taxOption
-    isPercentage: false,
-    products: [
-      {
-        id_product: 0,
-        quantity: 0,
-        location: 0,
-        area: 0,
-      },
-    ],
-  });
+const form = ref({
+  title: "",
+  description: "",
+  customerType: "new", 
+  name: "",
+  address: "",
+  phone: "",
+  email: "",
+  price: 0,
+  quantity: {},
+  deliveryAddress: "",
+  code: "",
+  tax: 0,
+  taxOption: false
+});
 
-  const productIds = ref([1, 2, 3, 4, 5]);
-  const quantityOptions = ref([1, 2, 3, 4, 5, 10, 20]);
-  const locationOptions = ref([101, 102, 103, 104, 105]);
-  const areaOptions = ref([1, 2, 3, 4, 5]);
+const selectedCustomer = ref("");
+const selectedProduct = ref(null); // Lưu trữ sản phẩm đã chọn
+const productQuantitySaved = ref({
+  product1: false,
+  product2: false,
+  product3: false
+}); // Lưu trữ trạng thái lưu số lượng cho từng sản phẩm
 
-  watch(
-    () => form.value.price * form.value.quantity,
-    (newTotal) => {
-      form.value.total = newTotal;
-    }
-  );
+const oldCustomers = ref([
+  { id: 1, name: "Nguyễn Văn A", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Elon_Musk_Colorado_2022_%28cropped2%29.jpg/800px-Elon_Musk_Colorado_2022_%28cropped2%29.jpg" },
+  { id: 2, name: "Trần Thị B", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Elon_Musk_Colorado_2022_%28cropped2%29.jpg/800px-Elon_Musk_Colorado_2022_%28cropped2%29.jpg" },
+  { id: 3, name: "Lê Văn C", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Elon_Musk_Colorado_2022_%28cropped2%29.jpg/800px-Elon_Musk_Colorado_2022_%28cropped2%29.jpg" },
+  { id: 4, name: "Phạm Thị D", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Elon_Musk_Colorado_2022_%28cropped2%29.jpg/800px-Elon_Musk_Colorado_2022_%28cropped2%29.jpg" },
+  { id: 5, name: "Đỗ Văn E", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Elon_Musk_Colorado_2022_%28cropped2%29.jpg/800px-Elon_Musk_Colorado_2022_%28cropped2%29.jpg" }
+]);
 
-  const addProduct = () => {
-    form.value.products.push({
-      id_product: 0,
-      quantity: 0,
-      location: 0,
-      area: 0,
-    });
-  };
+const selectProduct = (product) => {
+  selectedProduct.value = product;
+  // Không reset số lượng khi chuyển sang sản phẩm khác
+};
 
-  const removeProduct = (index) => {
-    form.value.products.splice(index, 1);
-  };
 
-  const handleSubmit = () => {
-    console.log("Phiếu xuất đã gửi:", form.value);
-  };
+const saveQuantity = (product) => {
+  productQuantitySaved.value[product] = true;
+};
+
+const selectCustomer = (name) => {
+  selectedCustomer.value = name;
+};
+
+const handleSubmit = () => {
+  console.log(form.value);
+};
 </script>
 
 <style scoped>
-  .form-container {
-    max-width: 100%;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-  }
-  h4 {
-    margin: 20px 0;
-    font-weight: bold;
-    color: red;
-  }
-  .form-group {
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    width: 100%;
-    margin-bottom: 10px;
-  }
+.form-container {
+  display: flex;
+  max-width: 1000px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
 
-  .form-group label {
-    font-size: 16px;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 8px;
-    flex: 1;
-  }
+.form-left-frame {
+  flex: 1;
+  padding-right: 20px;
+  border-right: 2px solid #ddd;
+  height: 100%;
+}
 
-  .form-group select,
-  .form-group input,
-  .form-group textarea {
-    flex: 2;
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-    box-sizing: border-box;
-  }
+.form-right-frame {
+  flex: 2;
+  padding-left: 20px;
+}
 
-  .form-group select,
-  .form-group input,
-  .form-group textarea:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
-    outline: none;
-  }
+.form-title {
+  text-align: center;
+  color: #007bff;
+  margin-bottom: 20px;
+}
 
-  .form-group select,
-  .form-group input,
-  .form-group textarea:focus::placeholder {
-    font-style: italic;
-  }
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
 
-  .form-group button {
-    padding: 8px 16px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
+.form-group label {
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #555;
+}
 
-  .form-group button:hover {
-    background-color: #0056b3;
-  }
+.form-group input,
+.form-group textarea {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+}
 
-  .product-item {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 10px;
-  }
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group input[type="email"] {
+  width: 100%;
+}
 
-  .product-item input {
-    flex: 1;
-  }
+textarea {
+  width: 100%;
+  height: 100px;
+}
 
-  .product-item button {
-    background-color: red;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 4px;
-    cursor: pointer;
-  }
+.radio-group {
+  display: flex;
+  justify-content: flex-start;
+  gap: 20px;
+}
 
-  .product-item button:hover {
-    background-color: darkred;
-  }
+.customer-old-frame ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.customer-old-frame li {
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+  cursor: pointer;
+}
+
+.customer-old-frame li:hover {
+  background-color: #f5f5f5;
+}
+
+.customer-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.product-item {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.product-item.selected {
+  background-color: #f0f8ff;
+}
+
+.product-item.saved {
+  background-color: #d4edda;
+}
+
+.product-item img {
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+}
+
+.quantity-input input {
+  width: 100px;
+  padding: 5px;
+  margin-right: 10px;
+}
+
+button {
+  background-color: #007bff;
+  color: white;
+  padding: 5px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.submit-button {
+  background-color: #28a745;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  width: 100%;
+  cursor: pointer;
+}
+
+.submit-button:hover {
+  background-color: #218838;
+}
 </style>
