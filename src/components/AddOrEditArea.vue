@@ -155,7 +155,7 @@ const AddDataArea = ref({
   name: "",
   quantity: 0,
   image: null,
-  floor: 0,
+  area: 0,
   max: 0,
   locationExceptionsDTOs: [],
 });
@@ -184,14 +184,14 @@ const UpdateData = async () => {
   isLoading.value = true;
   document.body.classList.add("loading"); // Add Lớp "loading"
   document.body.style.overflow = "hidden";
-  AddDataArea.value.floor = currentFloor.value;
+  AddDataArea.value.area = currentFloor.value;
 
-  const res = await axios.put(hostName + `/api/Area/Update?id=${route.query.id}`, AddDataArea.value, getToken())
+  const res = await axios.put(hostName + `/api/Shelf/Update?id=${route.query.id}`, AddDataArea.value, getToken())
   if(res.data.success){
     Toast.success("Update Sucess")
     router.push("/tablepage")
   }else{
-    Toast.success(res.data.error)
+    Toast.error(res.data.error)
   }
   console.log(res)
   isLoading.value = false;
@@ -200,11 +200,12 @@ const UpdateData = async () => {
 
 }
 const findOneIdArea = async (id) => {
-  const res = await axios.get(hostName + `/api/Area/FindOneId?id=${id}`, getToken())
+  const res = await axios.get(hostName + `/api/Shelf/FindOneId?id=${id}`, getToken())
+  console.log(res)
   if(res.data.success){
     AddDataArea.value = res.data.content
     AddDataArea.value.image = null
-    imagePreview.value = res.data.content.image
+    imagePreview.value = res.data.content.imageShelf
     AddDataArea.value.locationExceptionsDTOs = res.data.content.quantityExceptions
     currentFloor.value = res.data.content.id_floor
   }
@@ -227,7 +228,7 @@ const AddData = async () => {
   document.body.style.overflow = "hidden";
   AddDataArea.value.floor = currentFloor.value;
   const res = await axios.post(
-    hostName + "/api/Area/Add",
+    hostName + "/api/Shelf/Add",
     AddDataArea.value,
     getToken()
   );
@@ -258,7 +259,7 @@ const triggerFileInput = () => {
 
 const findAllFloor = async () => {
   const res = await axios.get(
-    hostName + `/api/Floor/FindAll?page=1&pageSize=2000`,
+    hostName + `/api/Area/FindAll?page=1&pageSize=2000`,
     getToken()
   );
   if (res.data.success) {

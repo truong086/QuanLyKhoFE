@@ -105,7 +105,6 @@
             <th class="title">Name</th>
             <th class="title">Floor</th>
             <th class="title">Quantity</th>
-            <th class="title">Quantity Emty</th>
             <th class="title">Account Create</th>
             <th class="title">#</th>
           </tr>
@@ -116,11 +115,59 @@
             <td>{{ row.name }}</td>
             <td>
               <div style="display: flex;">
-                <img :src="row.floor_image" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
-                <h5 style="margin: 0 15px; font-weight: bold;">{{ row.floor_name }}</h5>
+                <img :src="row.floorImage" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
+                <h5 style="margin: 0 15px; font-weight: bold;">{{ row.floorName }}</h5>
               </div>
             </td>
-            <td>{{ row.quantity }}</td>
+            <td>{{ row.storage }}</td>
+            <td>
+              <div style="display: flex;">
+                <img :src="row.accountImage" style="width: 50px; height: 50px; border-radius: 50%;" alt="">
+                <h3 style="margin: 0 15px; font-weight: bold;">{{ row.accountName }}</h3>
+              </div>
+            </td>
+            <td>
+              <div style="display: flex;">
+                <button class="btn btn-sucess" style="background-color: yellow; font-weight: bold;" @click="NextAreaUpdate(row.id)">Edit</button>
+                <button class="btn btn-sucess" style="background-color: red; color: white; font-weight: bold;">Delete</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <PagesTotal :page="pageArea" :totalPage="totalPageArea" :valueE="valueEArea" @pageChange="findAllArea" @pageSizeChange="changeReloadArea"></PagesTotal>
+    </div>
+
+    <!-- Bảng Kệ -->
+    <div class="table-container">
+      <h2 class="table-title">Shelf Manager</h2>
+      <router-link to="/AddOrEditArea" class="waves-effect waves-dark" aria-expanded="false">
+        <i class="fa fa-tachometer"></i>
+        <span class="hide-menu">Add Area</span>
+      </router-link>
+      <table class="table">
+        <thead>
+          <tr>
+            <th class="title">Image</th>
+            <th class="title">Name</th>
+            <th class="title">Area</th>
+            <th class="title">Quantity</th>
+            <th class="title">Quantity Emty</th>
+            <th class="title">Account Create</th>
+            <th class="title">#</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(row, rowIndex) in dataShelfs" :key="rowIndex">
+            <td><img :src="row.image" style="width: 50px; height: 50px; border-radius: 50%;" alt=""></td>
+            <td>{{ row.name }}</td>
+            <td>
+              <div style="display: flex;">
+                <img :src="row.area_image" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
+                <h5 style="margin: 0 15px; font-weight: bold;">{{ row.area_name }}</h5>
+              </div>
+            </td>
+            <td>{{ row.max }}</td>
             <td>{{ row.totalLocationExsis }}</td>
             <td>
               <div style="display: flex;">
@@ -137,7 +184,7 @@
           </tr>
         </tbody>
       </table>
-      <PagesTotal :page="pageArea" :totalPage="totalPageArea" :valueE="valueEArea" @pageChange="findAllArea" @pageSizeChange="changeReloadArea"></PagesTotal>
+      <PagesTotal :page="pageShelf" :totalPage="totalPageShelf" :valueE="valueEShelf" @pageChange="findAllShelfs" @pageSizeChange="changeReloadShelfs"></PagesTotal>
     </div>
   </div>
 
@@ -158,6 +205,7 @@ onMounted(() => {
   findAllArea(valueEArea.value, pageArea.value)
   findAllWarehourse(valueE.value, page.value)
   findAllFloor(valueEFloor.value, pageFloor.value)
+  findAllShelfs(valueEShelf.value, pageShelf.value)
   
 })
 const { proxy } = getCurrentInstance();
@@ -179,6 +227,11 @@ const dataArea = ref([])
 const store = useCounterStore()
 const isLoading = ref(false)
 const dataWarehourse = ref([])
+const dataShelfs = ref([])
+const pageShelf = ref(1);
+const totalPageShelf = ref(0);
+const pageSizeShelf = ref(2);
+const valueEShelf = ref("");
 const router = useRouter()
 
 watch(page.value, (newPage) => {
@@ -192,7 +245,13 @@ watch(page.value, (newPage) => {
     findAllFloor(valueEFloor.value, newPage)
   
   })
-const getToken = () => {
+
+  watch(pageShelf.value, (newPage) => {
+    findAllShelfs(valueEShelf.value, newPage)
+  
+  })
+
+  const getToken = () => {
         var token = store.getToken
             var result = {
                 headers: {Authorization: `Bearer ${token}`}
@@ -248,6 +307,7 @@ const changeReload = (event) => {
     const res = search === '' ? await axios.get(hostName + `/api/Area/FindAll?page=${pageData}&pageSize=${pageSizeArea.value}`, getToken()) 
                               : await axios.get(hostName + `/api/Area/FindAll?name=${search}&page=${pageData}&pageSize=${pageSizeArea.value}`, getToken())
   
+    console.log(res)
     if (res.data.success) {
       dataArea.value = res.data.content.data
       pageArea.value = res.data.content.page;
@@ -256,6 +316,21 @@ const changeReload = (event) => {
     isLoading.value = false
     document.body.classList.remove('loading')
     document.body.style.overflow = 'auto'
+  }
+
+  const changeReloadShelfs = (event) =>{
+    pageSizeShelf.value = event
+    findAllShelfs(valueEShelf.value, pageShelf.value)
+  }
+  const findAllShelfs = async (searchData, pageData) => {
+    const res = searchData === '' ? await axios.get(hostName + `/api/Shelf/FindAll?page=${pageData}&pageSize=${pageSizeShelf.value}`, getToken())
+                                  : await axios.get(hostName + `/api/Shelf/FindAll?name=${searchData}&page=${pageData}&pageSize=${pageSizeShelf.value}`, getToken())
+    console.log(res)
+                                  if(res.data.success){
+                                    dataShelfs.value = res.data.content.data
+                                    pageShelf.value = res.data.content.page;
+                                    totalPageShelf.value = res.data.content.totalPages;
+                                  }
   }
   const changeReloadArea = (event) => {
     pageSizeArea.value = event
