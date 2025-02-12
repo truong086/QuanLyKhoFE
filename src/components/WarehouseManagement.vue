@@ -212,16 +212,17 @@ const getToken = () => {
             return result
       }
 const findAllData = async (search, pageData) => {
+  console.log(search)
   isLoading.value = true
     document.body.classList.add('loading') // Add Lớp "loading"
     document.body.style.overflow = 'hidden'
     
-    const res = search === "" ? await axios.get(
+    const res = store.getRole(0) === "Admin" ? await axios.get(
       hostName + `/api/Status/FindAll?page=${pageData}&pageSize=${pageSize.value}`
     , getToken()) 
     : await axios.get(
       hostName +
-        `/api/Status/FindAll?name=${search}&page=${pageData}&pageSize=${pageSize.value}`
+        `/api/Status/FindByAccount?page=${pageData}&pageSize=${pageSize.value}`
     , getToken())
 
     if (res.data.success) {

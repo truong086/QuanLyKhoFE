@@ -171,7 +171,7 @@ onMounted(() => {
 const UpdateData = async () => {
   if (
     currentFloor.value === null ||
-    AddDataArea.value.quantity == 0 ||
+    AddDataArea.value.quantity < 0 ||
     AddDataArea.value.quantity == "" ||
     AddDataArea.value.max == 0 ||
     AddDataArea.value.max == "" ||
@@ -186,6 +186,7 @@ const UpdateData = async () => {
   document.body.style.overflow = "hidden";
   AddDataArea.value.area = currentFloor.value;
 
+  console.log(AddDataArea.value)
   const res = await axios.put(hostName + `/api/Shelf/Update?id=${route.query.id}`, AddDataArea.value, getToken())
   if(res.data.success){
     Toast.success("Update Sucess")
@@ -203,11 +204,12 @@ const findOneIdArea = async (id) => {
   const res = await axios.get(hostName + `/api/Shelf/FindOneId?id=${id}`, getToken())
   console.log(res)
   if(res.data.success){
+    console.log(res)
     AddDataArea.value = res.data.content
     AddDataArea.value.image = null
     imagePreview.value = res.data.content.imageShelf
     AddDataArea.value.locationExceptionsDTOs = res.data.content.quantityExceptions
-    currentFloor.value = res.data.content.id_floor
+    currentFloor.value = res.data.content.id_Area
   }
 }
 const AddData = async () => {

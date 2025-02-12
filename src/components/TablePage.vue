@@ -167,7 +167,7 @@
                 <h5 style="margin: 0 15px; font-weight: bold;">{{ row.area_name }}</h5>
               </div>
             </td>
-            <td>{{ row.max }}</td>
+            <td>{{ row.quantity }}</td>
             <td>{{ row.totalLocationExsis }}</td>
             <td>
               <div style="display: flex;">
@@ -323,6 +323,9 @@ const changeReload = (event) => {
     findAllShelfs(valueEShelf.value, pageShelf.value)
   }
   const findAllShelfs = async (searchData, pageData) => {
+    isLoading.value = true
+    document.body.classList.add('loading') // Add Lớp "loading"
+    document.body.style.overflow = 'hidden'
     const res = searchData === '' ? await axios.get(hostName + `/api/Shelf/FindAll?page=${pageData}&pageSize=${pageSizeShelf.value}`, getToken())
                                   : await axios.get(hostName + `/api/Shelf/FindAll?name=${searchData}&page=${pageData}&pageSize=${pageSizeShelf.value}`, getToken())
     console.log(res)
@@ -331,6 +334,10 @@ const changeReload = (event) => {
                                     pageShelf.value = res.data.content.page;
                                     totalPageShelf.value = res.data.content.totalPages;
                                   }
+
+                                  isLoading.value = false
+    document.body.classList.remove('loading')
+    document.body.style.overflow = 'auto'
   }
   const changeReloadArea = (event) => {
     pageSizeArea.value = event
