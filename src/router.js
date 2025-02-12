@@ -32,11 +32,6 @@ import { useCounterStore } from "./store";
 
 const routes = [
   {
-    path: "ImportExportForm",
-    name: "ImportExportForm",
-    component: ImportExportForm,
-  },
-  {
     path: "/AllCategory",
     name: "AllCategory",
     component: AllCategory,
@@ -87,6 +82,11 @@ const routes = [
       ],
     },
     children: [
+      {
+        path: "/ImportExportForm",
+        name: "ImportExportForm",
+        component: ImportExportForm,
+      },
       {
         path: "PlanOfAccount",
         name: "planOfAccount",

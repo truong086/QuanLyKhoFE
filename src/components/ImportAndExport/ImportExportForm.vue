@@ -25,3 +25,15 @@
     { id: "xuat", label: "Phiếu Xuất" },
   ];
 </script>
+<style>
+  .container {
+    width: 100%;
+    padding: 10px;
+    margin: 0 auto;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fffcfc;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: scroll;
+  }
+</style>

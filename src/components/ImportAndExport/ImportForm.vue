@@ -115,25 +115,146 @@
                 <option value="1000">lựa chọn nhà cung cấp 1000</option>
               </select>
             </div>
-            <!-- Area ID select -->
-            <div class="form-group">
-              <label for="areaId">Khu vực:</label>
-              <select id="areaId" v-model="form.productNew[0].areaId">
-                <option value="1">Khu vực 1</option>
-                <option value="2">Khu vực 2</option>
-              </select>
+            <!-- start select loction -->
+            <!-- ware houses select -->
+            <div class="select-location-form form-container">
+              <div class="select-location">
+                <div class="warehouses form-group">
+                  <label for="selct-warehouset">Warehouses</label>
+                  <select
+                    id="selct-warehouse"
+                    v-model="selectedWarehouse"
+                    @change="handleWarehouseChange"
+                  >
+                    <option
+                      v-for="warehouse in warehouses"
+                      :key="warehouse.id"
+                      :value="warehouse.id"
+                    >
+                      {{ warehouse.name }}
+                    </option>
+                  </select>
+                </div>
+                <!-- Floor select -->
+                <div class="floor form-group">
+                  <label for="select-floor"> Floor</label>
+                  <select
+                    v-model="selectedFloor"
+                    @change="handleFloorChange"
+                    :disabled="!selectedWarehouse"
+                  >
+                    <option
+                      v-for="floor in filteredFloors"
+                      :key="floor.id"
+                      :value="floor.id"
+                    >
+                      {{ floor.name }}
+                    </option>
+                  </select>
+                </div>
+                <!-- Area select -->
+                <div class="area form-group">
+                  <label for="select-area">Area</label>
+                  <select
+                    id="select-area"
+                    v-model="selectedArea"
+                    @change="handleAreaChange"
+                    :disabled="!selectedFloor"
+                  >
+                    <option
+                      v-for="area in filteredAreas"
+                      :key="area.id"
+                      :value="area.id"
+                    >
+                      {{ area.name }}
+                    </option>
+                  </select>
+                </div>
+                <!-- Sheft select -->
+                <div class="sheft form-group">
+                  <label for="select-sheft">Sheft</label>
+                  <select
+                    id="select-sheft"
+                    v-model="selectedSheft"
+                    @change="handleSheftChange"
+                    :disabled="!selectedArea"
+                  >
+                    <option
+                      v-for="sheft in filteredShefts"
+                      :key="sheft.id"
+                      :value="sheft.id"
+                    >
+                      {{ sheft.name }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+              <div class="cabinets-btn border">
+                <!-- Các button cho location -->
+                <div class="location-buttons">
+                  <div
+                    v-for="(chunk, index) in chunkedLocations"
+                    :key="index"
+                    class="button-row"
+                  >
+                    <button
+                      v-for="location in chunk"
+                      :key="location.id"
+                      :value="location.id"
+                      @click="handleLocationChange(location.id)"
+                      :class="{ active: selectedLocation === location.id }"
+                    >
+                      {{ location.locationName }}
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
-            <!-- location select -->
-            <div class="form-group">
-              <label for="location-new-product">Vị trí:</label>
-              <select
-                v-model="form.productNew[0].location"
-                id="location-new-product"
-              >
-                <option value="1" disabled selected>1</option>
-                <option value="1000">Vị trí 1000</option>
-              </select>
+            <!--  -->
+            <!-- slect location End -->
+            <!-- Modal product show-->
+            <div class="modal product-list" v-if="selectedLocation">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h3>Products in cabinet {{ selectedLocationName }}</h3>
+                  <span type="button" class="close-button" @click="closeModal"
+                    >Close</span
+                  >
+                </div>
+                <ul style="display: flex; flex-wrap: wrap">
+                  <li
+                    v-for="product in filteredProducts"
+                    :key="product.id"
+                    class="item"
+                  >
+                    <img
+                      :src="product.productImage[0]"
+                      alt="product avata"
+                      class="show_product-img"
+                    />
+                    <div class="show_product-info">
+                      <p>
+                        Name: <strong>{{ product.productName }}</strong>
+                      </p>
+                      <p>
+                        Price: <strong>${{ product.price }}</strong>
+                      </p>
+                      <p>
+                        Quantity:<strong>{{ product.quantity }}</strong>
+                      </p>
+                    </div>
+                  </li>
+                </ul>
+                <div class="form-group">
+                  <label for="quantity-into">Quantity you put into:</label>
+                  <input type="number" id="quantity-into" />
+                </div>
+                <div>
+                  <button @click="loctionAccept">OK</button>
+                </div>
+              </div>
             </div>
+
             <!-- Image upload New product -->
             <div class="upload-show-pr-img border">
               <div class="form-group">
@@ -163,225 +284,232 @@
           <!-- Nếu là sản phẩm cũ -->
           <div v-else class="product-old">
             <h4>Sản phẩm cũ</h4>
-
-            <!-- old product id -selection -->
-            <div class="form-group">
-              <label for="id-old-product">ID sản phẩm:</label>
-              <select
-                v-model="form.productOlds[0].id_product"
-                id="id-old-product"
-              >
-                <option value="" disabled>Chọn ID sản phẩm</option>
-                <option value="1">ID sản phẩm 1</option>
-                <option value="2">ID sản phẩm 2</option>
-              </select>
+            <!-- ware houses select -->
+            <div class="select-location-form form-container">
+              <div class="select-location">
+                <div class="warehouses form-group">
+                  <label for="selct-warehouset">Warehouses</label>
+                  <select
+                    id="selct-warehouse"
+                    v-model="selectedWarehouse"
+                    @change="handleWarehouseChange"
+                  >
+                    <option
+                      v-for="warehouse in warehouses"
+                      :key="warehouse.id"
+                      :value="warehouse.id"
+                    >
+                      {{ warehouse.name }}
+                    </option>
+                  </select>
+                </div>
+                <!-- Floor select -->
+                <div class="floor form-group">
+                  <label for="select-floor"> Floor</label>
+                  <select
+                    v-model="selectedFloor"
+                    @change="handleFloorChange"
+                    :disabled="!selectedWarehouse"
+                  >
+                    <option
+                      v-for="floor in filteredFloors"
+                      :key="floor.id"
+                      :value="floor.id"
+                    >
+                      {{ floor.name }}
+                    </option>
+                  </select>
+                </div>
+                <!-- Area select -->
+                <div class="area form-group">
+                  <label for="select-area">Area</label>
+                  <select
+                    id="select-area"
+                    v-model="selectedArea"
+                    @change="handleAreaChange"
+                    :disabled="!selectedFloor"
+                  >
+                    <option
+                      v-for="area in filteredAreas"
+                      :key="area.id"
+                      :value="area.id"
+                    >
+                      {{ area.name }}
+                    </option>
+                  </select>
+                </div>
+                <!-- Sheft select -->
+                <div class="sheft form-group">
+                  <label for="select-sheft">Sheft</label>
+                  <select
+                    id="select-sheft"
+                    v-model="selectedSheft"
+                    @change="handleSheftChange"
+                    :disabled="!selectedArea"
+                  >
+                    <option
+                      v-for="sheft in filteredShefts"
+                      :key="sheft.id"
+                      :value="sheft.id"
+                    >
+                      {{ sheft.name }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+              <div class="cabinets-btn border">
+                <!-- Các button cho location -->
+                <div class="location-buttons">
+                  <div
+                    v-for="(chunk, index) in chunkedLocations"
+                    :key="index"
+                    class="button-row"
+                  >
+                    <button
+                      v-for="location in chunk"
+                      :key="location.id"
+                      :value="location.id"
+                      @click="handleLocationChange(location.id)"
+                      :class="{ active: selectedLocation === location.id }"
+                    >
+                      {{ location.locationName }}
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
-
-            <!-- product old's name select -->
-            <div class="form-group">
-              <label for="old-product-name">Tên sản phẩm:</label>
-              <select v-model="form.productOlds[0].name" id="old-product-name">
-                <!-- Thêm các tùy chọn tên sản phẩm nếu có -->
-                <option value="">Chọn tên sản phẩm</option>
-                <option value="name1">Tên sản phẩm 1</option>
-                <option value="name2">Tên sản phẩm 2</option>
-              </select>
+            <!--  -->
+          </div>
+          <!-- Modal product show-->
+          <div class="modal product-list" v-if="selectedLocation">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h3>Products in cabinet {{ selectedLocationName }}</h3>
+                <span type="button" class="close-button" @click="closeModal"
+                  >Close</span
+                >
+              </div>
+              <ul style="display: flex; flex-wrap: wrap">
+                <li
+                  v-for="product in filteredProducts"
+                  :key="product.id"
+                  class="item"
+                >
+                  <img
+                    :src="product.productImage[0]"
+                    alt="product avata"
+                    class="show_product-img"
+                  />
+                  <div class="show_product-info">
+                    <p>
+                      Name: <strong>{{ product.productName }}</strong>
+                    </p>
+                    <p>
+                      Price: <strong>${{ product.price }}</strong>
+                    </p>
+                    <p>
+                      Quantity:<strong>{{ product.quantity }}</strong>
+                    </p>
+                    <input
+                      type="number"
+                      v-model="form.productOlds[0].quantity"
+                      placeholder="Nhập số lượng"
+                      required
+                    />
+                    <button @click="addProduct('productOlds')">Ok</button>
+                  </div>
+                </li>
+              </ul>
+              <div>
+                <button @click="loctionAccept">OK</button>
+              </div>
             </div>
-
-            <!-- product input quantity -->
-            <div class="form-group">
-              <label>Số lượng:</label>
-              <input
-                type="number"
-                v-model="form.productOlds[0].quantity"
-                placeholder="Nhập số lượng"
-                required
-              />
-            </div>
-
-            <!-- product's areaID select -->
-            <div class="form-group">
-              <label for="area-product-old">Khu vực:</label>
-              <select
-                v-model="form.productOlds[0].areaId"
-                id="area-product-old"
-              >
-                <option value="1">Area 1</option>
-                <option value="2">Area 2</option>
-              </select>
-            </div>
-
-            <!-- product's location -->
-            <div class="form-group">
-              <label for="location-old-product">Vị trí:</label>
-              <select
-                v-model="form.productOlds[0].location"
-                id="location-old-product"
-              >
-                <option value="" disabled>Chọn vị trí</option>
-                <option value="1000">Vị trí 1000</option>
-                <!-- Thêm các tùy chọn vị trí khác nếu có -->
-              </select>
-            </div>
-
-            <!-- Nhà cung cấp -->
-            <div class="form-group">
-              <label for="suppliersOldProductForm">Nhà cung cấp:</label>
-              <select
-                v-model="form.productOlds[0].supplier"
-                id="suppliersOldProductForm"
-              >
-                <option value="1">Chọn nhà cung cấp 1</option>
-                <option value="500">Lựa chọn nhà cung cấp 500</option>
-              </select>
-            </div>
-
-            <button type="button" @click="addProduct('productOlds')">
-              Thêm sản phẩm cũ
-            </button>
           </div>
         </div>
-
-        <div class="cabinet_product-show border">
-          <h4>đây là hiển thị sản phẩm đã thêm vào form</h4>
-        </div>
-      </div>
-      <!-- start select loction -->
-      <div class="select-location-form form-container">
-        <div class="select-location">
-          <div class="warehouses form-group">
-            <label for="selct-warehouset">Warehouses</label>
-            <select
-              id="selct-warehouse"
-              v-model="selectedWarehouse"
-              @change="handleWarehouseChange"
-            >
-              <option
-                v-for="warehouse in warehouses"
-                :key="warehouse.id"
-                :value="warehouse.id"
-              >
-                {{ warehouse.name }}
-              </option>
-            </select>
-          </div>
-          <div class="floor form-group">
-            <label for="select-floor"> Floor</label>
-            <select
-              v-model="selectedFloor"
-              @change="handleFloorChange"
-              :disabled="!selectedWarehouse"
-            >
-              <option
-                v-for="floor in filteredFloors"
-                :key="floor.id"
-                :value="floor.id"
-              >
-                {{ floor.name }}
-              </option>
-            </select>
-          </div>
-          <div class="area form-group">
-            <label for="select-area">Area</label>
-            <select
-              id="select-area"
-              v-model="selectedArea"
-              @change="handleAreaChange"
-              :disabled="!selectedFloor"
-            >
-              <option
-                v-for="area in filteredAreas"
-                :key="area.id"
-                :value="area.id"
-              >
-                {{ area.name }}
-              </option>
-            </select>
-          </div>
-          <div class="sheft form-group">
-            <label for="select-sheft">Sheft</label>
-            <select
-              id="select-sheft"
-              v-model="selectedSheft"
-              @change="handleSheftChange"
-              :disabled="!selectedArea"
-            >
-              <option
-                v-for="sheft in filteredShefts"
-                :key="sheft.id"
-                :value="sheft.id"
-              >
-                {{ sheft.name }}
-              </option>
-            </select>
-          </div>
-        </div>
-        <!-- Modal product show-->
-        <div class="modal product-list" v-if="selectedLocation">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h3>Products in cabinet {{ selectedLocationName }}</h3>
-              <span type="button" class="close-button" @click="closeModal"
-                >Close</span
-              >
-            </div>
-            <ul style="display: flex; flex-wrap: wrap">
-              <li
-                v-for="product in filteredProducts"
-                :key="product.id"
-                class="item"
+        <div class="cabinet_product-show">
+          <h4>This form Products have addad</h4>
+          <div class="showProduct_added">
+            <div class="product-grid">
+              <!-- show-product added -->
+              <div
+                v-for="(product, index) in productNewAdded"
+                :key="index"
+                class="product-card"
               >
                 <img
-                  :src="product.productImage[0]"
-                  alt="product avata"
-                  class="show_product-img"
+                  :src="
+                    product.image &&
+                    Array.isArray(product.image) &&
+                    product.image.length > 0
+                      ? product.image[0]
+                      : defaultImage
+                  "
+                  alt="Product Image"
+                  class="product-image"
                 />
-                <div class="show_product-info">
-                  <p>
-                    Name: <strong>{{ product.productName }}</strong>
-                  </p>
-                  <p>
-                    Price: <strong>${{ product.price }}</strong>
-                  </p>
-                  <p>
-                    Quantity:<strong>{{ product.quantity }}</strong>
-                  </p>
-                </div>
-              </li>
-            </ul>
-            <div class="form-group">
-              <label for="quantity-into">Quantity you put into:</label>
-              <input type="number" id="quantity-into" />
-            </div>
-            <div>
-              <button @click="loctionAccept">OK</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="cabinets-btn border">
-          <!-- Các button cho location -->
-          <div class="location-buttons">
-            <div
-              v-for="(chunk, index) in chunkedLocations"
-              :key="index"
-              class="button-row"
-            >
-              <button
-                v-for="location in chunk"
-                :key="location.id"
-                :value="location.id"
-                @click="handleLocationChange(location.id)"
-                :class="{ active: selectedLocation === location.id }"
+                <p class="product-name">
+                  <strong>{{ product.title }}</strong>
+                </p>
+                <p class="product-quantity">Quantity: {{ product.quantity }}</p>
+                <p class="product-price">
+                  Giá: {{ formatPrice(product.price) }}
+                </p>
+                <button
+                  class="edit-button"
+                  @click="editProduct(index, 'newProduct')"
+                >
+                  Sửa
+                </button>
+                <button
+                  style="background-color: red"
+                  class="edit-button"
+                  @click="delproduct(index, 'newProduct')"
+                >
+                  delete
+                </button>
+              </div>
+              <!-- old product -->
+              <div
+                v-for="(product, index) in productOldsAdded"
+                :key="index"
+                class="product-card"
               >
-                {{ location.locationName }}
-              </button>
+                <img
+                  :src="
+                    product.image &&
+                    Array.isArray(product.image) &&
+                    product.image.length > 0
+                      ? product.image[0]
+                      : defaultImage
+                  "
+                  alt="Product Image"
+                  class="product-image"
+                />
+                <p class="product-name">
+                  <strong>{{ product.title }}</strong>
+                </p>
+                <p class="product-quantity">Quantity: {{ product.quantity }}</p>
+                <p class="product-price">
+                  Giá: {{ formatPrice(product.price) }}
+                </p>
+                <button
+                  class="edit-button"
+                  @click="editProduct(index, 'newProduct')"
+                >
+                  Sửa
+                </button>
+                <button
+                  style="background-color: red"
+                  class="edit-button"
+                  @click="delproduct(index, 'newProduct')"
+                >
+                  delete
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <!--  -->
-      <!-- slect location End -->
       <div class="form-group">
         <label for="quantity">Tổng số lượng tất cả sản phẩm:</label>
         <input
@@ -482,7 +610,7 @@
         suppliers: 0,
         areaId: 0,
         location: 0,
-        image: [""],
+        image: [],
       },
     ],
     quantity: 0,
@@ -515,7 +643,7 @@
         suppliers: 0,
         areaId: 0,
         location: 0,
-        image: [""],
+        image: [],
       },
     ];
   };
@@ -560,7 +688,7 @@
             suppliers: 0,
             areaId: 0,
             location: 0,
-            image: [""],
+            image: [],
           },
         ],
         quantity: 0,
@@ -611,7 +739,7 @@
       locationName: `${index + 3}`,
     })),
   ]);
-
+  // product in cabinet
   const products = ref([
     {
       id: 1,
@@ -723,44 +851,206 @@
   const closeModal = () => {
     selectedLocation.value = null;
   };
-  const AddedProducts = reactive({
-    productNew: [],
-    productOlds: [],
-  });
+
+  //   const productNewAdded = ref([]);
+  //   const productOldsAdded = ref([]);
+  //   const addProduct = (type) => {
+  //     if (type === "productNew") {
+  //       productNewAdded.value.push({ ...form.productNew[0] });
+  //       resetProductNew();
+  //     } else if (type === "productOlds") {
+  //       productOldsAdded.value.push({ ...form.productOlds[0] });
+  //       resetProductOlds();
+  //     } else {
+  //       console.error("lỗi dữ liệu ..");
+  //       // resetAllFormData();
+  //     }
+  //   };
+  // --------------
+  // Khai báo danh sách sản phẩm bằng `ref`
+  // const productss = ref([
+  //   {
+  //     name: "Sản phẩm 1",
+  //     quantity: 10,
+  //     price: 100000,
+  //     image:
+  //       "https://khoinguonsangtao.vn/wp-content/uploads/2022/08/hinh-nen-gai-xinh.jpg",
+  //   },
+  //   {
+  //     name: "Sản phẩm 1",
+  //     quantity: 10,
+  //     price: 100000,
+  //     image:
+  //       "https://khoinguonsangtao.vn/wp-content/uploads/2022/08/hinh-nen-gai-xinh.jpg",
+  //   },
+  //   {
+  //     name: "Sản phẩm 1",
+  //     quantity: 10,
+  //     price: 100000,
+  //     image:
+  //       "https://khoinguonsangtao.vn/wp-content/uploads/2022/08/hinh-nen-gai-xinh.jpg",
+  //   },
+  //   {
+  //     name: "Sản phẩm 1",
+  //     quantity: 10,
+  //     price: 100000,
+  //     image:
+  //       "https://khoinguonsangtao.vn/wp-content/uploads/2022/08/hinh-nen-gai-xinh.jpg",
+  //   },
+  //   {
+  //     name: "Sản phẩm 1",
+  //     quantity: 10,
+  //     price: 100000,
+  //     image:
+  //       "https://khoinguonsangtao.vn/wp-content/uploads/2022/08/hinh-nen-gai-xinh.jpg",
+  //   },
+  // ]);
+  // const productsss = ref([
+  //   {
+  //     name: "Sản phẩm 1",
+  //     quantity: 10,
+  //     price: 100000,
+  //     image:
+  //       "https://khoinguonsangtao.vn/wp-content/uploads/2022/08/hinh-nen-gai-xinh.jpg",
+  //   },
+  //   {
+  //     name: "Sản phẩm 1",
+  //     quantity: 10,
+  //     price: 100000,
+  //     image:
+  //       "https://khoinguonsangtao.vn/wp-content/uploads/2022/08/hinh-nen-gai-xinh.jpg",
+  //   },
+  //   {
+  //     name: "Sản phẩm 1",
+  //     quantity: 10,
+  //     price: 100000,
+  //     image:
+  //       "https://khoinguonsangtao.vn/wp-content/uploads/2022/08/hinh-nen-gai-xinh.jpg",
+  //   },
+  //   {
+  //     name: "Sản phẩm 1",
+  //     quantity: 10,
+  //     price: 100000,
+  //     image:
+  //       "https://khoinguonsangtao.vn/wp-content/uploads/2022/08/hinh-nen-gai-xinh.jpg",
+  //   },
+  //   {
+  //     name: "Sản phẩm 1",
+  //     quantity: 10,
+  //     price: 100000,
+  //     image:
+  //       "https://khoinguonsangtao.vn/wp-content/uploads/2022/08/hinh-nen-gai-xinh.jpg",
+  //   },
+  // ]);
+  // // test=----------------
+  // const productssss = ref([]);
+  // const productts = () => {
+  //   productssss.value.push(...productsss.value);
+  // };
+  // productts();
+  // Hàm định dạng giá tiền
+  const productNewAdded = ref([]);
+  const productOldsAdded = ref([]);
+
   const addProduct = (type) => {
-    if (
-      type === "productNew" &&
-      form.productNew[0].title &&
-      form.productNew[0].description &&
-      form.productNew[0].price >= 0 &&
-      form.productNew[0].donViTinh &&
-      form.productNew[0].quantity >= 0 &&
-      form.productNew[0].quantityLocation >= 0 &&
-      form.productNew[0].category_map >= 0 &&
-      form.productNew[0].suppliers >= 0 &&
-      form.productNew[0].areaId >= 0 &&
-      form.productNew[0].location &&
-      (form.productNew[0].image.length >= 0 ||
-        form.productNew[0].image[0] >= "")
-    ) {
-      AddedProducts.productNew.push({ ...form.productNew[0] });
+    if (type === "productNew") {
+      productNewAdded.value.push(
+        JSON.parse(JSON.stringify(form.productNew[0]))
+      );
       resetProductNew();
-    } else if (
-      type === "productOlds" &&
-      form.productOlds[0].id_product >= 0 &&
-      form.productOlds[0].quantity >= 0 &&
-      form.productOlds[0].areaId >= 0 &&
-      form.productOlds[0].location >= 0 &&
-      form.productOlds[0].supplier >= 0
-    ) {
-      AddedProducts.productOlds.push({ ...form.productOlds[0] });
+    } else if (type === "productOlds") {
+      productOldsAdded.value.push(
+        JSON.parse(JSON.stringify(form.productOlds[0]))
+      );
       resetProductOlds();
     } else {
-      console.error("lỗi dữ liệu ..");
-      resetAllFormData();
+      console.error("Lỗi dữ liệu...");
+      resetAllFormData;
+    }
+  };
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    }).format(price);
+  };
+
+  // Hàm xử lý khi nhấn nút "Sửa thông tin"
+  // const editProduct = (index, type) => {
+  //   if (type === "newProduct") {
+  //     alert(`Sửa thông tin cho ${productNewAdded.value[index].name}`);
+  //   } else if (type === "oldProduct") {
+  //     alert(`Sửa thông tin cho ${productOldsAdded.value[index].name}`);
+  //   }
+  // };
+
+  const editProduct = (index, type) => {
+    if (type === "newProduct") {
+      const product = productNewAdded.value[index];
+
+      const newTitle = prompt("Nhập tên mới:", product.title);
+      const newPrice = prompt("Nhập giá mới:", product.price);
+      const newQuantity = prompt("Nhập số lượng mới:", product.quantity);
+
+      if (newTitle !== null) product.title = newTitle;
+      if (newPrice !== null) product.price = parseFloat(newPrice);
+      if (newQuantity !== null) product.quantity = parseInt(newQuantity);
+
+      alert(`Đã cập nhật sản phẩm "${product.title}"`);
+    } else if (type === "oldProduct") {
+      const product = productOldsAdded.value[index];
+
+      const newSupplier = prompt("Nhập nhà cung cấp mới:", product.supplier);
+      const newQuantity = prompt("Nhập số lượng mới:", product.quantity);
+      const newLocation = prompt("Nhập vị trí mới:", product.location);
+
+      if (newSupplier !== null) product.supplier = newSupplier;
+      if (newQuantity !== null) product.quantity = parseInt(newQuantity);
+      if (newLocation !== null) product.location = newLocation;
+
+      alert(`Đã cập nhật sản phẩm ID: ${product.id_product}`);
+    } else {
+      console.error("Lỗi: Loại sản phẩm không hợp lệ.");
     }
   };
 
+  // const delproduct = (index, type) => {
+  //   if (type === "newProduct") {
+  //     alert(`xóa sản phẩm thứ ${productNewAdded.value[index].name}`);
+  //   } else if (type === "oldProduct") {
+  //     alert(`xóa sản phẩm thứ:${productOldsAdded.value[index].name}`);
+  //   }
+  // };
+
+  const delproduct = (index, type) => {
+    if (type === "newProduct") {
+      const productName = productNewAdded.value[index]?.title || "không có tên";
+      const confirmDelete = confirm(
+        `Bạn có chắc muốn xóa sản phẩm: ${productName}?`
+      );
+
+      if (confirmDelete) {
+        productNewAdded.value.splice(index, 1); // Xóa sản phẩm khỏi mảng
+        alert(`Sản phẩm "${productName}" đã bị xóa!`);
+      }
+    } else if (type === "oldProduct") {
+      const productName =
+        productOldsAdded.value[index]?.id_product || "không có tên";
+      const confirmDelete = confirm(
+        `Bạn có chắc muốn xóa sản phẩm có ID: ${productName}?`
+      );
+
+      if (confirmDelete) {
+        productOldsAdded.value.splice(index, 1); // Xóa sản phẩm khỏi mảng
+        alert(`Sản phẩm có ID "${productName}" đã bị xóa!`);
+      }
+    } else {
+      console.error("Lỗi: Loại sản phẩm không hợp lệ.");
+    }
+  };
+
+  const defaultImage =
+    "https://th.bing.com/th/id/OIP.C6TzyAievTqJTjBRMcTJVAHaHa?rs=1&pid=ImgDetMain"; // Hình mặc định nếu không có ảnh
   // Xử lý gửi dữ liệu
   const handleSubmit = () => {
     console.log("Phiếu nhập đã gửi:", form);
@@ -771,11 +1061,7 @@
 <style scoped>
   .form-container {
     max-width: 100%;
-    margin: 20px auto;
-    padding: 5px;
     background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 8px;
   }
   .select-location div label {
     width: 30%;
@@ -784,9 +1070,12 @@
     width: 70%;
   }
   h4 {
-    margin: 20px 0;
+    padding: 20px 0;
     font-weight: bold;
     color: red;
+    background-color: #fff;
+    position: sticky;
+    top: 0;
   }
   h3 {
     text-align: center;
@@ -942,10 +1231,8 @@
   }
   .product_info-group {
     display: flex;
+    justify-content: space-between;
     margin: 10px 0;
-    gap: 10px;
-    padding: 10px;
-    background-color: #f5eeee;
   }
   .border {
     background-color: #f9f9f9;
@@ -955,15 +1242,52 @@
   }
   .product-info-form,
   .cabinet_product-show {
-    min-height: 100%;
+    min-height: 1200px;
+    max-height: 1600px;
     width: 100%;
     height: 100%;
     margin: 20px auto;
-    padding: 20px;
+    background-color: #fff;
+    overflow: scroll;
+    padding: 0 10px 10px 10px;
   }
-  .cabinet_product-show {
-    min-height: 900px;
+
+  /* show product after added */
+  /*  */
+
+  /* Lưới sản phẩm - luôn 3 cột */
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Luôn có 2 cột */
+    gap: 10px;
+    width: 100%;
+    padding: 10px;
   }
+
+  /* Thẻ sản phẩm */
+  .product-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.3s ease;
+  }
+
+  .product-card:hover {
+    transform: translateY(-3px);
+  }
+
+  /* Ảnh sản phẩm */
+  .product-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-bottom: 10px;
+  }
+
   /* css for modal .product-list */
   .product-list {
     position: fixed;
@@ -983,7 +1307,7 @@
   .modal-content {
     background: white;
     width: 90%;
-    max-width: 900px;
+    max-width: 1200px;
     max-height: 90vh; /* Giới hạn chiều cao tối đa để tránh tràn màn hình */
     overflow-y: auto; /* Cho phép cuộn khi nội dung dài */
     padding: 0;
@@ -1062,7 +1386,7 @@
 
   .close-button:hover {
     background-color: #c0392b;
-    transform: translateY(-55%);
+    transform: translateY(-35%);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   }
 
@@ -1167,20 +1491,19 @@
     white-space: nowrap; /* Ngăn các button tràn xuống dòng mới */
   }
   .location-buttons button {
+    background-color: #007bff;
     max-width: 8%;
-    margin: 5px;
-    padding: 5px;
+    margin: 3px;
     color: white;
     border: none;
     cursor: pointer;
-    border-radius: 8px; /* Thêm border-radius để bo góc button */
     flex: 1 0 9%; /* Giới hạn kích thước của button sao cho có tối đa 10 button trên 1 hàng */
     box-sizing: border-box; /* Đảm bảo padding và margin không ảnh hưởng đến kích thước button */
   }
   .button-row {
     display: flex;
     flex-wrap: nowrap;
-    gap: 10px;
+    gap: 5px;
   }
   .cabinets-btn button.active {
     background-color: #01f40d;
