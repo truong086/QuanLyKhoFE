@@ -21,6 +21,7 @@ const i18n = createI18n({
     locale: 'zh', // Ngôn ngữ mặc định
     messages: {
       en: {
+        
         dashboard: 'Dashboard',
         profile: 'Profile',
         warehouse: 'Warehouse',
@@ -92,7 +93,7 @@ const i18n = createI18n({
         statistics: '統計',
         pagesize: '頁面大小',
         floor: '樓層',
-        area: '区域',
+        area: '區域',
         almostFull: '幾乎滿了 !!!',
         full: '满了 !!!',
         update: '更新',

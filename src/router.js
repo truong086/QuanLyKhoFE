@@ -26,6 +26,7 @@ import AddProduct from "./components/AddProduct.vue";
 import DetailProductWarehoursePage from "./components/DetailProductWarehourse.vue";
 import productwarehousePage from "./components/productwarehouse/productwarehousePage.vue";
 import ImportExportForm from "./components/ImportAndExport/ImportExportForm.vue";
+import LocationStatus from "./components/LocationStatus.vue";
 import { useCounterStore } from "./store";
 // import { path } from "ramda";
 // import { compose } from "ramda";
@@ -82,6 +83,11 @@ const routes = [
       ],
     },
     children: [
+      {
+        path: "/LocationStatus",
+        name: "LocationStatus",
+        component: LocationStatus,
+      },
       {
         path: "/ImportExportForm",
         name: "ImportExportForm",

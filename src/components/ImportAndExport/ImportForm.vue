@@ -1058,7 +1058,7 @@
   };
 </script>
 
-<style scoped>
+<!-- <style scoped>
   .form-container {
     max-width: 100%;
     background-color: #f9f9f9;
@@ -1519,4 +1519,4 @@
     }
   }
   /* Phần hiển thị sản phẩm đã được thêm */
-</style>
+</style> -->
