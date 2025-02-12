@@ -78,7 +78,7 @@
                     <select v-model="selectedLanguage" @change="changeLanguage" class="btn waves-effect waves-light btn-info hidden-md-down text-white">
                       <option value="en">English</option>
                       <option value="vi">Tiếng Việt</option>
-                      <option value="zh">Chinese</option>
+                      <option value="zh">中文</option>
                     </select>
                   </div>
 
@@ -219,7 +219,7 @@
   }
 
   // Lưu trữ ngôn ngữ đã chọn
-  const selectedLanguage = ref('en')
+  const selectedLanguage = ref('zh')
 
   // Hàm thay đổi ngôn ngữ
   const changeLanguage = () => {

@@ -10,8 +10,8 @@
           <span>Vị trí: Kho 1</span>
           <div v-if="selectedProduct === 'product1'">
             <div v-if="!productQuantitySaved.product1" class="quantity-input">
-              <input type="number" v-model="form.quantity['product1']" placeholder="Nhập số lượng" />
-              <button @click="saveQuantity('product1')">Lưu</button>
+              <input type="number" v-model="form.quantity['product1']" placeholder="Quantity" />
+              <button @click="saveQuantity('product1')">Save</button>
             </div>
             <div v-if="productQuantitySaved.product1">
               <span>Số lượng: {{ form.quantity['product1'] }}</span>
@@ -25,8 +25,8 @@
           <span>Vị trí: Kho 2</span>
           <div v-if="selectedProduct === 'product2'">
             <div v-if="!productQuantitySaved.product2" class="quantity-input">
-              <input type="number" v-model="form.quantity['product2']" placeholder="Nhập số lượng" />
-              <button @click="saveQuantity('product2')">Lưu</button>
+              <input type="number" v-model="form.quantity['product2']" placeholder="Quantity" />
+              <button @click="saveQuantity('product2')">Save</button>
             </div>
             <div v-if="productQuantitySaved.product2">
               <span>Số lượng: {{ form.quantity['product2'] }}</span>
@@ -40,8 +40,8 @@
           <span>Vị trí: Kho 3</span>
           <div v-if="selectedProduct === 'product3'">
             <div v-if="!productQuantitySaved.product3" class="quantity-input">
-              <input type="number" v-model="form.quantity['product3']" placeholder="Nhập số lượng" />
-              <button @click="saveQuantity('product3')">Lưu</button>
+              <input type="number" v-model="form.quantity['product3']" placeholder="Quantity" />
+              <button @click="saveQuantity('product3')">Save</button>
             </div>
             <div v-if="productQuantitySaved.product3">
               <span>Số lượng: {{ form.quantity['product3'] }}</span>
@@ -181,8 +181,13 @@ const selectProduct = (product) => {
 
 
 const saveQuantity = (product) => {
+  if (!form.value.quantity[product] || form.value.quantity[product] <= 0) {
+    alert('Vui lòng nhập số lượng hợp lệ trước khi lưu!');
+    return; // Ngừng thực hiện hành động lưu nếu không nhập số lượng hợp lệ
+  }
   productQuantitySaved.value[product] = true;
 };
+
 
 const selectCustomer = (name) => {
   selectedCustomer.value = name;

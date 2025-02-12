@@ -18,7 +18,7 @@ import { createI18n } from 'vue-i18n'
 // Cấu hình i18n
 const i18n = createI18n({
     legacy: false,
-    locale: 'en', // Ngôn ngữ mặc định
+    locale: 'zh', // Ngôn ngữ mặc định
     messages: {
       en: {
         dashboard: 'Dashboard',
