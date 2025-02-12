@@ -82,6 +82,7 @@
               </div>
             </div>
           </li>
+          
           <li class="nav-item dropdown me-3">
             <a
               class="nav-link dropdown-toggle waves-effect waves-dark"
@@ -676,6 +677,67 @@ const scrollToBottom = () => {
 .notification-menu .dropdown-item:hover {
   background-color: #f8f9fa;
   color: #007bff;
+}
+.nav-item.dropdown.u-pro {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nav-item.dropdown.u-pro .profile-pic {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  transition: box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.nav-item.dropdown.u-pro .profile-img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.nav-item.dropdown.u-pro .dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  transform: translateY(10px);
+  opacity: 0;
+  visibility: hidden;
+}
+
+.nav-item.dropdown.u-pro .dropdown-menu.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.nav-item.dropdown.u-pro .dropdown-item {
+  padding: 12px 20px;
+  font-size: 14px;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.nav-item.dropdown.u-pro .dropdown-item i {
+  color: #007bff;
+}
+
+.nav-item.dropdown.u-pro .dropdown-item:hover {
+  background-color: rgba(0, 123, 255, 0.1);
 }
 
 /* Animation Effect */

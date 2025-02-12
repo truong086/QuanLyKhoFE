@@ -9,14 +9,14 @@
         <div>
           <div class="header-title">
               <h2 class="warehouse-title" style="width: 850px;">
-                Warehouse: {{ Warename }} => Floor: {{ Floorname }} => Area: {{ areaName }}
+                {{ $t('warehouse') }}: {{ Warename }} => {{ $t('floor') }}: {{ Floorname }} => {{ $t('area') }}: {{ areaName }}
               </h2>
             </div>
         </div>
           <div class="header-container" style="margin: 50px;">
             <div class="selectors-container">
               <div class="warehouse-select-container">
-                <label for="warehouse-select" class="warehouse-label">Warehourse:</label>
+                <label for="warehouse-select" class="warehouse-label">{{ $t('warehouse') }}:</label>
                 <select id="warehouse-select" v-model="currentWarehouse" @change="SearchWarehourse">
                   <option v-for="(item, index) in warehouseData" :key="index" :value="item">
                     {{ item.name }}
@@ -24,7 +24,7 @@
                 </select>
               </div>
               <div class="floor-select-container">
-                <label for="floor-select" class="floor-label">Floor:</label>
+                <label for="floor-select" class="floor-label">{{ $t('floor') }}:</label>
                 <select id="floor-select" v-model="currentFloor" @change="SearchFloor">
                   <option
                     v-for="(floor, index) in currentFloorData"
@@ -36,7 +36,7 @@
                 </select>
               </div>
               <div class="floor-select-container">
-                <label for="floor-select" class="floor-label">Area:</label>
+                <label for="floor-select" class="floor-label">{{ $t('area') }}:</label>
                 <select id="floor-select" v-model="currentAreaFindOne" @change="SearchArea">
                   <option
                     v-for="(item, index) in currentAreaData"
@@ -228,7 +228,7 @@
                     <button @click="ReduceQuantity(item?.location, item?.id, item?.id_product)" style="width: 200px;" class="navigate-btn">Update reduce</button>
                   </div>
                 </div>
-                <button @click="closeFrame" class="close-btn">Đóng</button>
+                <button @click="closeFrame" class="close-btn">Close</button>
               </div>
           </div>
         </div>
@@ -239,7 +239,7 @@
     <!-- Hiển thị màn hình loading -->
     <div v-if="isLoading" class="loading-overlay">
       <div class="spinner"></div>
-      <p>Đang tải...</p>
+      <p>Loading...</p>
     </div>
 </template>
 
