@@ -555,6 +555,3 @@
     }
   }
 </style>
-<style scoped>
-
-</style>

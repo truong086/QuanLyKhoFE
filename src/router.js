@@ -27,6 +27,8 @@ import DetailProductWarehoursePage from "./components/DetailProductWarehourse.vu
 import productwarehousePage from "./components/productwarehouse/productwarehousePage.vue";
 import ImportExportForm from "./components/ImportAndExport/ImportExportForm.vue";
 import LocationStatus from "./components/LocationStatus.vue";
+import SearchPage from "./components/SearchPage.vue";
+
 import { useCounterStore } from "./store";
 // import { path } from "ramda";
 // import { compose } from "ramda";
@@ -83,6 +85,11 @@ const routes = [
       ],
     },
     children: [
+      {
+        path: "/SearchPage",
+        name: "SearchPage",
+        component: SearchPage,
+      },
       {
         path: "/LocationStatus",
         name: "LocationStatus",

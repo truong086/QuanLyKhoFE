@@ -1,3 +1,4 @@
+
 <template>
     <div class="container mt-4">
       <div class="header">
@@ -196,7 +197,7 @@
 .zone-label {
   margin-bottom: 10px;
   font-weight: bold;
-  color: #333;
+  background: linear-gradient(135deg, #3a7bd5, #d76d77);
   font-size: 14px;  /* Thu nhỏ kích thước font */
   text-transform: uppercase;
   display: inline-block;
@@ -354,7 +355,7 @@
   border: 1px solid grey;
 }
 .row-label {
-  background: #007bff;
+  background: linear-gradient(135deg, #ff9a9e, #ff6a00);
   color: white;
   padding: 5px 9px;
   border-radius: 5px;
