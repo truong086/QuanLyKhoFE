@@ -100,9 +100,9 @@
     </div>
     
     <div class="form-group">
-      <label for="region">Floor:</label>
+      <label for="region">Area:</label>
       <select class="form-select" v-model="currentFloor">
-        <option value="" disabled>Floor</option>
+        <option value="" disabled>Area</option>
         <option
           v-for="(item, index) in floorData"
           :key="index"

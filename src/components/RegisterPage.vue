@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper">
+  <div class="wrapper"> 
     <div class="inner">
       <form>
         <h3>RegisterPage</h3>

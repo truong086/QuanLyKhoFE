@@ -141,10 +141,10 @@
     <!-- Bảng Kệ -->
     <div class="table-container">
       <h2 class="table-title">Shelf Manager</h2>
-      <router-link to="/AddOrEditArea" class="waves-effect waves-dark" aria-expanded="false">
+      <!-- <router-link to="/AddOrEditArea" class="waves-effect waves-dark" aria-expanded="false">
         <i class="fa fa-tachometer"></i>
         <span class="hide-menu">Add Area</span>
-      </router-link>
+      </router-link> -->
       <table class="table">
         <thead>
           <tr>
@@ -177,7 +177,7 @@
             </td>
             <td>
               <div style="display: flex;">
-                <button class="btn btn-sucess" style="background-color: yellow; font-weight: bold;" @click="NextAreaUpdate(row.id)">Edit</button>
+                <!-- <button class="btn btn-sucess" style="background-color: yellow; font-weight: bold;" @click="NextAreaUpdate(row.id)">Edit</button> -->
                 <button class="btn btn-sucess" style="background-color: red; color: white; font-weight: bold;">Delete</button>
               </div>
             </td>

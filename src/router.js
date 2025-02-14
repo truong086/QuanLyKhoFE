@@ -1,35 +1,36 @@
-import { createRouter, createWebHistory } from 'vue-router';
-import WarehouseManagement from './components/WarehouseManagement.vue';  // Vẫn giữ nguyên WarehouseManagement.vue
-import QuanLyKho from './components/QuanLyKho.vue';  // Import thêm QuanLyKho.vue
-import LoginPage from './components/loginPage.vue';
-import RegisterPage from './components/RegisterPage.vue';
-import GetOTP from './components/GetOTP.vue';
-import AddorEdit from './components/AddorEdit.vue';
-import AdminPage from './components/AdminTemplate/IndexPage.vue';
-import dassboadPage from './components/AdminTemplate/DashboadPage.vue';
-import TableAdmin from './components/AdminTemplate/TablePage.vue';
-import TablePage from './components/TablePage.vue';
-import DetailsPage from './components/DetailsPage.vue';
-import ProfilePage from './components/ProfilePage.vue';
-import AddCategory from './components/AddCategory.vue';
-import WarehouseTransfer from './components/WarehouseTransfer.vue';
-import AllCategory from './components/AllCategory.vue'
-import ChiTietSanPham from './components/ChiTietSanPhamPage.vue';
-import SliderPage from './components/DetailSlider.vue';
-import MapPageData from './components/MapPage.vue';
-import AddOrEditAreaPage from './components/AddOrEditArea.vue';
-import AllPlanPage from './components/Plan/AllPlan.vue';
-import DetailPlanPage from './components/Plan/DetailPlan.vue';
-import PlanOfAccountPage from './components/Plan/PlanOfAccount.vue';
-import StatisticsPage from './components/Statistics/StatisticsPage.vue';
-import AddProduct from './components/AddProduct.vue';
-import DetailProductWarehoursePage from './components/DetailProductWarehourse.vue';
-import productwarehousePage from './components/productwarehouse/productwarehousePage.vue';
-
-import { useCounterStore } from './store';
+import { createRouter, createWebHistory } from "vue-router";
+import WarehouseManagement from "./components/WarehouseManagement.vue"; // Vẫn giữ nguyên WarehouseManagement.vue
+import QuanLyKho from "./components/QuanLyKho.vue"; // Import thêm QuanLyKho.vue
+import LoginPage from "./components/loginPage.vue";
+import RegisterPage from "./components/RegisterPage.vue";
+import GetOTP from "./components/GetOTP.vue";
+import AddorEdit from "./components/AddorEdit.vue";
+import AdminPage from "./components/AdminTemplate/IndexPage.vue";
+import dassboadPage from "./components/AdminTemplate/DashboadPage.vue";
+import TableAdmin from "./components/AdminTemplate/TablePage.vue";
+import TablePage from "./components/TablePage.vue";
+import DetailsPage from "./components/DetailsPage.vue";
+import ProfilePage from "./components/ProfilePage.vue";
+import AddCategory from "./components/AddCategory.vue";
+import WarehouseTransfer from "./components/WarehouseTransfer.vue";
+import AllCategory from "./components/AllCategory.vue";
+import ChiTietSanPham from "./components/ChiTietSanPhamPage.vue";
+import SliderPage from "./components/DetailSlider.vue";
+import MapPageData from "./components/MapPage.vue";
+import AddOrEditAreaPage from "./components/AddOrEditArea.vue";
+import AllPlanPage from "./components/Plan/AllPlan.vue";
+import DetailPlanPage from "./components/Plan/DetailPlan.vue";
+import PlanOfAccountPage from "./components/Plan/PlanOfAccount.vue";
+import StatisticsPage from "./components/Statistics/StatisticsPage.vue";
+import AddProduct from "./components/AddProduct.vue";
+import DetailProductWarehoursePage from "./components/DetailProductWarehourse.vue";
+import productwarehousePage from "./components/productwarehouse/productwarehousePage.vue";
+import ImportExportForm from "./components/ImportAndExport/ImportExportForm.vue";
+import { useCounterStore } from "./store";
+// import { path } from "ramda";
+// import { compose } from "ramda";
 
 const routes = [
-
   {
     path: "/AllCategory",
     name: "AllCategory",
@@ -49,19 +50,19 @@ const routes = [
     path: "/test/Ware",
     name: "WareTest",
     component: WarehouseManagement,
-    meta:{
-      css: ['/AdminTemplatePage/css/statusCss.css']
-    }
+    meta: {
+      css: ["/AdminTemplatePage/css/statusCss.css"],
+    },
   },
   {
     path: "/getotp/:email",
     name: "GetOTP",
-    component: GetOTP, 
+    component: GetOTP,
   },
   {
     path: "/",
     name: "admin",
-    component: AdminPage, 
+    component: AdminPage,
     meta: {
       requiresAuth: true,
       css: [
@@ -73,15 +74,19 @@ const routes = [
         "/AdminTemplatePage/css/style.css",
         "/AdminTemplatePage/css/pages/dashboard1.css",
         "/AdminTemplatePage/css/colors/default.css",
-        "/AdminTemplatePage/css/plan.css"
-        
+        "/AdminTemplatePage/css/plan.css",
       ],
       js: [
         "/AdminTemplatePage/js/perfect-scrollbar.jquery.min.js",
-        "/AdminTemplatePage/js/waves.js"
-      ]
+        "/AdminTemplatePage/js/waves.js",
+      ],
     },
     children: [
+      {
+        path: "/ImportExportForm",
+        name: "ImportExportForm",
+        component: ImportExportForm,
+      },
       {
         path: "PlanOfAccount",
         name: "planOfAccount",
@@ -101,7 +106,6 @@ const routes = [
         path: "Statistics",
         name: "statistics",
         component: StatisticsPage,
-
       },
       {
         path: "/AddProduct",
@@ -146,7 +150,7 @@ const routes = [
       {
         path: "AddorEdit",
         name: "AddorEdit",
-        component: AddorEdit
+        component: AddorEdit,
       },
       {
         path: "DetailsPage",
@@ -155,22 +159,21 @@ const routes = [
       },
       {
         path: "AddCategory",
-        name:  "AddCategory",
-        component: AddCategory
-        
+        name: "AddCategory",
+        component: AddCategory,
       },
       {
         path: "ProfilePage",
         name: "ProfilePage",
-        component: ProfilePage  
+        component: ProfilePage,
       },
       {
         path: "Addedit",
         name: "addedit",
-        component: AddorEdit  
+        component: AddorEdit,
       },
       {
-        path: "warehouse",  // Thêm route cho QuanLyKho.vue
+        path: "warehouse", // Thêm route cho QuanLyKho.vue
         name: "QuanLyKho",
         component: QuanLyKho, // Sử dụng component QuanLyKho.vue
       },
@@ -182,19 +185,19 @@ const routes = [
       {
         path: "Ware",
         name: "Ware",
-        component: WarehouseManagement
+        component: WarehouseManagement,
       },
       {
-        path: "dasboad", 
+        path: "dasboad",
         name: "das",
-        component: dassboadPage, 
+        component: dassboadPage,
       },
       {
         path: "table",
         name: "table",
         component: TableAdmin,
-      }
-    ]
+      },
+    ],
   },
   {
     path: "/login",
@@ -202,28 +205,35 @@ const routes = [
     component: LoginPage, // Đăng ký trang đăng nhập
     meta: {
       requiresAuth: false,
-      css: ["https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css",
-            "https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap",
-            "/LoginTemplate/css/style.css"],
-      js: ["/LoginTemplate/js/jquery.min.js",
-          "/LoginTemplate/js/popper.js",
-          "/LoginTemplate/js/bootstrap.min.js",
-          "/LoginTemplate/js/main.js"],
+      css: [
+        "https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css",
+        "https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap",
+        "/LoginTemplate/css/style.css",
+      ],
+      js: [
+        "/LoginTemplate/js/jquery.min.js",
+        "/LoginTemplate/js/popper.js",
+        "/LoginTemplate/js/bootstrap.min.js",
+        "/LoginTemplate/js/main.js",
+      ],
     },
   },
   {
     path: "/register",
-    name: "Register", 
+    name: "Register",
     component: RegisterPage,
     meta: {
       requiresAuth: false,
-      css: ["/RegisterPageTemplate/css/style.css",
-            "/RegisterPageTemplate/fonts/material-design-iconic-font/css/material-design-iconic-font.min.css",
-          ],
-      js: ["/RegisterPageTemplate/js/jquery-3.3.1.min.js",
-           "/RegisterPageTemplate/js/main.js"],
+      css: [
+        "/RegisterPageTemplate/css/style.css",
+        "/RegisterPageTemplate/fonts/material-design-iconic-font/css/material-design-iconic-font.min.css",
+      ],
+      js: [
+        "/RegisterPageTemplate/js/jquery-3.3.1.min.js",
+        "/RegisterPageTemplate/js/main.js",
+      ],
     },
-  },  
+  },
 ];
 
 const router = createRouter({
@@ -236,8 +246,8 @@ function loadBootstrap(to) {
   const cssFiles = to.meta.css || [];
   cssFiles.forEach((css) => {
     if (!document.querySelector(`link[href="${css}"]`)) {
-      const link = document.createElement('link');
-      link.rel = 'stylesheet';
+      const link = document.createElement("link");
+      link.rel = "stylesheet";
       link.href = css;
       document.head.appendChild(link);
     }
@@ -247,7 +257,7 @@ function loadBootstrap(to) {
   const jsFiles = to.meta.js || [];
   jsFiles.forEach((js) => {
     if (!document.querySelector(`script[src="${js}"]`)) {
-      const script = document.createElement('script');
+      const script = document.createElement("script");
       script.src = js;
       script.async = false;
       document.body.appendChild(script);
@@ -262,7 +272,7 @@ router.afterEach((to) => {
 router.beforeEach((to, from, next) => {
   loadBootstrap(to);
   const counter = useCounterStore();
-  const paths = ["/login","/register","/getotp", "/"];
+  const paths = ["/login", "/register", "/getotp", "/"];
 
   const checkPaths = !paths.includes(to.path);
 
