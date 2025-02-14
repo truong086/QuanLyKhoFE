@@ -4,17 +4,17 @@
       <header class="header">
         <!-- Select Boxes -->
         <div class="select-container">
-          <select v-model="selectedWarehouse" class="form-select">
-            <option v-for="warehouse in warehouses" :key="warehouse" :value="warehouse">{{ warehouse }}</option>
+          <select v-model="selectedWarehouse" class="form-select" @change="searchWarehouse">
+            <option v-for="warehouse in warehouses" :key="warehouse" :value="warehouse.id">{{ warehouse.name }}</option>
           </select>
-          <select v-model="selectedFloor" class="form-select">
-            <option v-for="floor in floors" :key="floor" :value="floor">{{ floor }}</option>
+          <select v-model="selectedFloor" class="form-select" @change="searchFloor">
+            <option v-for="floor in floors" :key="floor" :value="floor.id">{{ floor.name }}</option>
           </select>
-          <select v-model="selectedZone" class="form-select">
-            <option v-for="zone in zones[selectedFloor]" :key="zone" :value="zone">{{ zone }}</option>
+          <select v-model="selectedZone" class="form-select" @change="searchArea">
+            <option v-for="zone in zones" :key="zone" :value="zone.id">{{ zone.name }}</option>
           </select>
-          <select v-model="selectedRack" class="form-select">
-            <option v-for="rack in racks[selectedZone]" :key="rack" :value="rack">{{ rack }}</option>
+          <select v-model="selectedRack" class="form-select" @change="searchShelf">
+            <option v-for="rack in racks" :key="rack" :value="rack.id">{{ rack.name }}</option>
           </select>
         </div>
       </header>
@@ -34,8 +34,15 @@
           <!-- Nhà cung cấp -->
           <div class="supplier-select">
             <label for="supplier" class="select-label">Chọn Nhà Cung Cấp</label>
-            <select v-model="selectedSupplier" id="supplier" class="form-select">
-              <option v-for="supplier in suppliers" :key="supplier" :value="supplier">{{ supplier }}</option>
+            <select v-model="selectedSupplier" id="supplier" class="form-select" @change="searchSupplier">
+              <option v-for="supplier in suppliers" :key="supplier" :value="supplier.id">{{ supplier.name }}</option>
+            </select>
+          </div>
+          <!-- category -->
+          <div class="supplier-select">
+            <label for="supplier" class="select-label">Category</label>
+            <select v-model="selectCategory" id="supplier" class="form-select" @change="searchCategory">
+              <option v-for="item in category" :key="item" :value="item.id">{{ item.name }}</option>
             </select>
           </div>
           <!-- Input giá -->
@@ -65,77 +72,232 @@
   
           <!-- Loop through the products and display each one -->
           <div v-for="(product, index) in products" :key="index" class="product-frame">
-            <img :src="product.image" alt="Product Image" class="product-image" />
+            <img :src="product.images[0]" alt="Product Image" class="product-image" />
+            <div>
+              <p>Location: </p>
+              <div v-for="(item, indexProduct) in product.listAreaOfproducts" :key="indexProduct">
+                <p>
+                  <img :src="item.warehouse_image" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
+                  {{ item.warehouse_name }}
+                  => 
+                  <img :src="item.floor_image" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
+                  {{ item.floor_name }} =>
+
+                  <img :src="item.area_image" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
+                  {{ item.area_name }} => 
+
+                  <img :src="item.shelf_image" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
+                  {{ item.shelf_name }} => 
+                  {{ item.location }} ({{ item.code }})
+                </p>
+
+                <p class="product-quantity">Category: {{ product.categoryName }}
+                  <img :src="product.categoryImage" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
+                </p>
+
+                <p class="product-quantity">Supplier: {{ product.supplierName }}
+                  <img :src="product.supplierImage" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
+                </p>
+              </div>
+              
+            </div>
             <div class="product-info">
-              <h3 class="product-name">{{ product.name }}</h3>
-              <p class="product-price">Giá: {{ product.price }}k</p>
-              <p class="product-quantity">Số lượng: {{ product.quantity }}</p>
-              <p class="product-location">Vị trí: {{ product.location }}</p>
+              <h3 class="product-name">{{ product.title }}</h3>
+              <p class="product-price">Price: {{ product.price }}k</p>
+              <p class="product-quantity">Quantity: {{ product.quantity }}</p>
+              <p class="product-quantity">Unit of measure: {{ product.donViTinh }}</p>
             </div>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- Hiển thị màn hình loading -->
+    <div v-if="isLoading" class="loading-overlay">
+      <div class="spinner"></div>
+      <p>Loading...</p>
+    </div>
   </template>
   
   <script setup>
-  import { ref } from "vue";
+import { useCounterStore } from "../store";
+  import {ref, getCurrentInstance, onMounted} from 'vue'
+  // import PagesTotal from './PageList/PagesTotal.vue'
+  import axios from 'axios'
+  import {useToast} from 'vue-toastification'
   const searchQuery = ref("");
 
+  const isLoading = ref(false)
+  
+  const {proxy} = getCurrentInstance()
+  const hostName = proxy?.hostname
+  const store = useCounterStore()
+  const Toast = useToast()
+
+  const searchDataAllProduct = ref({
+    idWarehouse: null,
+    idFloor: null,
+    idArea: null,
+    idShelf: null,
+    supplier: null,
+    category: null,
+    pricefrom: null,
+    priceto: null,
+    name: null
+  })
+
+  const getToken = () => {
+        var token = store.getToken
+            var result = {
+                headers: {Authorization: `Bearer ${token}`}
+            }
+            return result
+      }
+
+      onMounted(() => {
+        findAllWarehouse()
+        findAllFloor()
+        findAllArea()
+        findAllShelf()
+        findAllCategory()
+        findAllSupplier()
+      })
+  const findAllWarehouse = async () => {
+    const res = await axios.get(hostName + `/api/Warehouse/FindAll?page=1&pageSize=2000`, getToken())
+    if(res.data.success){
+      warehouses.value = res.data.content.data
+      Toast.success("Success")
+    }
+  }
+
+  const findAllFloor = async () => {
+    const res = await axios.get(hostName + `/api/Floor/FindAll?page=1&pageSize=2000`, getToken())
+    if(res.data.success){
+      floors.value = res.data.content.data
+      Toast.success("Success")
+    }
+  }
+
+  const findAllArea = async () => {
+    const res = await axios.get(hostName + `/api/Area/FindAll?page=1&pageSize=2000`, getToken())
+    if(res.data.success){
+      zones.value = res.data.content.data
+    }
+  }
+
+  const findAllShelf = async () => {
+    const res = await axios.get(hostName + `/api/Shelf/FindAll?page=1&pageSize=2000`, getToken())
+    if(res.data.success){
+      racks.value = res.data.content.data
+    }
+  }
+
+  const findAllCategory = async () => {
+    const res = await axios.get(hostName + `/api/Category/FindAll?page=1&pageSize=2000`, getToken())
+    if(res.data.success){
+      category.value = res.data.content.data
+    }
+  } 
+
+  const findAllSupplier = async () => {
+    const res = await axios.get(hostName + `/api/Supplier/FindAll?page=1&pageSize=2000`, getToken())
+    if(res.data.success){
+      suppliers.value = res.data.content.data
+    }
+  } 
+
+  const searchWarehouse = () =>{
+    findOneFloorByWarehouse()
+    searchDataAllProduct.value.idWarehouse = selectedWarehouse.value
+    searchDataAllProduct.value.idFloor = null
+    searchDataAllProduct.value.idArea = null
+    searchDataAllProduct.value.idShelf = null
+    searchDataAll()
+  }
+
+const searchFloor = () => {
+  findOneAreaByFloor()
+  searchDataAllProduct.value.idFloor = selectedFloor.value
+  searchDataAllProduct.value.idArea = null
+  searchDataAllProduct.value.idShelf = null
+  searchDataAll()
+}
+
+const searchArea = () => {
+  findOneShelfByArea()
+  searchDataAllProduct.value.idArea = selectedZone.value
+    searchDataAllProduct.value.idShelf = null
+  searchDataAll()
+}
+
+const searchShelf = () => {
+  searchDataAllProduct.value.idShelf = selectedRack.value
+  searchDataAll()
+}
+
+const searchSupplier = () =>{
+  console.log(selectedSupplier.value)
+  searchDataAllProduct.value.supplier = selectedSupplier.value
+  searchDataAll()
+}
+
+const searchCategory = () => {
+  searchDataAllProduct.value.category = selectCategory.value
+  searchDataAll()
+}
+const findOneShelfByArea = async () => {
+
+  const res = await axios.get(hostName + `/api/Shelf/FindByArea?id=${selectedZone.value}&page=1&pageSize=2000`, getToken())
+    if(res.data.success){
+      racks.value = res.data.content.data
+    }
+}
+const findOneAreaByFloor = async () => {
+  const res = await axios.get(hostName + `/api/Area/FindOneByFloor?id=${selectedFloor.value}`, getToken())
+    if(res.data.success){
+      zones.value = res.data.content.data
+    }
+}
+  const findOneFloorByWarehouse = async () => {
+    const res = await axios.get(hostName + `/api/Floor/FindByWareHouser?id=${selectedWarehouse.value}&page=1&pageSize=2000`, getToken())
+    if(res.data.success){
+      floors.value = res.data.content.data
+    }
+  }
+
+  const searchDataAll = async () =>{
+    console.log(searchDataAllProduct.value)
+    const res = await axios.post(hostName + `/api/Product/FindAllProductSearch`,searchDataAllProduct.value , getToken())
+    if(res.data.success){
+      products.value = res.data.content.dataMapList
+
+    }
+    console.log(res)
+  }
 const handleSearch = () => {
   alert(`Đang tìm kiếm: ${searchQuery.value}`);
 };
 
   // Sample data for warehouses, floors, zones, racks, suppliers, and price ranges
-  const warehouses = ref(["Kho 1", "Kho 2", "Kho 3"]);
-  const floors = ref(["Tầng 1", "Tầng 2", "Tầng 3"]);
-  const zones = ref({
-    "Tầng 1": ["C1", "C2", "C3", "C4", "C5"],
-    "Tầng 2": ["D1", "D2", "D3"],
-    "Tầng 3": ["E1", "E2"]
-  });
-  const racks = ref({
-    C1: ["Kệ 1", "Kệ 2"],
-    C2: ["Kệ 3", "Kệ 4"],
-    D1: ["Kệ 5", "Kệ 6"],
-    E1: ["Kệ 7", "Kệ 8"]
-  });
-  const suppliers = ref(["Nhà Cung Cấp A", "Nhà Cung Cấp B", "Nhà Cung Cấp C"]);
+  const warehouses = ref([]);
+  const floors = ref([]);
+  const zones = ref([]);
+  const racks = ref([]);
+  const category = ref([])
+  const suppliers = ref([]);
   const priceRanges = ref(["Dưới 100k", "100k - 200k", "200k - 300k", "300k - 400k", "400k - 500k", "500k - 600k", "Trên 600k"]);
   
   // Sample products data
-  const products = ref([
-    {
-      name: "Sản phẩm 1",
-      price: 500,
-      quantity: 100,
-      location: "Tầng 1, C2, Kệ 3",
-      image: "https://cdn.chotot.com/vTwjVrjU8FJ__W8Z6a-m4cPzvRgLs4z_HytY2_O1SsQ/preset:view/plain/e42c8c1eb20bfede15e2644fcd59f9f2-2825804544181120543.jpg"
-    },
-    {
-      name: "Sản phẩm 2",
-      price: 350,
-      quantity: 200,
-      location: "Tầng 1, C3, Kệ 4",
-      image: "https://scontent.fkhh2-2.fna.fbcdn.net/v/t39.30808-6/476772171_1058337303005514_852211668641334725_n.jpg?_nc_cat=1&ccb=1-7&_nc_sid=127cfc&_nc_ohc=EIC613r-m60Q7kNvgHPlKOm&_nc_oc=AdgtpkV84tNHg3Bh3id0rLZ9QgSDMdU_BqJyc0-Z6UuS5ycH-G7mHbNg9fEWpFxS_a0&_nc_zt=23&_nc_ht=scontent.fkhh2-2.fna&_nc_gid=Apk91kgNbV_4JbzyJDPIqfh&oh=00_AYBQx06G8SQzyvtfjmXGDiTqf4TYWqfU4mBiTe3bE_AQ0A&oe=67B2818D"
-    },
-    {
-      name: "Sản phẩm 3",
-      price: 150,
-      quantity: 50,
-      location: "Tầng 2, D1, Kệ 5",
-      image: "https://scontent.fkhh2-2.fna.fbcdn.net/v/t39.30808-6/476772171_1058337303005514_852211668641334725_n.jpg?_nc_cat=1&ccb=1-7&_nc_sid=127cfc&_nc_ohc=EIC613r-m60Q7kNvgHPlKOm&_nc_oc=AdgtpkV84tNHg3Bh3id0rLZ9QgSDMdU_BqJyc0-Z6UuS5ycH-G7mHbNg9fEWpFxS_a0&_nc_zt=23&_nc_ht=scontent.fkhh2-2.fna&_nc_gid=Apk91kgNbV_4JbzyJDPIqfh&oh=00_AYBQx06G8SQzyvtfjmXGDiTqf4TYWqfU4mBiTe3bE_AQ0A&oe=67B2818D"
-    }
-  ]);
+  const products = ref([]);
   
-  const selectedWarehouse = ref(warehouses.value[0]);
-  const selectedFloor = ref(floors.value[0]);
-  const selectedZone = ref(zones.value[selectedFloor.value][0]);
-  const selectedRack = ref(racks.value[selectedZone.value][0]);
-  const selectedSupplier = ref(suppliers.value[0]);
+  const selectedWarehouse = ref(null);
+  const selectedFloor = ref(null);
+  const selectedZone = ref(null);
+  const selectedRack = ref(null);
+  const selectedSupplier = ref(null);
   const price = ref(null);
-  const selectedPriceRange = ref(priceRanges.value[0]);
-  
+  const selectedPriceRange = ref(null);
+  const selectCategory = ref(null)
   // Handle button OK click next to input price
   const submitPrice = () => {
     alert(`Giá nhập là: ${price.value}`);

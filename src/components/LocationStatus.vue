@@ -1,47 +1,84 @@
-
 <template>
-    <div class="container mt-4">
-      <div class="header">
-        <label for="floorSelect" class="form-label">Chọn tầng:</label>
-        <select id="floorSelect" v-model="selectedFloor" class="form-select small-select">
-          <option v-for="floor in floors" :key="floor" :value="floor">
-            {{ floor }}
-          </option>
-        </select>
-      </div>
-  
-      <div class="zone-container">
-        <!-- Loop through zones based on selected floor -->
-        <div v-for="(zone, index) in zones[selectedFloor]" :key="index" class="zone-grid">
-          <div class="zone-label">{{ zone }}</div>
-          <div class="column">
-            <div class="row" v-for="row in 10" :key="row">
-              <div class="row-item">
-                <button class="row-label" @click="openRowDetail(zone, row)" :style="{ marginBottom: '15px' }">
-                  {{ row }}
-                </button>
-                <div class="sub-row-container">
-                  <div class="sub-row">
+  <div class="container mt-4">
+    <div class="header">
+      <label for="floorSelect" class="form-label">Chọn tầng:</label>
+      <select
+        id="floorSelect"
+        v-model="selectedFloor"
+        @change="seareArea"
+        class="form-select small-select"
+      >
+        <option v-for="floor in floors" :key="floor" :value="floor.id">
+          {{ floor.name }}
+        </option>
+      </select>
+    </div>
+
+    <div class="zone-container">
+      <!-- Loop through zones based on selected floor -->
+      <div v-for="(zone, index) in zones" :key="index" class="zone-grid">
+        <div class="zone-label">{{ zone.name }}</div>
+        <div class="column">
+          <div class="row" v-for="(row, indexRow) in zone.data" :key="indexRow">
+            <div class="row-item">
+              <button
+                class="row-label"
+                @click="openRowDetail(row.shelfGetAlls)"
+                :style="{ marginBottom: '15px' }"
+              >
+                {{ indexRow + 1 }}
+              </button>
+              <div class="sub-row-container">
+                <div
+                  class="sub-row"
+                  v-for="(box, indexBox) in row.shelfGetAlls"
+                  :key="indexBox"
+                >
+                  <div
+                    v-for="(location, indexlocation) in box.quantity"
+                    :key="indexlocation"
+                  >
                     <button
+                      v-if="
+                        checkQuantityLocationProduct(
+                          box.productShefl.productLocationAreas,
+                          location
+                        ) > 0
+                      "
+                      style="background-color: blueviolet"
                       class="box"
-                      v-for="box in 10"
-                      :key="box"
-                      :class="{ 'has-items': hasItems(zone, row, box), 'empty': !hasItems(zone, row, box) }"
-                      @click="openFrame(zone, row, box)"
+                      :class="{
+                        'has-items': hasItems(zone, row, box),
+                        empty: !hasItems(zone, row, box),
+                      }"
+                      @click="
+                        openFrame(
+                          box.productShefl.productLocationAreas,
+                          location
+                        )
+                      "
                     >
                       <span v-if="hasItems(zone, row, box)">
-                        {{ inventory[`${zone}-${row}-${box}`]?.length || 0 }}
+                        {{ location }}
                       </span>
                     </button>
-                  </div>
-                  <div class="sub-row">
                     <button
+                      v-else
                       class="box"
-                      v-for="box in 10"
-                      :key="box + '-b'"
-                      :class="{ 'has-items': hasItems(zone, row, box), 'empty': !hasItems(zone, row, box) }"
-                      @click="openFrame(zone, row, box)"
+                      :class="{
+                        'has-items': hasItems(zone, row, box),
+                        empty: !hasItems(zone, row, box),
+                      }"
+                      @click="
+                        openFrame(
+                          box.productShefl.productLocationAreas,
+                          location
+                        )
+                      "
                     >
+                      <span v-if="hasItems(zone, row, box)">
+                        {{ location }}
+                      </span>
                     </button>
                   </div>
                 </div>
@@ -50,107 +87,243 @@
           </div>
         </div>
       </div>
-  
-<!-- Frame chi tiết vị trí -->
-            <div v-if="frameVisible" class="detail-frame">
-            <div class="frame-content">
-                <div class="frame-top">
-                <div class="frame-image">
-                    <img :src="selectedDetail.productImage" alt="Product Image" />
-                </div>
-                <div class="frame-details">
-                    <p><strong>Sản phẩm:</strong> {{ selectedDetail.product }}</p>
-                    <h3>Chi tiết vị trí</h3>
-                    <p><strong>Khu:</strong> {{ selectedDetail.zone }}</p>
-                    <p><strong>Hàng:</strong> {{ selectedDetail.row }}</p>
-                    <p><strong>Cột:</strong> {{ selectedDetail.col }}</p>
-                </div>
-                </div>
-                <div class="frame-buttons">
-                <button class="close-button" @click="frameVisible = false">Đóng</button>
-                </div>
-            </div>
-            </div>
+    </div>
 
-  
-      <!-- Frame danh sách sản phẩm -->
-      <div v-if="rowDetailVisible" class="detail-frame">
-        <div class="frame-content">
-          <h3>Danh sách sản phẩm - Hàng {{ selectedRowDetail.row }}</h3>
-          <ul>
-            <li v-for="(product, index) in selectedRowDetail.products" :key="index">
-              {{ product }}
-            </li>
-          </ul>
-          <div class="frame-buttons">
-            <button class="close-button" @click="rowDetailVisible = false">Đóng</button>
+    <!-- Frame chi tiết vị trí -->
+    <div v-if="frameVisible" class="detail-frame">
+      <div class="frame-content">
+        <div v-for="(item, index) in selectedDetail" :key="index">
+          <div class="frame-top">
+            <div class="frame-image">
+              <div>
+                <img :src="item.image" alt="Product Image" />
+              </div>
+              <div v-if="item.images">
+                <img
+                  v-for="(itemImage, indexImage) in item.images"
+                  :key="indexImage"
+                  :src="itemImage"
+                  style="width: 30px; height: 30px"
+                  alt="Product Image"
+                />
+              </div>
+            </div>
+            <div class="frame-details">
+              <p><strong>Sản phẩm:</strong> {{ item.name }}</p>
+              <h3>Detatils</h3>
+              <p>
+                <strong>Category:</strong> {{ item.category }}
+                <img
+                  :src="item.category_image"
+                  style="width: 30px; height: 30px; border-radius: 50%"
+                  alt="Product Image"
+                />
+              </p>
+              <p>
+                <strong>Supplier:</strong> {{ item.supplier }}
+                <img
+                  :src="item.supplier_image"
+                  style="width: 30px; height: 30px; border-radius: 50%"
+                  alt="Product Image"
+                />
+              </p>
+              <p><strong>Price:</strong> {{ item.price }}</p>
+              <p><strong>inventory:</strong> {{ item.inventory }}</p>
+              <p><strong>Quantity Location:</strong> {{ item.quantity }}</p>
+              <p><strong>Location:</strong> {{ item.location }}</p>
+              <p><strong>Code:</strong> {{ item.code }}</p>
+            </div>
           </div>
+        </div>
+
+        <div class="frame-buttons">
+          <button class="close-button" @click="frameVisible = false">
+            Đóng
+          </button>
         </div>
       </div>
     </div>
-  </template>
-  
-  <script setup>
-  import { ref } from "vue";
-  
-  // Updated floors and zones, fixed to correctly match the zones for each floor
-  const floors = ref(["Tầng 1", "Tầng 3"]);
-  const selectedFloor = ref(floors.value[0]);
-  const zones = ref({
-    "Tầng 1": ["C1", "C2", "C3", "C4", "C5", "C6", "C7", "C8", "C9"],
-    "Tầng 3": ["Q1", "Q2", "Q3", "Q4", "Q5", "Q6"]
-  });
-  const frameVisible = ref(false);
-  const rowDetailVisible = ref(false);
-  const selectedDetail = ref({ zone: 0, row: 0, col: 0 });
-  const selectedRowDetail = ref({ row: 0, products: [] });
-  
-  // Sample inventory data
-  const inventory = ref({
-    "C1-2-3": "Sản phẩm A",
-    "C2-5-7": "Sản phẩm C",
-    "C3-8-4": "Sản phẩm D",
-    "C4-3-6": "Sản phẩm G",
-    "C5-9-2": "Sản phẩm H"
-  });
-  
-  // Check if a box has items in the inventory
-  const hasItems = (zone, row, col) => {
-    return Boolean(inventory.value[`${zone}-${row}-${col}`]);
+
+    <!-- Frame danh sách sản phẩm -->
+    <div v-if="rowDetailVisible" class="detail-frame">
+      <div class="frame-content">
+        <div v-for="(item, index) in selectedRowDetail" :key="index">
+          <div class="frame-top">
+          <div class="frame-image">
+            <div>
+              <img :src="item.image" alt="Product Image" />
+            </div>
+            <div v-if="item.images">
+              <img
+                v-for="(itemImage, indexImage) in item.images"
+                :key="indexImage"
+                :src="itemImage"
+                style="width: 30px; height: 30px"
+                alt="Product Image"
+              />
+            </div>
+          </div>
+          <div class="frame-details">
+            <p><strong>Sản phẩm:</strong> {{ item.name }}</p>
+            <h3>Detatils</h3>
+            <p>
+              <strong>Category:</strong> {{ item.category }}
+              <img
+                :src="item.category_image"
+                style="width: 30px; height: 30px; border-radius: 50%"
+                alt="Product Image"
+              />
+            </p>
+            <p>
+              <strong>Supplier:</strong> {{ item.supplier }}
+              <img
+                :src="item.supplier_image"
+                style="width: 30px; height: 30px; border-radius: 50%"
+                alt="Product Image"
+              />
+            </p>
+            <p><strong>Price:</strong> {{ item.price }}</p>
+            <p><strong>inventory:</strong> {{ item.inventory }}</p>
+            <p><strong>Quantity Location:</strong> {{ item.quantity }}</p>
+            <p><strong>Location:</strong> {{ item.location }}</p>
+            <p><strong>Code:</strong> {{ item.code }}</p>
+          </div>
+        </div>
+        <div class="frame-buttons">
+          <button class="close-button" @click="rowDetailVisible = false">
+            Đóng
+          </button>
+        </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+  <!-- Hiển thị màn hình loading -->
+  <div v-if="isLoading" class="loading-overlay">
+    <div class="spinner"></div>
+    <p>Loading...</p>
+  </div>
+</template>
+
+<script setup>
+import { useCounterStore } from "../store";
+import { ref, getCurrentInstance, onMounted } from "vue";
+// import PagesTotal from './PageList/PagesTotal.vue'
+import axios from "axios";
+import { useToast } from "vue-toastification";
+
+// Updated floors and zones, fixed to correctly match the zones for each floor
+const floors = ref(["Tầng 1", "Tầng 3"]);
+const selectedFloor = ref(null);
+const zones = ref({
+  "Tầng 1": ["C1", "C2", "C3", "C4", "C5", "C6", "C7", "C8", "C9"],
+  "Tầng 3": ["Q1", "Q2", "Q3", "Q4", "Q5", "Q6"],
+});
+const frameVisible = ref(false);
+const rowDetailVisible = ref(false);
+const selectedDetail = ref([]);
+const selectedRowDetail = ref([]);
+const isLoading = ref(false);
+
+const { proxy } = getCurrentInstance();
+const hostName = proxy?.hostname;
+const store = useCounterStore();
+const Toast = useToast();
+// Sample inventory data
+const inventory = ref({
+  "C1-2-3": "Sản phẩm A",
+  "C2-5-7": "Sản phẩm C",
+  "C3-8-4": "Sản phẩm D",
+  "C4-3-6": "Sản phẩm G",
+  "C5-9-2": "Sản phẩm H",
+});
+
+onMounted(() => {
+  findAllFloor();
+});
+const getToken = () => {
+  var token = store.getToken;
+  var result = {
+    headers: { Authorization: `Bearer ${token}` },
   };
-  
-  // Open frame with detailed item info
-  const openFrame = (zone, row, col) => {
-    const key = `${zone}-${row}-${col}`;
-    selectedDetail.value = { 
-      zone: zone, 
-      row, 
-      col, 
-      product: inventory.value[key] || "Trống" 
-    };
-    frameVisible.value = true;
-  };
-  
-  // Open row detail to show the products in a specific row
-  const openRowDetail = (zone, row) => {
-    let productSet = new Set();
-  
-    for (let col = 1; col <= 10; col++) {
-      const key = `${zone}-${row}-${col}`;
-      if (inventory.value[key]) {
-        productSet.add(inventory.value[key]);
-      }
+  return result;
+};
+const findAllFloor = async () => {
+  const res = await axios.get(
+    hostName + "/api/Floor/FindAll?page=1&pageSize=2000",
+    getToken()
+  );
+  if (res.data.success) {
+    floors.value = res.data.content.data;
+    Toast.success("Success");
+  }
+};
+
+const checkQuantityLocationProduct = (data, location) => {
+  var count = data.filter((p) => p.location == location).length;
+  return count;
+};
+const seareArea = () => {
+  findOneAreByFloor();
+};
+
+const findOneAreByFloor = async () => {
+  const res = await axios.get(
+    hostName +
+      `/api/Shelf/FindByDataAreaLineByFloor?id=${selectedFloor.value}&page=1&pageSize=200`,
+    getToken()
+  );
+  console.log(res);
+  if (res.data.success) {
+    zones.value = res.data.content.data;
+    Toast.success("Success");
+  }
+};
+// Check if a box has items in the inventory
+const hasItems = (zone, row, col) => {
+  return Boolean(inventory.value[`${zone}-${row}-${col}`]);
+};
+
+// Open frame with detailed item info
+const openFrame = (list, location) => {
+  selectedDetail.value = [];
+  if (list.length <= 0) return;
+  if (list.length > 0) {
+    const checkListData = list.filter((x) => x.location == location);
+    if (checkListData.length > 0) {
+      checkListData.forEach((element) => {
+        if (element.location === location) {
+          let dataItem = { ...element, type: "Sản phẩm đang ở kho" };
+          selectedDetail.value.push(dataItem);
+        }
+      });
     }
-  
-    selectedRowDetail.value = { 
-      row, 
-      products: Array.from(productSet) 
-    };
-    rowDetailVisible.value = true;
-  };
-  </script>
-  
-  <style scoped>
+  }
+  frameVisible.value = true;
+};
+
+// Open row detail to show the products in a specific row
+const openRowDetail = (zone, row) => {
+  let productSet = new Set();
+  selectedRowDetail.value = [];
+  zone.forEach((element) => {
+    element.productShefl.productLocationAreas.forEach((item) => {
+      selectedRowDetail.value.push(item);
+    });
+  });
+  for (let col = 1; col <= 10; col++) {
+    const key = `${zone}-${row}-${col}`;
+    if (inventory.value[key]) {
+      productSet.add(inventory.value[key]);
+    }
+  }
+
+  rowDetailVisible.value = true;
+};
+</script>
+
+<style scoped>
 /* Container chính */
 .container {
   max-width: 1000px;
@@ -174,7 +347,7 @@
 /* Select Box */
 /* Cải thiện kiểu cho select */
 .small-select {
-  width: 120px;  /* Tăng chiều rộng */
+  width: 120px; /* Tăng chiều rộng */
   height: 35px;
   padding: 5px;
   border: 1px solid #4a90e2;
@@ -198,7 +371,7 @@
   margin-bottom: 10px;
   font-weight: bold;
   background: linear-gradient(135deg, #3a7bd5, #d76d77);
-  font-size: 14px;  /* Thu nhỏ kích thước font */
+  font-size: 14px; /* Thu nhỏ kích thước font */
   text-transform: uppercase;
   display: inline-block;
   text-align: center;
@@ -214,7 +387,10 @@
 /* Cải thiện zone-container */
 .zone-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));  /* Cải thiện layout */
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(300px, 1fr)
+  ); /* Cải thiện layout */
   gap: 30px;
   justify-content: center;
   margin-top: 30px;
@@ -238,7 +414,6 @@
   transform: translateY(-5px);
   box-shadow: 6px 6px 15px rgba(0, 0, 0, 0.2);
 }
-
 
 .small-select:hover {
   background: linear-gradient(135deg, #e8eeff, #cbd9ff);
@@ -299,7 +474,6 @@
   flex-direction: row;
   gap: 2px;
 }
-
 
 .sub-row {
   display: flex;
@@ -366,7 +540,7 @@
 .zone-label {
   margin-top: 5px;
   font-weight: bold;
-  background-color:orange;
+  background-color: orange;
   color: #333;
   font-size: 16px;
   text-transform: uppercase;
@@ -391,8 +565,11 @@
 }
 
 .frame-content {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Các cột tự động thay đổi */
+  gap: 20px; /* Khoảng cách giữa các phần tử */
+  padding: 20px;
+  justify-items: center; /* Căn giữa các phần tử trong mỗi ô */
 }
 
 .frame-top {
@@ -402,7 +579,7 @@
 }
 
 .frame-image img {
-  width: 100px;  /* Kích thước ảnh */
+  width: 100px; /* Kích thước ảnh */
   height: 100px;
   object-fit: cover;
   border-radius: 10px;
@@ -493,6 +670,4 @@
   background: linear-gradient(135deg, #a71d2a, #7a141e);
   box-shadow: 2px 2px 10px rgba(255, 0, 0, 0.3);
 }
-
-  </style>
-  
+</style>

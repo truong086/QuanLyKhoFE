@@ -9,7 +9,7 @@
                                     class="fa fa-tachometer"></i><span class="hide-menu">Dashboard</span></a>
                         </li> -->
                         <li v-on:click="SwapBackGroupColor('b1')" class="b1">
-                        <router-link to="/warehouse" class="waves-effect waves-dark b1" aria-expanded="false">
+                        <router-link to="/LocationStatus" class="waves-effect waves-dark b1" aria-expanded="false">
                             <i class="fa fa-tachometer"></i>
                             <span class="hide-menu">{{ t('dashboard') }}</span>
                         </router-link>
@@ -68,6 +68,12 @@
                           <router-link to="/Statistics" class="waves-effect waves-dark" aria-expanded="false">
                             <i class="fa fa-desktop" aria-hidden="true"></i>
                             <span class="hide-menu">{{ t('statistics') }}</span>
+                        </router-link>
+                        </li>
+                        <li class="b11" v-on:click="SwapBackGroupColor('b11')">
+                          <router-link to="/SearchPage" class="waves-effect waves-dark" aria-expanded="false">
+                            <i class="fa fa-search" aria-hidden="true"></i>
+                            <span class="hide-menu">{{ t('Search Product') }}</span>
                         </router-link>
                         </li>
                         <!----<li> <a class="waves-effect waves-dark" href="pages-error-404.html" aria-expanded="false"><i
