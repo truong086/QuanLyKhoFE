@@ -18,6 +18,7 @@ import ChiTietSanPham from "./components/ChiTietSanPhamPage.vue";
 import SliderPage from "./components/DetailSlider.vue";
 import MapPageData from "./components/MapPage.vue";
 import AddOrEditAreaPage from "./components/AddOrEditArea.vue";
+import planPageData from "./components/planPage.vue";
 import AllPlanPage from "./components/Plan/AllPlan.vue";
 import DetailPlanPage from "./components/Plan/DetailPlan.vue";
 import PlanOfAccountPage from "./components/Plan/PlanOfAccount.vue";
@@ -94,6 +95,11 @@ const routes = [
         path: "/LocationStatus",
         name: "LocationStatus",
         component: LocationStatus,
+      },
+      {
+        path: "/planPage",
+        name: "PlanPage",
+        component: planPageData,
       },
       {
         path: "/ImportExportForm",

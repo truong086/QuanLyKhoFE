@@ -23,7 +23,7 @@
                                     <span class="hide-menu">{{ t('showplan') }}</span></router-link>
                         </li>
                         <li class="b4" v-if="store.getRole(0).includes('Admin')" v-on:click="SwapBackGroupColor('b4')"> 
-                        <router-link to="/TransferPage" class="waves-effect waves-dark" href="icon-fontawesome.html" aria-expanded="false">
+                        <router-link to="/planPage" class="waves-effect waves-dark" aria-expanded="false">
                           <i
                             class="fa fa-smile-o"></i><span class="hide-menu">{{ t('plan') }}</span>
                         </router-link>

@@ -52,14 +52,14 @@
             <button @click="submitPrice" class="btn-ok">OK</button>
           </div>
           <!-- Mức giá tìm kiếm -->
-          <div class="price-search">
+          <!-- <div class="price-search">
             <label for="priceRange" class="select-label">Mức Giá</label>
             <div class="price-range">
               <div v-for="(range, index) in priceRanges" :key="index" class="price-item" @click="selectedPriceRange = range">
                 {{ range }}
               </div>
             </div>
-          </div>
+          </div> -->
           <!-- Nút OK ở cuối navbar -->
           <div class="navbar-footer">
             <button @click="handleNavbarOk" class="btn-ok">Xác Nhận</button>
@@ -73,7 +73,7 @@
           <!-- Loop through the products and display each one -->
           <div v-for="(product, index) in products" :key="index" class="product-frame">
             <img :src="product.images[0]" alt="Product Image" class="product-image" />
-            <div>
+            <div style="margin: 0 15px;">
               <p>Location: </p>
               <div v-for="(item, indexProduct) in product.listAreaOfproducts" :key="indexProduct">
                 <p>
@@ -107,6 +107,9 @@
               <p class="product-quantity">Quantity: {{ product.quantity }}</p>
               <p class="product-quantity">Unit of measure: {{ product.donViTinh }}</p>
             </div>
+            <div>
+              <button class="btn" style="border: 1px solid green;" @click="nextDetails(product.id)">Details</button>
+            </div>
           </div>
         </div>
       </div>
@@ -125,6 +128,7 @@ import { useCounterStore } from "../store";
   // import PagesTotal from './PageList/PagesTotal.vue'
   import axios from 'axios'
   import {useToast} from 'vue-toastification'
+import router from "@/router";
   const searchQuery = ref("");
 
   const isLoading = ref(false)
@@ -162,52 +166,108 @@ import { useCounterStore } from "../store";
         findAllCategory()
         findAllSupplier()
       })
+
+      const nextDetails = (id) =>{
+        router.push({path: "/ChiTietSanPham", query: {id: id, name: "Details"}})
+      }
   const findAllWarehouse = async () => {
+    isLoading.value = true
+    document.body.classList.add('loading') // Add Lớp "loading"
+    document.body.style.overflow = 'hidden'
     const res = await axios.get(hostName + `/api/Warehouse/FindAll?page=1&pageSize=2000`, getToken())
     if(res.data.success){
       warehouses.value = res.data.content.data
       Toast.success("Success")
     }
+
+    isLoading.value = false
+    document.body.classList.remove('loading')
+    document.body.style.overflow = 'auto'
   }
 
   const findAllFloor = async () => {
+
+    isLoading.value = true
+    document.body.classList.add('loading') // Add Lớp "loading"
+    document.body.style.overflow = 'hidden'
+
     const res = await axios.get(hostName + `/api/Floor/FindAll?page=1&pageSize=2000`, getToken())
     if(res.data.success){
       floors.value = res.data.content.data
       Toast.success("Success")
     }
+
+    isLoading.value = false
+    document.body.classList.remove('loading')
+    document.body.style.overflow = 'auto'
   }
 
   const findAllArea = async () => {
+    isLoading.value = true
+    document.body.classList.add('loading') // Add Lớp "loading"
+    document.body.style.overflow = 'hidden'
     const res = await axios.get(hostName + `/api/Area/FindAll?page=1&pageSize=2000`, getToken())
     if(res.data.success){
       zones.value = res.data.content.data
     }
+
+    isLoading.value = false
+    document.body.classList.remove('loading')
+    document.body.style.overflow = 'auto'
   }
 
   const findAllShelf = async () => {
+
+    isLoading.value = true
+    document.body.classList.add('loading') // Add Lớp "loading"
+    document.body.style.overflow = 'hidden'
     const res = await axios.get(hostName + `/api/Shelf/FindAll?page=1&pageSize=2000`, getToken())
     if(res.data.success){
       racks.value = res.data.content.data
     }
+
+    isLoading.value = false
+    document.body.classList.remove('loading')
+    document.body.style.overflow = 'auto'
   }
 
   const findAllCategory = async () => {
+    isLoading.value = true
+    document.body.classList.add('loading') // Add Lớp "loading"
+    document.body.style.overflow = 'hidden'
+
     const res = await axios.get(hostName + `/api/Category/FindAll?page=1&pageSize=2000`, getToken())
     if(res.data.success){
       category.value = res.data.content.data
     }
+
+    isLoading.value = false
+    document.body.classList.remove('loading')
+    document.body.style.overflow = 'auto'
   } 
 
   const findAllSupplier = async () => {
+    isLoading.value = true
+    document.body.classList.add('loading') // Add Lớp "loading"
+    document.body.style.overflow = 'hidden'
+
     const res = await axios.get(hostName + `/api/Supplier/FindAll?page=1&pageSize=2000`, getToken())
     if(res.data.success){
       suppliers.value = res.data.content.data
     }
+
+    isLoading.value = false
+    document.body.classList.remove('loading')
+    document.body.style.overflow = 'auto'
   } 
 
   const searchWarehouse = () =>{
     findOneFloorByWarehouse()
+    findAllArea()
+    findAllShelf()
+
+    selectedZone.value = null;
+    selectedRack.value = null;
     searchDataAllProduct.value.idWarehouse = selectedWarehouse.value
     searchDataAllProduct.value.idFloor = null
     searchDataAllProduct.value.idArea = null
@@ -217,6 +277,10 @@ import { useCounterStore } from "../store";
 
 const searchFloor = () => {
   findOneAreaByFloor()
+  findAllShelf()
+
+  selectedZone.value = null;
+  selectedRack.value = null;
   searchDataAllProduct.value.idFloor = selectedFloor.value
   searchDataAllProduct.value.idArea = null
   searchDataAllProduct.value.idShelf = null
@@ -225,6 +289,7 @@ const searchFloor = () => {
 
 const searchArea = () => {
   findOneShelfByArea()
+  selectedRack.value = null;
   searchDataAllProduct.value.idArea = selectedZone.value
     searchDataAllProduct.value.idShelf = null
   searchDataAll()
@@ -246,36 +311,72 @@ const searchCategory = () => {
   searchDataAll()
 }
 const findOneShelfByArea = async () => {
+  isLoading.value = true
+    document.body.classList.add('loading') // Add Lớp "loading"
+    document.body.style.overflow = 'hidden'
 
   const res = await axios.get(hostName + `/api/Shelf/FindByArea?id=${selectedZone.value}&page=1&pageSize=2000`, getToken())
     if(res.data.success){
       racks.value = res.data.content.data
     }
+
+    isLoading.value = false
+    document.body.classList.remove('loading')
+    document.body.style.overflow = 'auto'
 }
 const findOneAreaByFloor = async () => {
+
+  isLoading.value = true
+    document.body.classList.add('loading') // Add Lớp "loading"
+    document.body.style.overflow = 'hidden'
   const res = await axios.get(hostName + `/api/Area/FindOneByFloor?id=${selectedFloor.value}`, getToken())
     if(res.data.success){
       zones.value = res.data.content.data
     }
+
+    isLoading.value = false
+    document.body.classList.remove('loading')
+    document.body.style.overflow = 'auto'
 }
   const findOneFloorByWarehouse = async () => {
+    isLoading.value = true
+    document.body.classList.add('loading') // Add Lớp "loading"
+    document.body.style.overflow = 'hidden'
+
     const res = await axios.get(hostName + `/api/Floor/FindByWareHouser?id=${selectedWarehouse.value}&page=1&pageSize=2000`, getToken())
     if(res.data.success){
       floors.value = res.data.content.data
     }
+
+    isLoading.value = false
+    document.body.classList.remove('loading')
+    document.body.style.overflow = 'auto'
   }
 
   const searchDataAll = async () =>{
+    isLoading.value = true
+    document.body.classList.add('loading') // Add Lớp "loading"
+    document.body.style.overflow = 'hidden'
     console.log(searchDataAllProduct.value)
     const res = await axios.post(hostName + `/api/Product/FindAllProductSearch`,searchDataAllProduct.value , getToken())
     if(res.data.success){
       products.value = res.data.content.dataMapList
 
     }
+    isLoading.value = false
+    document.body.classList.remove('loading')
+    document.body.style.overflow = 'auto'
     console.log(res)
   }
 const handleSearch = () => {
-  alert(`Đang tìm kiếm: ${searchQuery.value}`);
+  if(searchQuery.value.trim()){
+    searchDataAllProduct.value.name = searchQuery.value
+    searchDataAll()
+  }else{
+    searchDataAllProduct.value.name = null
+    searchDataAll()
+  }
+  
 };
 
   // Sample data for warehouses, floors, zones, racks, suppliers, and price ranges
@@ -285,7 +386,7 @@ const handleSearch = () => {
   const racks = ref([]);
   const category = ref([])
   const suppliers = ref([]);
-  const priceRanges = ref(["Dưới 100k", "100k - 200k", "200k - 300k", "300k - 400k", "400k - 500k", "500k - 600k", "Trên 600k"]);
+  // const priceRanges = ref(["Dưới 100k", "100k - 200k", "200k - 300k", "300k - 400k", "400k - 500k", "500k - 600k", "Trên 600k"]);
   
   // Sample products data
   const products = ref([]);
@@ -296,11 +397,18 @@ const handleSearch = () => {
   const selectedRack = ref(null);
   const selectedSupplier = ref(null);
   const price = ref(null);
-  const selectedPriceRange = ref(null);
+  // const selectedPriceRange = ref(null);
   const selectCategory = ref(null)
   // Handle button OK click next to input price
   const submitPrice = () => {
-    alert(`Giá nhập là: ${price.value}`);
+    if(price.value !== null){
+      searchDataAllProduct.value.pricefrom = price.value
+      searchDataAll()
+    }else if(price.value === "" || price.value === 0){
+      searchDataAllProduct.value.pricefrom = null
+      searchDataAll()
+    }
+    
   };
   
   // Handle button OK click at the end of navbar

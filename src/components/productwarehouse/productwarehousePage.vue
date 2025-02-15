@@ -19,6 +19,8 @@
             padding: 20px;
             border: 1px dashed black;
             margin: 20px 20px;
+            display: flex;
+            width: 1000px;
           "
         >
           <img
@@ -36,7 +38,7 @@
           </div>
           <div
             class="card-body"
-            style=" margin: 20px 0"
+            style=" margin: 20px 0; display: flex;"
           >
             <div>
               <h5
@@ -94,6 +96,7 @@
           </div>
           <a
             class="btn btn-primary"
+            style="border: 1px solid green; display: block; width: 100px; height: 100px;"
             href="#"
             @click="backDetail(item.id)"
             >Back</a
@@ -132,7 +135,7 @@ const isLoading = ref(false)
 const valueE = ref("");
 const page = ref(1);
 const totalPage = ref(0);
-const pageSize = ref(5);
+const pageSize = ref(2);
 const DataWarehouse = ref([])
 
 const getToken = () => {

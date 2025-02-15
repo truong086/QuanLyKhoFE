@@ -9,7 +9,36 @@
         Plan No recipient yet
       </button>
     </div>
+    <div class="p-4 bg-white shadow-lg rounded-xl w-full max-w-md mx-auto">
+    <label class="block text-lg font-semibold text-gray-700 mb-2">Chọn khoảng thời gian:</label>
 
+    <div class="flex flex-col gap-4" style="display: flex;">
+      <div>
+        <label class="text-gray-600 text-sm">Từ ngày:</label>
+        <input 
+          type="datetime-local" 
+          v-model="datetimePlan.datefrom"
+          class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+
+      <div>
+        <label class="text-gray-600 text-sm">Đến ngày:</label>
+        <input 
+          type="datetime-local" 
+          v-model="datetimePlan.dateto"
+          class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+      
+      <button 
+        @click="submitDate"
+        class="bg-blue-600 text-white font-semibold py-2 rounded-lg hover:bg-blue-700 transition duration-300"
+      >
+        Gửi
+      </button>
+    </div>
+  </div>
     <div style="height: auto" class="result">
       <!-- New Frame Below Product - First Warehouse -->
       <div v-for="(item, index) in currentPlanData" :key="index">
@@ -53,7 +82,8 @@
               }}</a>
             </h5>
           </div>
-          <button
+          <div>
+            <button
             v-if="item.isConfirmation"
             class="btn btn-location"
             style="margin-left: 50px; background-color: rgba(11, 176, 217, 0.8)"
@@ -69,6 +99,23 @@
           >
             Chi tiết
           </button>
+
+            <button
+            class="btn btn-location"
+            style=" background-color: green; color: white; margin: 15px 0;"
+            @click="Update(item.id)"
+          >
+            Update
+          </button>
+
+          <button
+            class="btn btn-location"
+            style=" background-color: red; color: black"
+            @click="Delete(item.id)"
+          >
+            Delete
+          </button>
+          </div>
         </div>
         <div
           class="warehouse-frame"
@@ -136,7 +183,7 @@
           v-else
           style="background-color: rgba(247, 231, 5, 0.2);"
         >
-          <div class="warehouse-info" style="z-index: 1000">
+          <div class="warehouse-info" style="z-index: 1000; width: 1000px;">
             <h2 style="font-weight: bold">Plan Name: {{ item.title }}</h2>
             <p>
               Location Old: {{ item.warehouseOld }} => {{ item.floorOld }} =>
@@ -173,10 +220,10 @@
               }}</a>
             </h5>
           </div>
-          <button
+          <div>
+            <button
             v-if="item.isConfirmation"
             class="btn btn-location"
-            style="margin-left: 50px"
             @click="NextMap(item.id)"
           >
             Chi tiết
@@ -184,11 +231,28 @@
           <button
             v-else
             class="btn btn-location"
-            style="margin-left: 50px; background-color: yellow; color: black"
+            style="background-color: yellow; color: black"
             @click="NextMap(item.id)"
           >
             Chi tiết
           </button>
+
+            <button
+            class="btn btn-location"
+            style=" background-color: green; color: white; margin: 15px 0;"
+            @click="Update(item.id)"
+          >
+            Update
+          </button>
+
+          <button
+            class="btn btn-location"
+            style=" background-color: red; color: black"
+            @click="Delete(item.id)"
+          >
+            Delete
+          </button>
+          </div>
         </div>
       </div>
     </div>
@@ -221,14 +285,56 @@ const store = useCounterStore();
 const Toast = useToast();
 const page = ref(1);
 const totalPage = ref(0);
-const pageSize = ref(5);
+const pageSize = ref(2);
 const currentPlanData = ref([]);
 const router = useRouter();
 const { proxy } = getCurrentInstance();
 const hostName = proxy?.hostname;
 const isButton = ref("");
 const typePlan = ref("");
+const datetimePlan = ref({
+  datefrom: "",
+  dateto: ""
+})
 
+const submitDate = async () => {
+  if (!datetimePlan.value.datefrom) {
+    alert("Vui lòng chọn ngày!");
+    return;
+  }
+
+  if (!datetimePlan.value.dateto) {
+    alert("Vui lòng chọn ngày!");
+    return;
+  }
+
+  // Chuyển đổi thành ISO 8601 (UTC)
+  datetimePlan.value.datefrom = new Date(datetimePlan.value.datefrom).toISOString();
+  datetimePlan.value.dateto = new Date(datetimePlan.value.dateto).toISOString();
+
+  try {
+    const response = await axios.post(hostName + "/api/Plan/ExportToExcel", datetimePlan.value, {
+      headers: {
+                    'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${store.getToken}`
+                },
+                responseType: 'blob' // Cực kỳ quan trọng! Không có sẽ bị lỗi file
+    });
+    console.log(response)
+     // Tạo URL từ Blob
+     const url = window.URL.createObjectURL(new Blob([response.data]));
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'DataExcel.xlsx'; // Đặt tên file khi tải xuống
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error("Lỗi gửi dữ liệu:", error);
+  }
+};
 watch(page.value, (newPage) => {
   findAllData(valueE.value, newPage);
 });
@@ -356,6 +462,22 @@ const showData = (data, type) => {
 
   findAllData(valueE.value, page.value);
 };
+
+const Update = (id) => {
+    router.push({path: "/planPage", query: {id: id, name: "Update"}})
+}
+
+const Delete = async (id) => {
+  if(confirm("Bạn chắn chắn muốn xóa không")){
+    const res = await axios.delete(hostName + `/api/Plan/DeleteData?id=${id}`, getToken())
+    if(res.data.success){
+      Toast.success("Success")
+      findAllData(valueE.value, page.value);
+    }else{
+      Toast.error(res.data.error)
+    }
+  }
+}
 </script>
 
 <style scoped>
@@ -372,7 +494,7 @@ const showData = (data, type) => {
   justify-content: center;
   padding-top: 0;
 }
-button {
+.all, .lichsu, .NoReceiver {
   padding: 12px 20px;
   font-size: 18px;
   cursor: pointer;

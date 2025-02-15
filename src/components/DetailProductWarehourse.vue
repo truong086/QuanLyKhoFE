@@ -16,11 +16,12 @@
         v-for="(item, index) in productDetail.productLocationAreas"
         style="
           box-shadow: 3px 2px 3px grey;
-          width: 500px;
+          width: 1000px;
           border-radius: 10px;
           padding: 20px;
           border: 1px dashed black;
           margin: 20px 20px;
+          display: flex;
         "
         :key="index"
       >

@@ -21,9 +21,7 @@
             <h5 class="card-title" style="font-weight: bold; margin: 20px 0; color: red;">{{ product.title }}</h5>
             <p class="card-text">Price: ${{ product.price?.toFixed(2) }}</p>
             <p class="card-text">Unit of measure: ${{ product.quantity }}</p>
-           </div>
-            <div>
-              <p>DonViTinh: {{ product.donViTinh }}</p>
+            <p>DonViTinh: {{ product.donViTinh }}</p>
             <p>
               Category: {{ product.categoryName }}
               <img
@@ -37,8 +35,44 @@
                 alt=""
               />
             </p>
+
+            <p>
+              Suppliers: {{ product.supplierName }}
+              <img
+                :src="product.supplierImage"
+                style="
+                  width: 30px;
+                  height: 30px;
+                  border-radius: 50%;
+                  margin: 0 15px;
+                "
+                alt=""
+              />
+            </p>
             <p>Description: {{ product.description }}</p>
+            <h5>History Product Location: </h5>
+            <div v-for="(itemhistory, indexhistory) in product.historyProductLocations" :key="indexhistory">
+              <p>
+                <img :src="itemhistory.warehouse_image" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
+                {{ itemhistory.warehouse_name }} => 
+
+                <img :src="itemhistory.floor_image" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
+                {{ itemhistory.floor_name }} => 
+
+                <img :src="itemhistory.area_image" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
+                {{ itemhistory.area_name }} => 
+
+                <img :src="itemhistory.shelf_image" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
+                {{ itemhistory.shelf_name }} => 
+
+                {{ itemhistory.lcoation }} ({{ itemhistory.code }})
+                
+              </p>
+              <span v-if="indexhistory !== product.historyProductLocations.length - 1" style="font-size: 20px; color: blueviolet;">
+                ⏫
+              </span>
             </div>
+           </div>
             
           </div>
           <a class="btn btn-primary" href="#">Back</a>

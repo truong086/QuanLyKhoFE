@@ -96,7 +96,7 @@
           <div class="frame-top">
             <div class="frame-image">
               <div>
-                <img :src="item.image" alt="Product Image" />
+                <img :src="item.image" :class="'images_' + item.id" alt="Product Image" />
               </div>
               <div v-if="item.images">
                 <img
@@ -105,6 +105,7 @@
                   :src="itemImage"
                   style="width: 30px; height: 30px"
                   alt="Product Image"
+                  @click="swapImage('images_' + item.id, itemImage)"
                 />
               </div>
             </div>
@@ -135,6 +136,7 @@
             </div>
           </div>
         </div>
+        
 
         <div class="frame-buttons">
           <button class="close-button" @click="frameVisible = false">
@@ -146,12 +148,12 @@
 
     <!-- Frame danh sách sản phẩm -->
     <div v-if="rowDetailVisible" class="detail-frame">
-      <div class="frame-content">
-        <div v-for="(item, index) in selectedRowDetail" :key="index">
-          <div class="frame-top">
+      <div class="frame-content" >
+        <div v-for="(item, index) in selectedRowDetail" :key="index" style="display: flex !important;">
+          <div class="frame-top" style="display: flex !important;">
           <div class="frame-image">
             <div>
-              <img :src="item.image" alt="Product Image" />
+              <img :src="item.image" :class="'images_' + item.id" alt="Product Image" />
             </div>
             <div v-if="item.images">
               <img
@@ -160,6 +162,7 @@
                 :src="itemImage"
                 style="width: 30px; height: 30px"
                 alt="Product Image"
+                @click="swapImage('images_' + item.id, itemImage)"
               />
             </div>
           </div>
@@ -189,16 +192,18 @@
             <p><strong>Code:</strong> {{ item.code }}</p>
           </div>
         </div>
+        
+        </div>
         <div class="frame-buttons">
           <button class="close-button" @click="rowDetailVisible = false">
             Đóng
           </button>
         </div>
-        </div>
         
       </div>
     </div>
   </div>
+  <PagesTotal :page="page" :totalPage="totalPage" :valueE="valueE" @pageChange="findOneAreByFloor" @pageSizeChange="changeReload"></PagesTotal>
   <!-- Hiển thị màn hình loading -->
   <div v-if="isLoading" class="loading-overlay">
     <div class="spinner"></div>
@@ -208,8 +213,8 @@
 
 <script setup>
 import { useCounterStore } from "../store";
-import { ref, getCurrentInstance, onMounted } from "vue";
-// import PagesTotal from './PageList/PagesTotal.vue'
+import { ref, getCurrentInstance, onMounted, watch } from "vue";
+import PagesTotal from './PageList/PagesTotal.vue'
 import axios from "axios";
 import { useToast } from "vue-toastification";
 
@@ -220,11 +225,15 @@ const zones = ref({
   "Tầng 1": ["C1", "C2", "C3", "C4", "C5", "C6", "C7", "C8", "C9"],
   "Tầng 3": ["Q1", "Q2", "Q3", "Q4", "Q5", "Q6"],
 });
+const valueE = ref("")
 const frameVisible = ref(false);
 const rowDetailVisible = ref(false);
 const selectedDetail = ref([]);
 const selectedRowDetail = ref([]);
 const isLoading = ref(false);
+const page = ref(1)
+  const totalPage = ref(0)
+  const pageSize = ref(2)
 
 const { proxy } = getCurrentInstance();
 const hostName = proxy?.hostname;
@@ -249,15 +258,30 @@ const getToken = () => {
   };
   return result;
 };
+
+const swapImage = (classData, link) => {
+  document.querySelector('.' + classData).src = link
+}
 const findAllFloor = async () => {
+  isLoading.value = true
+    document.body.classList.add('loading') // Add Lớp "loading"
+    document.body.style.overflow = 'hidden'
   const res = await axios.get(
     hostName + "/api/Floor/FindAll?page=1&pageSize=2000",
     getToken()
   );
   if (res.data.success) {
     floors.value = res.data.content.data;
+    selectedFloor.value = res.data.content.data[0].id
+    findOneAreByFloor(valueE.value, page.value)
     Toast.success("Success");
+  }else{
+    isLoading.value = false
+    document.body.classList.remove('loading')
+    document.body.style.overflow = 'auto'
   }
+
+  
 };
 
 const checkQuantityLocationProduct = (data, location) => {
@@ -265,20 +289,30 @@ const checkQuantityLocationProduct = (data, location) => {
   return count;
 };
 const seareArea = () => {
-  findOneAreByFloor();
+  findOneAreByFloor(valueE.value, page.value);
 };
 
-const findOneAreByFloor = async () => {
+const findOneAreByFloor = async (search, pageData) => {
+  console.log(search)
+  isLoading.value = true
+    document.body.classList.add('loading') // Add Lớp "loading"
+    document.body.style.overflow = 'hidden'
   const res = await axios.get(
     hostName +
-      `/api/Shelf/FindByDataAreaLineByFloor?id=${selectedFloor.value}&page=1&pageSize=200`,
+      `/api/Shelf/FindByDataAreaLineByFloor?id=${selectedFloor.value}&page=${pageData}&pageSize=${pageSize.value}`,
     getToken()
   );
   console.log(res);
   if (res.data.success) {
+    page.value = res.data.content.page
+    totalPage.value = res.data.content.totalPages
     zones.value = res.data.content.data;
     Toast.success("Success");
   }
+
+  isLoading.value = false
+    document.body.classList.remove('loading')
+    document.body.style.overflow = 'auto'
 };
 // Check if a box has items in the inventory
 const hasItems = (zone, row, col) => {
@@ -321,6 +355,17 @@ const openRowDetail = (zone, row) => {
 
   rowDetailVisible.value = true;
 };
+
+const changeReload = (event) => {
+    pageSize.value = event
+    findOneAreByFloor(valueE.value, page.value)
+  }
+
+  watch(page.value, (newPage) => {
+    findOneAreByFloor(valueE.value, newPage)
+  })
+
+
 </script>
 
 <style scoped>
@@ -558,24 +603,20 @@ const openRowDetail = (zone, row) => {
   box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
   border-radius: 10px;
   text-align: left; /* Canh trái */
-  width: 400px;
+  width: 1000px;
   animation: fadeIn 0.3s ease-in-out;
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
 }
 
 .frame-content {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Các cột tự động thay đổi */
   gap: 20px; /* Khoảng cách giữa các phần tử */
   padding: 20px;
-  justify-items: center; /* Căn giữa các phần tử trong mỗi ô */
 }
 
 .frame-top {
   display: flex;
   gap: 20px;
-  align-items: center;
 }
 
 .frame-image img {
@@ -585,9 +626,7 @@ const openRowDetail = (zone, row) => {
   border-radius: 10px;
 }
 
-.frame-details {
-  flex-grow: 1;
-}
+
 
 .frame-buttons {
   margin-top: 15px;
@@ -620,8 +659,6 @@ const openRowDetail = (zone, row) => {
 
 .frame-content {
   display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 
 /* Hình ảnh trong frame */

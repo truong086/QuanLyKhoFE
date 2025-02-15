@@ -1,37 +1,76 @@
 <template>
 <main>
   <h6>{{ filteredProducts.length }} results</h6>
+  <div>
+    <input type="text" v-model="valueE" style="padding: 5px 0; outline: none; border-radius: 5px;">
+    <button class="btn" style="border: 1px solid green; margin: 0 15px;" @click="searchData">Search</button>
+  </div>
   <p v-if="activeFilters.length">
     <small class="text-muted"
       >Filtered by {{ activeFilters.join(", ") }}</small
     >
   </p>
   <div class="product-grid">
-    <div
-      class="card"
-      v-for="(product, index) in products"
-      :key="index"
-    >
-      <img class="card-img-top" :src="product.images[0]" alt="" />
-
-      <div class="card-body">
-        <h5 class="card-title" style="margin: 25px 0; font-weight: bold; color: red;">{{ product.title }}</h5>
+  <div class="card" v-for="(product, index) in products" :key="index">
+    <div class="card-content">
+      <img class="card-img" :src="product.images[0]" alt="" />
+      <div class="card-body" style=" display: flex;">
+        <h5 class="card-title">{{ product.title }}</h5>
+       <div style="margin-left: 20px;">
         <p class="card-text">
           <span>Price: ${{ product.price.toFixed(2) }}</span>
           <br />
+        </p>
+        <p class="card-text">
           <span>DonViTinh: {{ product.donViTinh }}</span>
           <br />
+        </p>
+        <p class="card-text">
+          <span>Suppliers: {{ product.supplierName }}</span>
+          <br />
+          <img :src="product.supplierImage" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
+        </p>
+       </div>
+        <div style="margin: 0 20px;">
+          <p class="card-text">
           <span>Quantity: {{ product.quantity }}</span>
           <br />
+        </p>
+          
+        <p class="card-text">
           <span style="color: violet;">Category: {{ product.categoryName }}
             <img style="width: 30px; height: 30px; border-radius: 50%;" :src="product.categoryImage" alt="">
           </span>
         </p>
-        <a class="btn btn-primary" @click="Next(product.id)" href="#">Chi tiết</a>
+        </div>
+        <div>
+          <h5>Location:</h5>
+          <div v-for="(itemLocation, indexLocation) in product.listAreaOfproducts" :key="indexLocation">
+            <p class="card-text">
+              <img :src="itemLocation.warehouse_image" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
+              {{ itemLocation.warehouse_name }} => 
+
+              <img :src="itemLocation.floor_image" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
+              {{ itemLocation.floor_name }} => 
+
+              <img :src="itemLocation.area_image" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
+              {{ itemLocation.area_name }} => 
+
+              <img :src="itemLocation.floor_image" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
+              {{ itemLocation.floor_name }} => 
+
+              {{ itemLocation.location }} ({{ itemLocation.code }})
+            </p>
+        </div>
+        </div>
+        
+       
       </div>
+      <a class="btn btn-primary" @click="Next(product.id)" href="#">Chi tiết</a>
     </div>
-    
   </div>
+</div>
+
   <PagesTotal
       :page="page"
       :totalPage="totalPage"
@@ -73,7 +112,7 @@ const store = useCounterStore();
 const products = ref([]);
 const page = ref(1);
 const totalPage = ref(0);
-const pageSize = ref(5);
+const pageSize = ref(2);
 const isLoading = ref(false);
 const valueE = ref("");
 onMounted(() => {
@@ -112,6 +151,9 @@ Toast.success("Sucess");
 console.log(router);
 };
 
+const searchData = () => {
+  findAllProduct(valueE.value, page.value)
+}
 const getToken = () => {
 var token = store.getToken;
 var result = {
@@ -158,7 +200,6 @@ location.hash = newVal.join(",");
 <style scoped>
 #app {
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   background: #f7f7f7;
@@ -197,8 +238,6 @@ footer {
 }
 
 .product-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 1.5rem;
   margin-top: 2rem;
 }
@@ -217,10 +256,16 @@ footer {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-.card-img-top {
-  max-width: 100%;
-  height: 200px;
+.card-content {
+  display: flex;
+  justify-content: space-around;
+}
+
+.card-img {
+  max-width: 150px;
+  height: auto;
   object-fit: cover;
+  margin-right: 1rem;
 }
 
 .card-body {
@@ -240,7 +285,6 @@ footer {
 }
 
 .card-text span {
-  display: block;
   margin-bottom: 0.25rem;
 }
 
@@ -264,7 +308,9 @@ footer small {
   font-size: 0.875rem;
   color: #888;
 }
+
 strong {
   font-weight: bold;
 }
+
 </style>

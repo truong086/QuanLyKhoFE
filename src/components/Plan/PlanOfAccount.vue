@@ -221,7 +221,7 @@
   const Toast = useToast();
   const page = ref(1);
   const totalPage = ref(0);
-  const pageSize = ref(5);
+  const pageSize = ref(2);
   const currentPlanData = ref([]);
   const router = useRouter();
   const { proxy } = getCurrentInstance();
