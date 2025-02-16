@@ -627,7 +627,7 @@
                   <div
                     v-if="
                       quantityLocationNew.productInPlans.some(
-                        (x) => (x.locationNew == cell && x.shelfsNew == quantityLocationNew.id) && (x.locationOld == cell || x.shelfsOld == quantityLocationNew.id)
+                        (x) => (x.locationNew == cell && x.shelfsNew == quantityLocationNew.id) || (x.locationOld == cell && x.shelfsOld == quantityLocationNew.id)
                       )
                     "
                   >
@@ -1263,9 +1263,11 @@ const addPlan = async () => {
 const updateData = async () => {
   classNameDataOld.value = classNameData.value;
   classNameData.value = classNamSwapOrNew.value;
-
+  
   locationCheck.value.location = locationCheckDemo.value.location;
   locationCheck.value.id_Shelf = locationCheckDemo.value.id_Shelf;
+  planNew.value.locationOld = locationCheck.value.location;
+  planNew.value.shelfOld = locationCheck.value.id_Shelf;
   const res = await axios.post(
     hostName + "/api/Product/checkLocationTotal",
     locationCheck.value,
@@ -1292,8 +1294,10 @@ const updateDataLocationNew = async () => {
   planNew.value.floor = currentFloorNew.value.id;
   planNew.value.warehouse = currentWarehouseNew.value.id;
   planNew.value.area = DataOneArea.value.id;
-  planNew.value.locationOld = locationCheck.value.location;
+  
   planNew.value.localtionNew = locationNewDataDemo.value.localtionNew;
+  planNew.value.shelf = locationNewDataDemo.value.shelf;
+
 
   classNameNew.value = classNameDataNew.value;
   classNameDataNew.value = classNamSwapOrNew.value;
