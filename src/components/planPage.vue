@@ -239,7 +239,7 @@
                   <div
                     v-if="
                       quantityLocation.productInPlans.some(
-                        (x) => x.locationNew == cell || x.locationOld == cell
+                        (x) => (x.locationNew == cell && x.shelfsNew == quantityLocation.id) || (x.shelfsOld == quantityLocation.id && x.locationOld == cell)
                       )
                     "
                   >
@@ -627,7 +627,7 @@
                   <div
                     v-if="
                       quantityLocationNew.productInPlans.some(
-                        (x) => x.locationNew == cell || x.locationOld == cell
+                        (x) => (x.locationNew == cell && x.shelfsNew == quantityLocationNew.id) && (x.locationOld == cell || x.shelfsOld == quantityLocationNew.id)
                       )
                     "
                   >

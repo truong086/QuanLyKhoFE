@@ -208,7 +208,7 @@
             <div
                     v-if="
                       dataShelfLocation.productInPlans.some(
-                        (x) => x.locationNew == location || x.locationOld == location
+                        (x) => (x.locationNew == location && x.shelfsNew == dataShelfLocation.id) || (x.shelfsOld == dataShelfLocation.id && x.locationOld == location)
                       )
                     "
                   >
