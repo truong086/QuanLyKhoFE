@@ -49,6 +49,16 @@
         placeholder="Name Warehourse..."
       />
     </div>
+
+    <div class="form-group">
+      <label for="quantity">ID:</label>
+      <input
+        v-model="addDataWarehourse.code"
+        type="text"
+        class="form-input"
+        placeholder="Name Warehourse..."
+      />
+    </div>
     <!-- Các mục chọn miền, tỉnh, huyện, xã, và ghi chú không thay đổi -->
     <div class="form-group">
       <label for="region">Miền:</label>
@@ -158,6 +168,7 @@ const addDataWarehourse = ref({
   Numberoffloors: "",
   address: "",
   Image: "",
+  code: ""
 });
 
 onMounted(() => {
@@ -196,6 +207,7 @@ const UpdateData = async () => {
   form.append("City", province.name);
   form.append("Country", Regions.value.name);
   form.append("address", addDataWarehourse.value.address);
+  form.append("code", addDataWarehourse.value.code);
   if (addDataWarehourse.value.Image != null)
     form.append("Image", addDataWarehourse.value.Image);
 
@@ -264,6 +276,7 @@ const findOneId = async (id) => {
   addDataWarehourse.value.Numberoffloors = res.data.content.numberoffloors;
   addDataWarehourse.value.name = res.data.content.name;
   addDataWarehourse.value.address = res.data.content.address;
+  addDataWarehourse.value.code = res.data.content.code;
 
   isLoading.value = false;
   document.body.classList.remove("loading");
@@ -389,6 +402,7 @@ const AddData = async () => {
   form.append("City", province.name);
   form.append("Country", Regions.value.name);
   form.append("address", addDataWarehourse.value.address);
+  form.append("code", addDataWarehourse.value.code);
   if (addDataWarehourse.value.Image != null)
     form.append("Image", addDataWarehourse.value.Image);
 

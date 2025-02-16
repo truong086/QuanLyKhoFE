@@ -272,6 +272,16 @@ import router from "@/router";
     searchDataAllProduct.value.idFloor = null
     searchDataAllProduct.value.idArea = null
     searchDataAllProduct.value.idShelf = null
+
+    if(searchQuery.value.trim())
+       searchDataAllProduct.value.name = searchQuery.value
+    else
+        searchDataAllProduct.value.name = null  
+
+    if(price.value != null)
+       searchDataAllProduct.value.pricefrom = price.value
+    else
+        searchDataAllProduct.value.pricefrom = null  
     searchDataAll()
   }
 
@@ -284,6 +294,16 @@ const searchFloor = () => {
   searchDataAllProduct.value.idFloor = selectedFloor.value
   searchDataAllProduct.value.idArea = null
   searchDataAllProduct.value.idShelf = null
+
+  if(searchQuery.value.trim())
+       searchDataAllProduct.value.name = searchQuery.value
+    else
+        searchDataAllProduct.value.name = null  
+
+  if(price.value != null)
+       searchDataAllProduct.value.pricefrom = price.value
+  else
+      searchDataAllProduct.value.pricefrom = null  
   searchDataAll()
 }
 
@@ -292,22 +312,59 @@ const searchArea = () => {
   selectedRack.value = null;
   searchDataAllProduct.value.idArea = selectedZone.value
     searchDataAllProduct.value.idShelf = null
+
+    if(searchQuery.value.trim())
+       searchDataAllProduct.value.name = searchQuery.value
+    else
+        searchDataAllProduct.value.name = null  
+
+    if(price.value != null)
+       searchDataAllProduct.value.pricefrom = price.value
+    else
+        searchDataAllProduct.value.pricefrom = null  
   searchDataAll()
 }
 
 const searchShelf = () => {
   searchDataAllProduct.value.idShelf = selectedRack.value
+  if(searchQuery.value.trim())
+       searchDataAllProduct.value.name = searchQuery.value
+    else
+        searchDataAllProduct.value.name = null  
+
+    if(price.value != null)
+       searchDataAllProduct.value.pricefrom = price.value
+    else
+        searchDataAllProduct.value.pricefrom = null  
   searchDataAll()
 }
 
 const searchSupplier = () =>{
   console.log(selectedSupplier.value)
   searchDataAllProduct.value.supplier = selectedSupplier.value
+  if(searchQuery.value.trim())
+      searchDataAllProduct.value.name = searchQuery.value
+  else
+      searchDataAllProduct.value.name = null  
+
+  if(price.value != null)
+      searchDataAllProduct.value.pricefrom = price.value
+  else
+      searchDataAllProduct.value.pricefrom = null  
   searchDataAll()
 }
 
 const searchCategory = () => {
   searchDataAllProduct.value.category = selectCategory.value
+  if(searchQuery.value.trim())
+      searchDataAllProduct.value.name = searchQuery.value
+  else
+      searchDataAllProduct.value.name = null  
+
+  if(price.value != null)
+      searchDataAllProduct.value.pricefrom = price.value
+  else
+      searchDataAllProduct.value.pricefrom = null  
   searchDataAll()
 }
 const findOneShelfByArea = async () => {

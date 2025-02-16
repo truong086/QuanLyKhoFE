@@ -18,7 +18,7 @@
       <!-- Loop through zones based on selected floor -->
       <div v-for="(zone, index) in zones" :key="index" class="zone-grid">
         <div class="zone-label">{{ zone.name }}</div>
-        <div class="column">
+        <div class="column" style="width: 400px; overflow-y: auto;">
           <div class="row" v-for="(row, indexRow) in zone.data" :key="indexRow">
             <div class="row-item">
               <button
@@ -28,59 +28,41 @@
               >
                 {{ indexRow + 1 }}
               </button>
-              <div class="sub-row-container">
+              <div class="sub-row-container" style="width: 40px; overflow-x: auto; flex-wrap: wrap;">
                 <div
                   class="sub-row"
                   v-for="(box, indexBox) in row.shelfGetAlls"
                   :key="indexBox"
+                  
                 >
-                  <div
-                    v-for="(location, indexlocation) in box.quantity"
-                    :key="indexlocation"
-                  >
-                    <button
-                      v-if="
-                        checkQuantityLocationProduct(
-                          box.productShefl.productLocationAreas,
-                          location
-                        ) > 0
-                      "
-                      style="background-color: blueviolet"
+                <button
+                  v-if="box.productShefl.productLocationAreas.length > 0"
+                       @click="openFrameData(box, indexBox + 1)"
+                      style="background-color: red"
                       class="box"
                       :class="{
                         'has-items': hasItems(zone, row, box),
                         empty: !hasItems(zone, row, box),
                       }"
-                      @click="
-                        openFrame(
-                          box.productShefl.productLocationAreas,
-                          location
-                        )
-                      "
                     >
-                      <span v-if="hasItems(zone, row, box)">
-                        {{ location }}
+                      <span>
+                        {{ indexBox + 1 }}
                       </span>
                     </button>
+
                     <button
-                      v-else
+                  v-else
+                       @click="openFrameData(box, indexBox + 1)"
                       class="box"
                       :class="{
                         'has-items': hasItems(zone, row, box),
                         empty: !hasItems(zone, row, box),
                       }"
-                      @click="
-                        openFrame(
-                          box.productShefl.productLocationAreas,
-                          location
-                        )
-                      "
                     >
-                      <span v-if="hasItems(zone, row, box)">
-                        {{ location }}
+                      <span>
+                        {{ indexBox + 1 }}
                       </span>
                     </button>
-                  </div>
                 </div>
               </div>
             </div>
@@ -209,6 +191,229 @@
     <div class="spinner"></div>
     <p>Loading...</p>
   </div>
+
+   <!-- Form hiển thị khi isFormVisible = true -->
+   <div v-if="isFormVisible && dataShelfLocation" class="form-container2">
+    
+      <div class="form-content2">
+        <div>
+          <button class="row-label"
+                @click="openRowDetailShelf(dataShelfLocation)"
+                :style="{ marginBottom: '15px' }">{{ indexLine }}</button>
+      <button @click="isFormVisible = false" style="border: none; outline: none; background-color: transparent; color: red;"><i class="fa fa-window-close-o" aria-hidden="true"></i></button>
+        </div>
+        <div style="display: flex; flex-wrap: wrap;">
+          <div v-for="(location, indexlocation) in dataShelfLocation.quantity" :key="indexlocation" >
+           
+            <div
+                    v-if="
+                      dataShelfLocation.productInPlans.some(
+                        (x) => x.locationNew == location || x.locationOld == location
+                      )
+                    "
+                  >
+                    <p
+                      style="
+                        position: absolute;
+                        animation: index1 0.1s ease-in-out infinite;
+                        font-size: 8px;
+                        width: 25px;
+                      "
+                    >
+                      Plan:
+                      {{
+                        checkLocationPlan(
+                          dataShelfLocation.productInPlans,
+                          dataShelfLocation.id,
+                          location
+                        ).title
+                      }}
+                      :
+                      {{
+                        checkLocationPlan(
+                          dataShelfLocation.productInPlans,
+                          dataShelfLocation.id,
+                          location
+                        ).shelfsOld == dataShelfLocation.id &&
+                        checkLocationPlan(
+                          dataShelfLocation.productInPlans,
+                          dataShelfLocation.id,
+                          location
+                        ).locationOld == location
+                          ? "Old"
+                          : "New"
+                      }}
+                    </p>
+                    <!-- <button 
+                              :key="cellIndex"
+                              :class="'form-select' + ' ' + 'swapBgOld_' + quantityLocation.id + '_' + cell"
+                              @click="(event) => openFrame(quantityLocation.id, cell, quantityLocation.productLocationAreas, quantityLocation.productPlans, 'old', 'swapBgOld_' + quantityLocation.id + '_' + cell)"
+                              style="animation: planData 0.1s ease-in-out infinite; font-size: 12px;"
+                            >
+                            {{ quantityLocation.productLocationAreas.some(x => x.location == cell) || quantityLocation.productPlans.some(x => x.location == cell) ? cell + " - " + quantityLocation.name + " (Có sản phẩm)" : cell + " - " + quantityLocation.name }}
+                          </button> -->
+                    <div
+                    v-if="
+                        checkQuantityLocationProduct(
+                          dataShelfLocation.productShefl.
+                          productLocationAreas,
+                          location
+                        ) > 0
+                      "
+                    >
+                    <!--
+                           <div v-if="dataShelfLocation.totalQuantityUseds.some(d => d.location == location && d.quantityUsed <= 15 && d.quantityUsed > 1)" style="position: absolute;">
+                    <p style="font-size: 10px; font-weight: bold; animation: AlmostFull 0.5s ease-in-out infinite;">Almost full !!!</p>
+                  </div>
+                  <div v-else-if="dataShelfLocation.totalQuantityUseds.some(d => d.location == location && d.quantityUsed <= 0)" style="position: absolute;">
+                    <p style="font-size: 10px; font-weight: bold; animation: Full 0.5s ease-in-out infinite;">Full !!!</p>
+                  </div>
+                    -->
+                    <button
+                     
+                      style="background-color: blueviolet; padding: 15px 25px;"
+                      class="box"
+                      :class="{
+                        'has-items': hasItems(1, row, box),
+                        empty: !hasItems(1, row, box),
+                      }"
+                      @click="
+                        openFrame(
+                          dataShelfLocation.productShefl
+                          .productLocationAreas,
+                          location
+                        )
+                      "
+                    >
+                    <p v-if="dataShelfLocation.totalQuantityUseds.some(d => d.location == location && d.quantityUsed <= 15 && d.quantityUsed > 1)"
+                       style="position: absolute; font-size: 8px; font-weight: bold; animation: AlmostFull 0.5s ease-in-out infinite; margin-left: 30px;">Almost full !!!</p>
+                       <p v-else-if="dataShelfLocation.totalQuantityUseds.some(d => d.location == location && d.quantityUsed <= 0)" 
+                        style="position: absolute; font-size: 8px; font-weight: bold; animation: Full 0.5s ease-in-out infinite; margin-left: 30px;">Full !!!</p>
+                       <span>
+                        {{ location }}
+                      </span>
+                    </button>
+                    </div>
+                    <div v-else>
+                      <button
+                      v-if="
+                        checkQuantityLocationProduct(
+                          dataShelfLocation.productShefl.
+                          productLocationAreas,
+                          location
+                        ) > 0
+                      "
+                      style="background-color: blueviolet; padding: 15px 25px;"
+                      class="box"
+                      :class="{
+                        'has-items': hasItems(1, row, box),
+                        empty: !hasItems(1, row, box),
+                      }"
+                      @click="
+                        openFrame(
+                          dataShelfLocation.productShefl
+                          .productLocationAreas,
+                          location
+                        )
+                      "
+                    >
+                    <p v-if="dataShelfLocation.totalQuantityUseds.some(d => d.location == location && d.quantityUsed <= 15 && d.quantityUsed > 1)"
+                       style="position: absolute; font-size: 8px; font-weight: bold; animation: AlmostFull 0.5s ease-in-out infinite; margin-left: 30px;">Almost full !!!</p>
+                       <p v-else-if="dataShelfLocation.totalQuantityUseds.some(d => d.location == location && d.quantityUsed <= 0)" 
+                        style="position: absolute; font-size: 8px; font-weight: bold; animation: Full 0.5s ease-in-out infinite; margin-left: 30px;">Full !!!</p>
+                      <span>
+                        {{ location }}
+                      </span>
+                    </button>
+                    <button
+                      v-else
+                      class="box"
+                      :class="{
+                        'has-items': hasItems(1, row, box),
+                        empty: !hasItems(1, row, box),
+                      }"
+                      style="padding: 15px 25px;"
+                      @click="
+                        openFrame(
+                          dataShelfLocation.productShefl
+                          .productLocationAreas,
+                          location
+                        )
+                      "
+                    >
+                    <p v-if="dataShelfLocation.totalQuantityUseds.some(d => d.location == location && d.quantityUsed <= 15 && d.quantityUsed > 1)"
+                       style="position: absolute; font-size: 8px; font-weight: bold; animation: AlmostFull 0.5s ease-in-out infinite; margin-left: 30px;">Almost full !!!</p>
+                       <p v-else-if="dataShelfLocation.totalQuantityUseds.some(d => d.location == location && d.quantityUsed <= 0)" 
+                        style="position: absolute; font-size: 8px; font-weight: bold; animation: Full 0.5s ease-in-out infinite; margin-left: 30px;">Full !!!</p>
+                      <span>
+                        {{ location }}
+                      </span>
+                    </button>
+                    </div>
+                  </div>
+                  <div v-else>
+                    <button
+                      v-if="
+                        checkQuantityLocationProduct(
+                          dataShelfLocation.productShefl.
+                          productLocationAreas,
+                          location
+                        ) > 0
+                      "
+                      style="background-color: blueviolet; padding: 15px 25px;"
+                      class="box"
+                      :class="{
+                        'has-items': hasItems(1, row, box),
+                        empty: !hasItems(1, row, box),
+                      }"
+                      @click="
+                        openFrame(
+                          dataShelfLocation.productShefl
+                          .productLocationAreas,
+                          location
+                        )
+                      "
+                    >
+                    <p v-if="dataShelfLocation.totalQuantityUseds.some(d => d.location == location && d.quantityUsed <= 15 && d.quantityUsed > 1)"
+                       style="position: absolute; font-size: 8px; font-weight: bold; animation: AlmostFull 0.5s ease-in-out infinite; margin-left: 30px;">Almost full !!!</p>
+                       <p v-else-if="dataShelfLocation.totalQuantityUseds.some(d => d.location == location && d.quantityUsed <= 0)" 
+                        style="position: absolute; font-size: 8px; font-weight: bold; animation: Full 0.5s ease-in-out infinite; margin-left: 30px;">Full !!!</p>
+                      <span>
+                        {{ location }}
+                      </span>
+                    </button>
+                    <button
+                      v-else
+                      class="box"
+                      :class="{
+                        'has-items': hasItems(1, row, box),
+                        empty: !hasItems(1, row, box),
+                      }"
+                      style="padding: 15px 25px;"
+                      @click="
+                        openFrame(
+                          dataShelfLocation.productShefl
+                          .productLocationAreas,
+                          location
+                        )
+                      "
+                    >
+                    <p v-if="dataShelfLocation.totalQuantityUseds.some(d => d.location == location && d.quantityUsed <= 15 && d.quantityUsed > 1)"
+                       style="position: absolute; font-size: 8px; font-weight: bold; animation: AlmostFull 0.5s ease-in-out infinite; margin-left: 30px;">Almost full !!!</p>
+                       <p v-else-if="dataShelfLocation.totalQuantityUseds.some(d => d.location == location && d.quantityUsed <= 0)" 
+                        style="position: absolute; font-size: 8px; font-weight: bold; animation: Full 0.5s ease-in-out infinite; margin-left: 30px;">Full !!!</p>
+                      <span>
+                        {{ location }}
+                      </span>
+                    </button>
+                  </div>
+            
+        </div>
+        </div>
+        
+        
+      </div>
+    </div>
 </template>
 
 <script setup>
@@ -231,13 +436,16 @@ const rowDetailVisible = ref(false);
 const selectedDetail = ref([]);
 const selectedRowDetail = ref([]);
 const isLoading = ref(false);
+const isFormVisible = ref(false)
 const page = ref(1)
   const totalPage = ref(0)
   const pageSize = ref(2)
+  const dataShelfLocation = ref({})
 
 const { proxy } = getCurrentInstance();
 const hostName = proxy?.hostname;
 const store = useCounterStore();
+const indexLine = ref(0)
 const Toast = useToast();
 // Sample inventory data
 const inventory = ref({
@@ -259,6 +467,20 @@ const getToken = () => {
   return result;
 };
 
+const checkLocationPlan = (list, id, cell) => {
+  return list.find(
+    (x) =>
+      (x.shelfsOld == id || x.shelfsNew == id) &&
+      (x.locationOld == cell || x.locationNew == cell)
+  );
+};
+
+const openFrameData = (box, index) => {
+  dataShelfLocation.value = box
+  indexLine.value = index
+  console.log(box)
+  isFormVisible.value = true
+}
 const swapImage = (classData, link) => {
   document.querySelector('.' + classData).src = link
 }
@@ -321,10 +543,12 @@ const hasItems = (zone, row, col) => {
 
 // Open frame with detailed item info
 const openFrame = (list, location) => {
+  console.log(list)
+  console.log(location)
   selectedDetail.value = [];
-  if (list.length <= 0) return;
+  const checkListData = list.filter((x) => x.location == location);
+  if (checkListData.length <= 0) return;
   if (list.length > 0) {
-    const checkListData = list.filter((x) => x.location == location);
     if (checkListData.length > 0) {
       checkListData.forEach((element) => {
         if (element.location === location) {
@@ -339,6 +563,7 @@ const openFrame = (list, location) => {
 
 // Open row detail to show the products in a specific row
 const openRowDetail = (zone, row) => {
+  console.log(zone)
   let productSet = new Set();
   selectedRowDetail.value = [];
   zone.forEach((element) => {
@@ -352,6 +577,16 @@ const openRowDetail = (zone, row) => {
       productSet.add(inventory.value[key]);
     }
   }
+
+  if(selectedRowDetail.value.length > 0)
+      rowDetailVisible.value = true;
+};
+
+const openRowDetailShelf = (zone) => {
+  selectedRowDetail.value = [];
+  zone.productShefl.productLocationAreas.forEach((element) => {
+    selectedRowDetail.value.push(element);
+  });
 
   rowDetailVisible.value = true;
 };
@@ -367,6 +602,47 @@ const changeReload = (event) => {
 
 
 </script>
+
+<style>
+  @keyframes AlmostFull {
+    0%{
+      color: blue;
+    }
+    100%{
+      color: azure;
+    }
+  }
+
+  @keyframes Full {
+    0%{
+      color: goldenrod;
+    }
+    50%{
+      color: white;
+    }
+    100%{
+      color: green;
+    }
+  }
+
+  @keyframes AlmostFullHeader {
+    0%{
+      background-color: violet;
+    }
+    100%{
+      background-color: darkorange;
+    }
+  }
+
+  @keyframes FullHeader {
+    0%{
+      background-color: gold;
+    }
+    100%{
+      background-color: mediumblue;
+    }
+  }
+</style>
 
 <style scoped>
 /* Container chính */
@@ -706,5 +982,30 @@ const changeReload = (event) => {
 .close-button:hover {
   background: linear-gradient(135deg, #a71d2a, #7a141e);
   box-shadow: 2px 2px 10px rgba(255, 0, 0, 0.3);
+}
+
+.form-container2 {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.form-content2 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  width: 300px;
 }
 </style>

@@ -137,7 +137,6 @@ body {
   background-size: cover;
   background-repeat: no-repeat;
 }
-
  /* Màn hình chờ */
  .loading-overlay {
   position: fixed;

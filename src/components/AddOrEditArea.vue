@@ -100,9 +100,9 @@
     </div>
     
     <div class="form-group">
-      <label for="region">Area:</label>
+      <label for="region">Line:</label>
       <select class="form-select" v-model="currentFloor">
-        <option value="" disabled>Area</option>
+        <option value="" disabled>Line</option>
         <option
           v-for="(item, index) in floorData"
           :key="index"
@@ -228,7 +228,8 @@ const AddData = async () => {
   isLoading.value = true;
   document.body.classList.add("loading"); // Add Lớp "loading"
   document.body.style.overflow = "hidden";
-  AddDataArea.value.floor = currentFloor.value;
+  console.log("ID: " + currentFloor.value)
+  AddDataArea.value.area = currentFloor.value;
   const res = await axios.post(
     hostName + "/api/Shelf/Add",
     AddDataArea.value,
@@ -261,7 +262,7 @@ const triggerFileInput = () => {
 
 const findAllFloor = async () => {
   const res = await axios.get(
-    hostName + `/api/Area/FindAll?page=1&pageSize=2000`,
+    hostName + `/api/Line/FindAll?page=1&pageSize=2000`,
     getToken()
   );
   if (res.data.success) {

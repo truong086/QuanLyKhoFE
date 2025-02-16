@@ -29,6 +29,9 @@ import productwarehousePage from "./components/productwarehouse/productwarehouse
 import ImportExportForm from "./components/ImportAndExport/ImportExportForm.vue";
 import LocationStatus from "./components/LocationStatus.vue";
 import SearchPage from "./components/SearchPage.vue";
+import AddLinePage from "./components/AddLine.vue";
+import AddDataAreasPage from "./components/AddDataAreas.vue";
+import AddDataFloorPage from "./components/AddDataFloor.vue";
 
 import { useCounterStore } from "./store";
 // import { path } from "ramda";
@@ -87,9 +90,24 @@ const routes = [
     },
     children: [
       {
+        path: "/AddDataAreasPage",
+        name: "addDataAreasPage",
+        component: AddDataAreasPage,
+      },
+      {
+        path: "/AddDataFloorPage",
+        name: "addDataFloorPage",
+        component: AddDataFloorPage,
+      },
+      {
         path: "/SearchPage",
         name: "SearchPage",
         component: SearchPage,
+      },
+      {
+        path: "/AddLinePage",
+        name: "addLinePage",
+        component: AddLinePage,
       },
       {
         path: "/LocationStatus",
@@ -223,7 +241,6 @@ const routes = [
     name: "Login",
     component: LoginPage, // Đăng ký trang đăng nhập
     meta: {
-      requiresAuth: false,
       css: [
         "https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css",
         "https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap",

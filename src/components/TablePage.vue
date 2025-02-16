@@ -12,6 +12,7 @@
       <table class="table">
         <thead>
           <tr>
+            <th class="title">ID</th>
             <th class="title">Image</th>
             <th class="title">Name</th>
             <th class="title">Address</th>
@@ -23,6 +24,7 @@
         </thead>
         <tbody>
           <tr v-for="(row, rowIndex) in dataWarehourse" :key="rowIndex">
+            <td>{{ row.code }}</td>
             <td><img :src="row.image" style="width: 50px; height: 50px; border-radius: 50%;" alt=""></td>
             <td>{{ row.name }}</td>
             <td>{{ row.city }}, {{ row.street }}, {{ row.district }}</td>
@@ -49,6 +51,10 @@
     <!-- Bảng Tầng -->
     <div class="table-container">
       <h2 class="table-title">Floor Manager</h2>
+      <router-link to="/AddDataFloorPage" class="waves-effect waves-dark" aria-expanded="false">
+        <i class="fa fa-tachometer"></i>
+        <span class="hide-menu">Add Floor</span>
+      </router-link>
       <table class="table">
         <thead>
           <tr>
@@ -94,7 +100,7 @@
     <!-- Bảng Khu -->
     <div class="table-container">
       <h2 class="table-title">Arera Manager</h2>
-      <router-link to="/AddOrEditArea" class="waves-effect waves-dark" aria-expanded="false">
+      <router-link to="/AddDataAreasPage" class="waves-effect waves-dark" aria-expanded="false">
         <i class="fa fa-tachometer"></i>
         <span class="hide-menu">Add Area</span>
       </router-link>
@@ -138,19 +144,61 @@
       <PagesTotal :page="pageArea" :totalPage="totalPageArea" :valueE="valueEArea" @pageChange="findAllArea" @pageSizeChange="changeReloadArea"></PagesTotal>
     </div>
 
+    <!-- Bảng Line -->
+    <div class="table-container">
+      <h2 class="table-title">Line Manager</h2>
+      <router-link to="/AddLinePage" class="waves-effect waves-dark" aria-expanded="false">
+        <i class="fa fa-tachometer"></i>
+        <span class="hide-menu">Add Line</span>
+      </router-link>
+      <table class="table">
+        <thead>
+          <tr>
+            <th class="title">Name</th>
+            <th class="title">quantityshelf</th>
+            <th class="title">area_name</th>
+            <th class="title">area_image</th>
+            <th class="title">code</th>
+            <th class="title">#</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(row, rowIndex) in dataLine" :key="rowIndex">
+            <td>{{ row.name }}</td>
+            <td>
+              <h5 style="margin: 0 15px; font-weight: bold;">{{ row.quantityshelf }}</h5>
+            </td>
+            <td>{{ row.area_name }}</td>
+            <td><img :src="row.area_image" style="width: 50px; height: 50px; border-radius: 50%;" alt=""></td>
+            <td>
+              <div style="display: flex;">
+                <h3 style="margin: 0 15px; font-weight: bold;">{{ row.code }}</h3>
+              </div>
+            </td>
+            <td>
+              <div style="display: flex;">
+                <!-- <button class="btn btn-sucess" style="background-color: yellow; font-weight: bold;" @click="NextAreaUpdate(row.id)">Edit</button> -->
+                <button class="btn btn-sucess" style="background-color: red; color: white; font-weight: bold;">Delete</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <PagesTotal :page="pageLine" :totalPage="totalPageLine" :valueE="valueELine" @pageChange="findAllLine" @pageSizeChange="changeReloadLine"></PagesTotal>
+    </div>
     <!-- Bảng Kệ -->
     <div class="table-container">
       <h2 class="table-title">Shelf Manager</h2>
-      <!-- <router-link to="/AddOrEditArea" class="waves-effect waves-dark" aria-expanded="false">
+      <router-link to="/AddOrEditArea" class="waves-effect waves-dark" aria-expanded="false">
         <i class="fa fa-tachometer"></i>
-        <span class="hide-menu">Add Area</span>
-      </router-link> -->
+        <span class="hide-menu">Add Shelf</span>
+      </router-link>
       <table class="table">
         <thead>
           <tr>
             <th class="title">Image</th>
             <th class="title">Name</th>
-            <th class="title">Area</th>
+            <th class="title">Line</th>
             <th class="title">Quantity</th>
             <th class="title">Quantity Emty</th>
             <th class="title">Account Create</th>
@@ -163,8 +211,7 @@
             <td>{{ row.name }}</td>
             <td>
               <div style="display: flex;">
-                <img :src="row.area_image" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
-                <h5 style="margin: 0 15px; font-weight: bold;">{{ row.area_name }}</h5>
+                <h5 style="margin: 0 15px; font-weight: bold;">{{ row.lineidsdata }}</h5>
               </div>
             </td>
             <td>{{ row.quantity }}</td>
@@ -206,6 +253,7 @@ onMounted(() => {
   findAllWarehourse(valueE.value, page.value)
   findAllFloor(valueEFloor.value, pageFloor.value)
   findAllShelfs(valueEShelf.value, pageShelf.value)
+  findAllLine(valueELine.value, pageLine.value)
   
 })
 const { proxy } = getCurrentInstance();
@@ -234,6 +282,12 @@ const pageSizeShelf = ref(2);
 const valueEShelf = ref("");
 const router = useRouter()
 
+const valueELine = ref("");
+const dataLine = ref([])
+const pageLine = ref(1);
+const pageSizeLine = ref(2);
+const totalPageLine = ref(0);
+
 watch(page.value, (newPage) => {
   findAllWarehourse(valueE.value, newPage)
   
@@ -248,6 +302,11 @@ watch(page.value, (newPage) => {
 
   watch(pageShelf.value, (newPage) => {
     findAllShelfs(valueEShelf.value, newPage)
+  
+  })
+
+  watch(pageLine.value, (newPage) => {
+    findAllLine(valueELine.value, newPage)
   
   })
 
@@ -291,6 +350,22 @@ const findAllWarehourse = async (search, pageData) => {
     document.body.style.overflow = 'auto'
 }
 
+const findAllLine = async(search, pageData) => {
+  isLoading.value = true
+    document.body.classList.add('loading') // Add Lớp "loading"
+    document.body.style.overflow = 'hidden'
+  console.log(search)
+  const res = await axios.get(hostName + `/api/Line/FindAll?page=${pageData}&pageSize=${pageSizeLine.value}`, getToken())
+  if(res.data.success){
+    dataLine.value = res.data.content.data
+    pageLine.value = res.data.content.page;
+    totalPageLine.value = res.data.content.totalPages;
+  }
+
+  isLoading.value = false
+    document.body.classList.remove('loading')
+    document.body.style.overflow = 'auto'
+}
 const changeReload = (event) => {
     pageSize.value = event
     findAllWarehourse(valueE.value, page.value)
@@ -321,6 +396,11 @@ const changeReload = (event) => {
   const changeReloadShelfs = (event) =>{
     pageSizeShelf.value = event
     findAllShelfs(valueEShelf.value, pageShelf.value)
+  }
+
+  const changeReloadLine = (event) =>{
+    pageSizeLine.value = event
+    findAllLine(valueELine.value, pageLine.value)
   }
   const findAllShelfs = async (searchData, pageData) => {
     isLoading.value = true
