@@ -73,14 +73,14 @@
                         <li class="b11" v-on:click="SwapBackGroupColor('b11')">
                           <router-link to="/SearchPage" class="waves-effect waves-dark" aria-expanded="false">
                             <i class="fa fa-search" aria-hidden="true"></i>
-                            <span class="hide-menu">{{ t('Search Product') }}</span>
+                            <span class="hide-menu">{{ t('searchproduct') }}</span>
                         </router-link>
                         </li>
 
                         <li class="b12" v-on:click="SwapBackGroupColor('b12')">
                           <router-link to="/SearechProductCodeLocationPage" class="waves-effect waves-dark" aria-expanded="false">
                             <i class="fa fa-search" aria-hidden="true"></i>
-                            <span class="hide-menu">{{ t('Search Product Location') }}</span>
+                            <span class="hide-menu">{{ t('searchproductlocation') }}</span>
                         </router-link>
                         </li>
                         <!----<li> <a class="waves-effect waves-dark" href="pages-error-404.html" aria-expanded="false"><i

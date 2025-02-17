@@ -45,16 +45,16 @@
                 class="card-title"
                 style="font-weight: bold; margin: 20px 0; color: red"
               >
-                Title: {{ item.title }}
+              標題: {{ item.title }}
               </h5>
-              <p class="card-text">Price: {{ item.price }}</p>
-              <p class="card-text">Unit of measure: {{ item.quantity }}</p>
-              <p style="font-weight: bold; color: blue;" class="card-text">Code Location: {{ item.codeLocation }}</p>
+              <p class="card-text">價格: {{ item.price }}</p>
+              <p class="card-text">計量單位: {{ item.quantity }}</p>
+              <p style="font-weight: bold; color: blue;" class="card-text">代碼: {{ item.codeLocation }}</p>
               <p style="font-weight: bold; color: blue;" class="card-text">Code Product: {{ item.code }}</p>
             </div>
             <div>
               <p>
-                Supplier: {{ item.suppliers_name }}
+                供應商: {{ item.suppliers_name }}
                 <img
                   style="width: 30px; height: 30px; border-radius: 50%"
                   :src="item.suppliers_image"
@@ -62,7 +62,7 @@
                 />
               </p>
               <p>
-                Category: {{ item.categoryName }}
+                類別: {{ item.categoryName }}
                 <img
                   :src="item.categoryImage"
                   style="
@@ -74,10 +74,10 @@
                   alt=""
                 />
               </p>
-              <p>Quantity location: {{ item.quantityLocaton }}</p>
+              <p>數量位置: {{ item.quantityLocaton }}</p>
               <p style="font-weight: bold; color: blue;">Location: {{ item.location }}</p>
-              <p>Unit of measure: {{ item.donViTinh }}</p>
-              <p>Description: {{ item.description }}</p>
+              <p>計量單位: {{ item.donViTinh }}</p>
+              <p>描述: {{ item.description }}</p>
               <p>
                 <img :src="item.warehouse_image" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
                 {{ item.warehouse_name }} => 
@@ -100,7 +100,7 @@
             style="border: 1px solid green; display: block; width: 100px; height: 100px;"
             href="#"
             @click="backDetail(item.id)"
-            >Back</a
+            >返回</a
           >
         </div>
       </div>
@@ -116,7 +116,7 @@
     <!-- Hiển thị màn hình loading -->
     <div v-if="isLoading" class="loading-overlay">
       <div class="spinner"></div>
-      <p>Đang tải...</p>
+      <p>Loading...</p>
     </div>
   </template>
   

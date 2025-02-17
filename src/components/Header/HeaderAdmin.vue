@@ -10,13 +10,13 @@
               class="dark-logo"
             />
           </b>
-          <span>
+          <!-- <span>
             <img
               src="https://www.tsust.edu.tw/var/file/0/1000/img/95/mlogo.png"
               alt="homepage"
               class="dark-logo"
             />
-          </span>
+          </span> -->
         </a>
       </div>
       <div class="navbar-collapse">

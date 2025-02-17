@@ -1,55 +1,56 @@
 <template>
-    <div class="container">
-      <!-- Title và nhập số lượng -->
-      <div class="title-container">
-        <h2 class="title">Form</h2>
-        <div class="quantity-input">
-          <label for="quantity">Quantity:</label>
-          <input
-            v-model="addDataWarehourse.quantityshelf"
-            type="number"
-            min="1"
-            class="form-input"
-            placeholder="Enter quantity"
-          />
-        </div>
-      </div>
-  
-      <div class="form-group">
-      <label for="region">Area:</label>
-      <select class="form-select" v-model="currentArea">
-        <option value="" disabled>Area</option>
-        <option
-          v-for="(item, index) in areaData"
-          :key="index"
-          :value="item.id"
-        >
-          {{ item.name }}
-        </option>
-      </select>
+<div class="container">
+  <!-- Title và nhập số lượng -->
+  <div class="title-container">
+    <h2 class="title">表單</h2>
+    <div class="quantity-input">
+      <label for="quantity">數量：</label>
+      <input
+        v-model="addDataWarehourse.quantityshelf"
+        type="number"
+        min="1"
+        class="form-input"
+        placeholder="輸入數量"
+      />
     </div>
-      <div class="form-group">
-        <label for="quantity">Name:</label>
-        <input
-          v-model="addDataWarehourse.name"
-          type="text"
-          class="form-input"
-          placeholder="Name Line..."
-        />
-      </div>
-  
-      <div class="form-group">
-        <button v-if="route.query.id" class="btn" @click="UpdateData">
-          Update Data
-        </button>
-        <button v-else class="btn" @click="AddData">Add Data</button>
-      </div>
-    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="region">區域：</label>
+    <select class="form-select" v-model="currentArea">
+      <option value="" disabled>區域</option>
+      <option
+        v-for="(item, index) in areaData"
+        :key="index"
+        :value="item.id"
+      >
+        {{ item.name }}
+      </option>
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="quantity">名稱：</label>
+    <input
+      v-model="addDataWarehourse.name"
+      type="text"
+      class="form-input"
+      placeholder="線路名稱..."
+    />
+  </div>
+
+  <div class="form-group">
+    <button v-if="route.query.id" class="btn" @click="UpdateData">
+      更新資料
+    </button>
+    <button v-else class="btn" @click="AddData">新增資料</button>
+  </div>
+</div>
+
   
     <!-- Hiển thị màn hình loading -->
     <div v-if="isLoading" class="loading-overlay">
       <div class="spinner"></div>
-      <p>Đang tải...</p>
+      <p>Loading...</p>
     </div>
   </template>
   

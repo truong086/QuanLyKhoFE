@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <header>
-      <h3>Plan Details</h3>
+      <h3>計劃詳細資料</h3>
     </header>
 
     <main>
@@ -13,10 +13,10 @@
         >
           <div class="card-body">
             <h2 class="card-title" style="font-weight: bold; margin: 25px 0">
-              Title: <a style="color: red">{{ data.title }}</a>
+              標題: <a style="color: red">{{ data.title }}</a>
             </h2>
             <p style="font-size: 18px" class="card-text">
-              Location Old:
+              舊位置:
               <img
                 v-if="data.imageWarehourseOld"
                 :src="data.imageWarehourseOld"
@@ -45,7 +45,7 @@
             </p>
             <p class="card-text" style="font-size: 20px">⏬</p>
             <p style="font-size: 18px" class="card-text">
-              Location New:
+              新位置:
               <img
                 v-if="data.imageWarehourseNew"
                 :src="data.imageWarehourseNew"
@@ -66,17 +66,17 @@
                 style="width: 30px; height: 30px; border-radius: 50%"
                 alt=""
               />
-              {{ data.area }} => 
-
+              {{ data.area }} =>
+              
               <img v-if="data.imageShelfeNew" :src="data.imageShelfeNew"
               style="width: 30px; height: 30px; border-radius: 50%" alt="">
               {{ data.shelf }} = > {{ data.localtionNew }} ({{ data.localtionNewCode }})
             </p>
             <p style="font-weight: bold; margin: 30px 0; color: blueviolet">
-              Account creat Plan: {{ data.account_creatPlan }}
+              創建計劃帳戶: {{ data.account_creatPlan }}
             </p>
             <p>
-              Receiver: {{ data.receiver_name }}
+              收件人: {{ data.receiver_name }}
               <img
                 v-if="data.receiver_image"
                 :src="data.receiver_image"
@@ -86,18 +86,18 @@
             </p>
 
             <p style="font-size: 18px">
-              Status:
+              狀態:
               <a style="color: red; font-weight: bold">{{ data.status }}</a>
             </p>
             <p style="font-size: 18px">
-              Update Date:
+              更新日期:
               <a style="font-weight: bold">{{
                 formatDateTime(data.updatedAt).includes("01/01/1 08:06")
-                  ? "Chưa cập nhật thời gian"
+                  ? "尚未更新時間"
                   : formatDateTime(data.updatedAt)
               }}</a>
             </p>
-            <p>Description: {{ data.description }}</p>
+            <p>描述: {{ data.description }}</p>
             <button
               v-if="data.isConfirmation"
               style="
@@ -138,10 +138,10 @@
         >
           <div class="card-body">
             <h2 class="card-title" style="font-weight: bold; margin: 25px 0">
-              Title: <a style="color: red">{{ data.title }}</a>
+              標題: <a style="color: red">{{ data.title }}</a>
             </h2>
             <p style="font-size: 18px" class="card-text">
-              Location Old:
+              舊位置:
               <img
                 v-if="data.imageWarehourseOld"
                 :src="data.imageWarehourseOld"
@@ -170,7 +170,7 @@
             </p>
             <p class="card-text" style="font-size: 20px">⏬</p>
             <p style="font-size: 18px" class="card-text">
-              Location New:
+              新位置:
               <img
                 v-if="data.imageWarehourseNew"
                 :src="data.imageWarehourseNew"
@@ -191,17 +191,17 @@
                 style="width: 30px; height: 30px; border-radius: 50%"
                 alt=""
               />
-              {{ data.area }} => 
+              {{ data.area }} =>
               
               <img v-if="data.imageShelfeNew" :src="data.imageShelfeNew"
               style="width: 30px; height: 30px; border-radius: 50%" alt="">
               {{ data.shelf }} = > {{ data.localtionNew }} ({{ data.localtionNewCode }})
             </p>
             <p style="font-weight: bold; margin: 30px 0; color: blueviolet">
-              Account creat Plan: {{ data.account_creatPlan }}
+              創建計劃帳戶: {{ data.account_creatPlan }}
             </p>
             <p>
-              Receiver: {{ data.receiver_name }}
+              收件人: {{ data.receiver_name }}
               <img
                 v-if="data.receiver_image"
                 :src="data.receiver_image"
@@ -211,18 +211,18 @@
             </p>
 
             <p style="font-size: 18px">
-              Status:
+              狀態:
               <a style="color: red; font-weight: bold">{{ data.status }}</a>
             </p>
             <p style="font-size: 18px">
-              Update Date:
+              更新日期:
               <a style="font-weight: bold">{{
                 formatDateTime(data.updatedAt).includes("01/01/1 08:06")
-                  ? "Chưa cập nhật thời gian"
+                  ? "尚未更新時間"
                   : formatDateTime(data.updatedAt)
               }}</a>
             </p>
-            <p>Description: {{ data.description }}</p>
+            <p>描述: {{ data.description }}</p>
             <button
               v-if="data.isConfirmation"
               style="
@@ -263,10 +263,10 @@
         >
           <div class="card-body">
             <h2 class="card-title" style="font-weight: bold; margin: 25px 0">
-              Title: <a style="color: red">{{ data.title }}</a>
+              標題: <a style="color: red">{{ data.title }}</a>
             </h2>
             <p style="font-size: 18px" class="card-text">
-              Location Old:
+              舊位置:
               <img
                 v-if="data.imageWarehourseOld"
                 :src="data.imageWarehourseOld"
@@ -295,7 +295,7 @@
             </p>
             <p class="card-text" style="font-size: 20px">⏬</p>
             <p style="font-size: 18px" class="card-text">
-              Location New:
+              新位置:
               <img
                 v-if="data.imageWarehourseNew"
                 :src="data.imageWarehourseNew"
@@ -323,10 +323,10 @@
               {{ data.shelf }} = > {{ data.localtionNew }} ({{ data.localtionNewCode }})
             </p>
             <p style="font-weight: bold; margin: 30px 0; color: blueviolet">
-              Account creat Plan: {{ data.account_creatPlan }}
+              創建計劃帳戶: {{ data.account_creatPlan }}
             </p>
             <p>
-              Receiver: {{ data.receiver_name }}
+              收件人: {{ data.receiver_name }}
               <img
                 v-if="data.receiver_image"
                 :src="data.receiver_image"
@@ -336,18 +336,18 @@
             </p>
 
             <p style="font-size: 18px">
-              Status:
+              狀態:
               <a style="color: red; font-weight: bold">{{ data.status }}</a>
             </p>
             <p style="font-size: 18px">
-              Update Date:
+              更新日期:
               <a style="font-weight: bold">{{
                 formatDateTime(data.updatedAt).includes("01/01/1 08:06")
-                  ? "Chưa cập nhật thời gian"
+                  ? "尚未更新時間"
                   : formatDateTime(data.updatedAt)
               }}</a>
             </p>
-            <p>Description: {{ data.description }}</p>
+            <p>描述: {{ data.description }}</p>
             <button
               v-if="data.isConfirmation"
               style="
@@ -383,12 +383,8 @@
       </div>
     </main>
   </div>
-  <!-- Hiển thị màn hình loading -->
-  <div v-if="isLoading" class="loading-overlay">
-    <div class="spinner"></div>
-    <p>Đang tải...</p>
-  </div>
 </template>
+
 
 <script setup>
 import { useCounterStore } from "../../store";

@@ -1,210 +1,199 @@
 <template>
-    <div class="container">
-      <div class="button-group">
-        <button class="all" @click="showData('all', 'all')">Plan of {{ store.getIdAccountName }}</button>
-        <button class="lichsu" @click="showData('lichsu', 'lichsu')">
-          History of {{ store.getIdAccountName }}
-        </button>
-        <button class="NoReceiver" @click="showData('NoReceiver', 'NoReceiver')">
-          Plan No recipient yet
-        </button>
-      </div>
-  
-      <div style="height: auto" class="result">
-        <!-- New Frame Below Product - First Warehouse -->
-        <div v-for="(item, index) in currentPlanData" :key="index">
-          <div
-            class="warehouse-frame"
-            v-if="item.isConfirmation && item.status !== 'done'"
-            style="background-color: rgba(11, 176, 217, 0.2)"
-          >
-            <div class="warehouse-info" style="z-index: 1000">
-              <h2 style="font-weight: bold">Plan Name: {{ item.title }}</h2>
-              <p>
-              Location Old: {{ item.warehouseOld }} => {{ item.floorOld }} =>
-              {{ item.areaOld }} => {{ item.shelfOld }} => {{ item.localtionOld }}
-            </p>
-            <p style="font-size: 20px">⏬</p>
-            <p>
-              Location New: {{ item.warehouse }} => {{ item.floor }} =>
-              {{ item.area }} => {{ item.shelf }} => {{ item.localtionNew }}
-            </p>
-              <h5>Account Create: {{ item.account_creatPlan }}</h5>
-              <h5>
-                Status:
-                <a style="font-weight: bold; color: red">{{ item.status }}</a>
-              </h5>
-              <h5>
-                Receiver:
-                <a style="font-weight: bold; color: violet">{{
-                  item.receiver_name
-                }}</a>
-                <img
-                  v-if="item.receiver_image"
-                  :src="item.receiver_image"
-                  style="width: 30px; height: 30px; border-radius: 50%"
-                  alt=""
-                />
-              </h5>
-              <h5>
-                Thời gian update gần nhất:
-                <a style="font-weight: bold; color: violet">{{
-                  formatDateTime(item.updatedAt)
-                }}</a>
-              </h5>
-            </div>
-            <button
-              v-if="item.isConfirmation"
-              class="btn btn-location"
-              style="margin-left: 50px; background-color: rgba(11, 176, 217, 0.8)"
-              @click="NextMap(item.id)"
-            >
-              Chi tiết
-            </button>
-            <button
-              v-else
-              class="btn btn-location"
-              style="margin-left: 50px; background-color: yellow; color: black"
-              @click="NextMap(item.id)"
-            >
-              Chi tiết
-            </button>
-          </div>
-          <div
-            class="warehouse-frame"
-            v-else-if="item.isConfirmation && item.status === 'done'"
-            :style="
-              item.isConfirmation
-                ? 'background: rgba(52, 199, 62, 0.2); '
-                : 'background: rgba(247, 231, 5, 0.2);'
-            "
-          >
-            <div class="warehouse-info" style="z-index: 1000">
-              <h2 style="font-weight: bold">Plan Name: {{ item.title }}</h2>
-              <p>
-              Location Old: {{ item.warehouseOld }} => {{ item.floorOld }} =>
-              {{ item.areaOld }} => {{ item.shelfOld }} => {{ item.localtionOld }}
-            </p>
-            <p style="font-size: 20px">⏬</p>
-            <p>
-              Location New: {{ item.warehouse }} => {{ item.floor }} =>
-              {{ item.area }} => {{ item.shelf }} => {{ item.localtionNew }}
-            </p>
-              <h5>Account Create: {{ item.account_creatPlan }}</h5>
-              <h5>
-                Status:
-                <a style="font-weight: bold; color: red">{{ item.status }}</a>
-              </h5>
-              <h5>
-                Receiver:
-                <a style="font-weight: bold; color: violet">{{
-                  item.receiver_name
-                }}</a>
-                <img
-                  v-if="item.receiver_image"
-                  :src="item.receiver_image"
-                  style="width: 30px; height: 30px; border-radius: 50%"
-                  alt=""
-                />
-              </h5>
-              <h5>
-                Thời gian update gần nhất:
-                <a style="font-weight: bold; color: violet">{{
-                  formatDateTime(item.updatedAt)
-                }}</a>
-              </h5>
-            </div>
-            <button
-              v-if="item.isConfirmation"
-              class="btn btn-location"
-              style="margin-left: 50px"
-              @click="NextMap(item.id)"
-            >
-              Chi tiết
-            </button>
-            <button
-              v-else
-              class="btn btn-location"
-              style="margin-left: 50px; background-color: yellow; color: black"
-              @click="NextMap(item.id)"
-            >
-              Chi tiết
-            </button>
-          </div>
-          <div
-            class="warehouse-frame"
-            v-else
-            style="background-color: rgba(247, 231, 5, 0.2);"
-          >
-            <div class="warehouse-info" style="z-index: 1000">
-              <h2 style="font-weight: bold">Plan Name: {{ item.title }}</h2>
-              <p>
-              Location Old: {{ item.warehouseOld }} => {{ item.floorOld }} =>
-              {{ item.areaOld }} => {{ item.shelfOld }} => {{ item.localtionOld }}
-            </p>
-            <p style="font-size: 20px">⏬</p>
-            <p>
-              Location New: {{ item.warehouse }} => {{ item.floor }} =>
-              {{ item.area }} => {{ item.shelf }} => {{ item.localtionNew }}
-            </p>
-              <h5>Account Create: {{ item.account_creatPlan }}</h5>
-              <h5>
-                Status:
-                <a style="font-weight: bold; color: red">{{ item.status }}</a>
-              </h5>
-              <h5>
-                Receiver:
-                <a style="font-weight: bold; color: violet">{{
-                  item.receiver_name
-                }}</a>
-                <img
-                  v-if="item.receiver_image"
-                  :src="item.receiver_image"
-                  style="width: 30px; height: 30px; border-radius: 50%"
-                  alt=""
-                />
-              </h5>
-              <h5>
-                Thời gian update gần nhất:
-                <a style="font-weight: bold; color: violet">{{
-                  formatDateTime(item.updatedAt).includes("01/01/1 08:06")
-                    ? "Chưa Update"
-                    : formatDateTime(item.updatedAt)
-                }}</a>
-              </h5>
-            </div>
-            <button
-              v-if="item.isConfirmation"
-              class="btn btn-location"
-              style="margin-left: 50px"
-              @click="NextMap(item.id)"
-            >
-              Chi tiết
-            </button>
-            <button
-              v-else
-              class="btn btn-location"
-              style="margin-left: 50px; background-color: yellow; color: black"
-              @click="NextMap(item.id)"
-            >
-              Chi tiết
-            </button>
-          </div>
+<div class="container">
+  <div class="button-group">
+    <button class="all" @click="showData('all', 'all')">計劃的  {{ store.getIdAccountName }}</button>
+    <button class="lichsu" @click="showData('lichsu', 'lichsu')">
+      歷史 {{ store.getIdAccountName }}
+    </button>
+    <button class="NoReceiver" @click="showData('NoReceiver', 'NoReceiver')">
+      尚無收件人計劃
+    </button>
+  </div>
+
+  <div style="height: auto" class="result">
+    <!-- New Frame Below Product - First Warehouse -->
+    <div v-for="(item, index) in currentPlanData" :key="index">
+      <div
+        class="warehouse-frame"
+        v-if="item.isConfirmation && item.status !== 'done'"
+        style="background-color: rgba(11, 176, 217, 0.2)"
+      >
+        <div class="warehouse-info" style="z-index: 1000">
+          <h2 style="font-weight: bold">計劃名稱: {{ item.title }}</h2>
+          <p>
+            位置舊: {{ item.warehouseOld }} => {{ item.floorOld }} =>
+            {{ item.areaOld }} => {{ item.shelfOld }} => {{ item.localtionOld }}
+          </p>
+          <p style="font-size: 20px">⏬</p>
+          <p>
+            位置新: {{ item.warehouse }} => {{ item.floor }} =>
+            {{ item.area }} => {{ item.shelf }} => {{ item.localtionNew }}
+          </p>
+          <h5>創建帳號: {{ item.account_creatPlan }}</h5>
+          <h5>
+            狀態:
+            <a style="font-weight: bold; color: red">{{ item.status }}</a>
+          </h5>
+          <h5>
+            收件人:
+            <a style="font-weight: bold; color: violet">{{ item.receiver_name }}</a>
+            <img
+              v-if="item.receiver_image"
+              :src="item.receiver_image"
+              style="width: 30px; height: 30px; border-radius: 50%"
+              alt=""
+            />
+          </h5>
+          <h5>
+            最後更新時間:
+            <a style="font-weight: bold; color: violet">{{ formatDateTime(item.updatedAt) }}</a>
+          </h5>
         </div>
+        <button
+          v-if="item.isConfirmation"
+          class="btn btn-location"
+          style="margin-left: 50px; background-color: rgba(11, 176, 217, 0.8)"
+          @click="NextMap(item.id)"
+        >
+          詳情
+        </button>
+        <button
+          v-else
+          class="btn btn-location"
+          style="margin-left: 50px; background-color: yellow; color: black"
+          @click="NextMap(item.id)"
+        >
+          詳情
+        </button>
       </div>
-      <PagesTotal
-        :page="page"
-        :totalPage="totalPage"
-        :valueE="valueE"
-        @pageChange="findAllData"
-        @pageSizeChange="changeReload"
-      ></PagesTotal>
+      <div
+        class="warehouse-frame"
+        v-else-if="item.isConfirmation && item.status === 'done'"
+        :style="
+          item.isConfirmation
+            ? 'background: rgba(52, 199, 62, 0.2); '
+            : 'background: rgba(247, 231, 5, 0.2);'
+        "
+      >
+        <div class="warehouse-info" style="z-index: 1000">
+          <h2 style="font-weight: bold">計劃名稱: {{ item.title }}</h2>
+          <p>
+            位置舊: {{ item.warehouseOld }} => {{ item.floorOld }} =>
+            {{ item.areaOld }} => {{ item.shelfOld }} => {{ item.localtionOld }}
+          </p>
+          <p style="font-size: 20px">⏬</p>
+          <p>
+            位置新: {{ item.warehouse }} => {{ item.floor }} =>
+            {{ item.area }} => {{ item.shelf }} => {{ item.localtionNew }}
+          </p>
+          <h5>創建帳號: {{ item.account_creatPlan }}</h5>
+          <h5>
+            狀態:
+            <a style="font-weight: bold; color: red">{{ item.status }}</a>
+          </h5>
+          <h5>
+            收件人:
+            <a style="font-weight: bold; color: violet">{{ item.receiver_name }}</a>
+            <img
+              v-if="item.receiver_image"
+              :src="item.receiver_image"
+              style="width: 30px; height: 30px; border-radius: 50%"
+              alt=""
+            />
+          </h5>
+          <h5>
+            最後更新時間:
+            <a style="font-weight: bold; color: violet">{{ formatDateTime(item.updatedAt) }}</a>
+          </h5>
+        </div>
+        <button
+          v-if="item.isConfirmation"
+          class="btn btn-location"
+          style="margin-left: 50px"
+          @click="NextMap(item.id)"
+        >
+          詳情
+        </button>
+        <button
+          v-else
+          class="btn btn-location"
+          style="margin-left: 50px; background-color: yellow; color: black"
+          @click="NextMap(item.id)"
+        >
+          詳情
+        </button>
+      </div>
+      <div
+        class="warehouse-frame"
+        v-else
+        style="background-color: rgba(247, 231, 5, 0.2);"
+      >
+        <div class="warehouse-info" style="z-index: 1000">
+          <h2 style="font-weight: bold">計劃名稱: {{ item.title }}</h2>
+          <p>
+            位置舊: {{ item.warehouseOld }} => {{ item.floorOld }} =>
+            {{ item.areaOld }} => {{ item.shelfOld }} => {{ item.localtionOld }}
+          </p>
+          <p style="font-size: 20px">⏬</p>
+          <p>
+            位置新: {{ item.warehouse }} => {{ item.floor }} =>
+            {{ item.area }} => {{ item.shelf }} => {{ item.localtionNew }}
+          </p>
+          <h5>創建帳號: {{ item.account_creatPlan }}</h5>
+          <h5>
+            狀態:
+            <a style="font-weight: bold; color: red">{{ item.status }}</a>
+          </h5>
+          <h5>
+            收件人:
+            <a style="font-weight: bold; color: violet">{{ item.receiver_name }}</a>
+            <img
+              v-if="item.receiver_image"
+              :src="item.receiver_image"
+              style="width: 30px; height: 30px; border-radius: 50%"
+              alt=""
+            />
+          </h5>
+          <h5>
+            最後更新時間:
+            <a style="font-weight: bold; color: violet">{{ formatDateTime(item.updatedAt).includes("01/01/1 08:06")
+              ? "尚未更新"
+              : formatDateTime(item.updatedAt) }}</a>
+          </h5>
+        </div>
+        <button
+          v-if="item.isConfirmation"
+          class="btn btn-location"
+          style="margin-left: 50px"
+          @click="NextMap(item.id)"
+        >
+          詳情
+        </button>
+        <button
+          v-else
+          class="btn btn-location"
+          style="margin-left: 50px; background-color: yellow; color: black"
+          @click="NextMap(item.id)"
+        >
+          詳情
+        </button>
+      </div>
     </div>
+  </div>
+  <PagesTotal
+    :page="page"
+    :totalPage="totalPage"
+    :valueE="valueE"
+    @pageChange="findAllData"
+    @pageSizeChange="changeReload"
+  ></PagesTotal>
+</div>
+
   
     <!-- Hiển thị màn hình loading -->
     <div v-if="isLoading" class="loading-overlay">
       <div class="spinner"></div>
-      <p>Đang tải...</p>
+      <p>Loading...</p>
     </div>
   </template>
   

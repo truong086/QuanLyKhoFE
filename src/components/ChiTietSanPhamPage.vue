@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <header>
-      <h3>Product Details</h3>
+      <h3>產品詳情</h3>
     </header>
 
     <main>
@@ -19,11 +19,11 @@
           <div class="card-body" style="display: flex; justify-content: space-around; margin: 20px 0;">
            <div>
             <h5 class="card-title" style="font-weight: bold; margin: 20px 0; color: red;">{{ product.title }}</h5>
-            <p class="card-text">Price: ${{ product.price?.toFixed(2) }}</p>
-            <p class="card-text">Unit of measure: ${{ product.quantity }}</p>
-            <p>DonViTinh: {{ product.donViTinh }}</p>
+            <p class="card-text">價格: ${{ product.price?.toFixed(2) }}</p>
+            <p class="card-text">計量單位: ${{ product.quantity }}</p>
+            <p>計量單位: {{ product.donViTinh }}</p>
             <p>
-              Category: {{ product.categoryName }}
+              類別: {{ product.categoryName }}
               <img
                 :src="product.categoryImage"
                 style="
@@ -37,7 +37,7 @@
             </p>
 
             <p>
-              Suppliers: {{ product.supplierName }}
+              供應商: {{ product.supplierName }}
               <img
                 :src="product.supplierImage"
                 style="
@@ -49,12 +49,11 @@
                 alt=""
               />
             </p>
-
             <p style="font-weight: bold; color: red;">
               Code: {{ product.code }}
             </p>
-            <p>Description: {{ product.description }}</p>
-            <h5>History Product Location: </h5>
+            <p>描述: {{ product.description }}</p>
+            <h5>歷史產品位置: </h5>
             <div v-for="(itemhistory, indexhistory) in product.historyProductLocations" :key="indexhistory">
               <p>
                 <img :src="itemhistory.warehouse_image" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
@@ -79,7 +78,7 @@
            </div>
             
           </div>
-          <a class="btn btn-primary" href="#">Back</a>
+          <a class="btn btn-primary" href="#">返回</a>
         </div>
       </div>
 
@@ -89,22 +88,22 @@
           <img :src="item.warehouse_image" alt="Warehouse Image" />
         </div>
         <div class="warehouse-info">
-          <h2 style="font-weight: bold;">Warehourse Name: {{ item.warehouse_name }}</h2>
+          <h2 style="font-weight: bold;">倉庫名稱: {{ item.warehouse_name }}</h2>
           <div v-if="item.listShelfOfproducts">
             <div v-for="(itemWarehouse, indexWarehouse) in item.listShelfOfproducts" :key="indexWarehouse">
               <div style="display: flex; margin-left: 50px;">
-                <p>Location {{ indexWarehouse + 1 }}: {{ itemWarehouse.warehouse_name }} => {{ itemWarehouse.floor_name }} => {{ itemWarehouse.area_name }} => {{ itemWarehouse.shelf_name }} => {{ itemWarehouse.location }} ({{ itemWarehouse.code }})</p>
+                <p>位置 {{ indexWarehouse + 1 }}: {{ itemWarehouse.warehouse_name }} => {{ itemWarehouse.floor_name }} => {{ itemWarehouse.area_name }} => {{ itemWarehouse.shelf_name }} => {{ itemWarehouse.location }} ({{ itemWarehouse.code }})</p>
                 <button class="btn btn-location" style="font-size: 10px; padding: 2px 15px; height: 25px; margin-left: 10px;" @click="nextSearchWarehourse(itemWarehouse)">Details</button>
               </div>
               <span v-if="indexWarehouse !== item.listShelfOfproducts.length - 1">🔽</span> <!--Kiểm tra xem đã lặp đến phần tử cuối cùng chưa-->
             </div>
             
           </div>
-          <h5>Quantity: {{ item.quantity }}</h5>
-          <h5>Account Create: {{ item.account_name }} 
+          <h5>數量: {{ item.quantity }}</h5>
+          <h5>產品輸入者: {{ item.account_name }} 
             <img :src="item.account_image" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
           </h5>
-          <h5>Address: {{ item.addressWarehouse }} </h5>
+          <h5>地址: {{ item.addressWarehouse }} </h5>
         </div>
         <!-- <button class="btn btn-location" @click="NextMap(item.addressWarehouse)">Location</button> -->
       </div>
@@ -113,7 +112,7 @@
   <!-- Hiển thị màn hình loading -->
   <div v-if="isLoading" class="loading-overlay">
     <div class="spinner"></div>
-    <p>Đang tải...</p>
+    <p>Loading...</p>
   </div>
 </template>
 

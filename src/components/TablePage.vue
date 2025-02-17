@@ -1,24 +1,24 @@
 <template>
   <div class="table-page">
-    <h1>Manager</h1>
+    <h1>管理</h1>
 
     <!-- Bảng Kho -->
     <div class="table-container">
-      <h2 class="table-title">Warehourse Manager</h2>
+      <h2 class="table-title">倉庫管理</h2>
       <router-link to="/AddorEdit" class="waves-effect waves-dark" aria-expanded="false">
         <i class="fa fa-tachometer"></i>
-        <span class="hide-menu">Add Warehourse</span>
+        <span class="hide-menu">添加倉庫</span>
       </router-link>
       <table class="table">
         <thead>
           <tr>
             <th class="title">ID</th>
-            <th class="title">Image</th>
-            <th class="title">Name</th>
-            <th class="title">Address</th>
-            <th class="title">Quantity</th>
-            <th class="title">Quantity Emty</th>
-            <th class="title">Account Create</th>
+            <th class="title">圖片</th>
+            <th class="title">名稱</th>
+            <th class="title">地址</th>
+            <th class="title">數量</th>
+            <th class="title">數量為空</th>
+            <th class="title">帳戶已創建</th>
             <th class="title">#</th>
           </tr>
         </thead>
@@ -50,20 +50,20 @@
 
     <!-- Bảng Tầng -->
     <div class="table-container">
-      <h2 class="table-title">Floor Manager</h2>
+      <h2 class="table-title"> 樓層管理</h2>
       <router-link to="/AddDataFloorPage" class="waves-effect waves-dark" aria-expanded="false">
         <i class="fa fa-tachometer"></i>
-        <span class="hide-menu">Add Floor</span>
+        <span class="hide-menu">新增樓層</span>
       </router-link>
       <table class="table">
         <thead>
           <tr>
-            <th class="title">Image</th>
-            <th class="title">Name</th>
-            <th class="title">Warehourse</th>
-            <th class="title">Quantity</th>
-            <th class="title">Quantity Emty</th>
-            <th class="title">Account Create</th>
+            <th class="title">圖片</th>
+            <th class="title">名稱</th>
+            <th class="title">倉庫</th>
+            <th class="title">數量</th>
+            <th class="title">數量為空</th>
+            <th class="title">帳戶已創建</th>
             <th class="title">#</th>
           </tr>
         </thead>
@@ -99,19 +99,19 @@
 
     <!-- Bảng Khu -->
     <div class="table-container">
-      <h2 class="table-title">Arera Manager</h2>
+      <h2 class="table-title">倉庫管理</h2>
       <router-link to="/AddDataAreasPage" class="waves-effect waves-dark" aria-expanded="false">
         <i class="fa fa-tachometer"></i>
-        <span class="hide-menu">Add Area</span>
+        <span class="hide-menu">新增倉庫</span>
       </router-link>
       <table class="table">
         <thead>
           <tr>
-            <th class="title">Image</th>
-            <th class="title">Name</th>
-            <th class="title">Floor</th>
-            <th class="title">Quantity</th>
-            <th class="title">Account Create</th>
+            <th class="title">圖片</th>
+            <th class="title">名稱</th>
+            <th class="title">樓層</th>
+            <th class="title">數量</th>
+            <th class="title">帳戶已創建</th>
             <th class="title">#</th>
           </tr>
         </thead>
@@ -134,8 +134,8 @@
             </td>
             <td>
               <div style="display: flex;">
-                <button class="btn btn-sucess" style="background-color: yellow; font-weight: bold;" @click="NextAreaUpdate(row.id)">Edit</button>
-                <button class="btn btn-sucess" style="background-color: red; color: white; font-weight: bold;">Delete</button>
+                <button class="btn btn-sucess" style="background-color: yellow; font-weight: bold;" @click="NextAreaUpdate(row.id)">修正</button>
+                <button class="btn btn-sucess" style="background-color: red; color: white; font-weight: bold;">刪除</button>
               </div>
             </td>
           </tr>
@@ -146,19 +146,19 @@
 
     <!-- Bảng Line -->
     <div class="table-container">
-      <h2 class="table-title">Line Manager</h2>
+      <h2 class="table-title">排管理</h2>
       <router-link to="/AddLinePage" class="waves-effect waves-dark" aria-expanded="false">
         <i class="fa fa-tachometer"></i>
-        <span class="hide-menu">Add Line</span>
+        <span class="hide-menu"> 新增排</span>
       </router-link>
       <table class="table">
         <thead>
           <tr>
-            <th class="title">Name</th>
-            <th class="title">quantityshelf</th>
-            <th class="title">area_name</th>
-            <th class="title">area_image</th>
-            <th class="title">code</th>
+            <th class="title">名稱</th>
+            <th class="title">貨架數量</th>
+            <th class="title">倉庫名稱</th>
+            <th class="title">倉庫圖片</th>
+            <th class="title">代碼</th>
             <th class="title">#</th>
           </tr>
         </thead>
@@ -188,20 +188,20 @@
     </div>
     <!-- Bảng Kệ -->
     <div class="table-container">
-      <h2 class="table-title">Shelf Manager</h2>
+      <h2 class="table-title">貨架管理</h2>
       <router-link to="/AddOrEditArea" class="waves-effect waves-dark" aria-expanded="false">
         <i class="fa fa-tachometer"></i>
-        <span class="hide-menu">Add Shelf</span>
+        <span class="hide-menu">新增貨架</span>
       </router-link>
       <table class="table">
         <thead>
           <tr>
-            <th class="title">Image</th>
-            <th class="title">Name</th>
-            <th class="title">Line</th>
-            <th class="title">Quantity</th>
-            <th class="title">Quantity Emty</th>
-            <th class="title">Account Create</th>
+            <th class="title">圖片</th>
+            <th class="title">名稱</th>
+            <th class="title">排</th>
+            <th class="title">數量</th>
+            <th class="title">數量為空</th>
+            <th class="title">帳戶已創建</th>
             <th class="title">#</th>
           </tr>
         </thead>
@@ -225,7 +225,7 @@
             <td>
               <div style="display: flex;">
                 <!-- <button class="btn btn-sucess" style="background-color: yellow; font-weight: bold;" @click="NextAreaUpdate(row.id)">Edit</button> -->
-                <button class="btn btn-sucess" style="background-color: red; color: white; font-weight: bold;">Delete</button>
+                <button class="btn btn-sucess" style="background-color: red; color: white; font-weight: bold;">刪除</button>
               </div>
             </td>
           </tr>
@@ -238,7 +238,7 @@
   <!-- Hiển thị màn hình loading -->
   <div v-if="isLoading" class="loading-overlay">
       <div class="spinner"></div>
-      <p>Đang tải...</p>
+      <p>Loading...</p>
     </div>
 </template>
 

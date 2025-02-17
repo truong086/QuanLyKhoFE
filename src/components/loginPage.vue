@@ -4,19 +4,19 @@
       <div class="container">
         <div class="row justify-content-center">
           <div class="col-md-6 text-center mb-5">
-            <h2 class="heading-section">Login</h2>
+            <h2 class="heading-section">登入</h2>
           </div>
         </div>
         <div class="row justify-content-center">
           <div class="col-md-6 col-lg-4">
             <div class="login-wrap p-0">
-              <h3 class="mb-4 text-center">Have an account?</h3>
+              <h3 class="mb-4 text-center"> 有帳戶嗎?</h3>
               <form action="#" class="signin-form">
                 <div class="form-group">
                   <input
                     type="text"
                     class="form-control"
-                    placeholder="Username"
+                    placeholder="用戶名"
                     required
                     v-model="LoginModel.username"
                   />
@@ -26,7 +26,7 @@
                     id="password-field"
                     type="password"
                     class="form-control"
-                    placeholder="Password"
+                    placeholder="密碼"
                     required
                     v-model="LoginModel.password"
                   />
@@ -41,19 +41,19 @@
                     class="form-control btn btn-primary submit px-3"
                     v-on:click="login"
                   >
-                    Sign In
+                  登入
                   </button>
                 </div>
                 <div class="form-group d-md-flex">
                   <div class="w-50">
                     <label class="checkbox-wrap checkbox-primary"
-                      >Remember Me
+                      >記住我
                       <input type="checkbox" checked />
                       <span class="checkmark"></span>
                     </label>
                   </div>
                   <div class="w-50 text-md-right">
-                    <a href="#" @click="Next" style="color: #fff">Register</a>
+                    <a href="#" @click="Next" style="color: #fff">註冊</a>
                   </div>
                 </div>
               </form>
@@ -67,7 +67,7 @@
   <!-- Hiển thị màn hình loading -->
   <div v-if="isLoading" class="loading-overlay">
       <div class="spinner"></div>
-      <p>Đang tải...</p>
+      <p>Loading...</p>
   </div>
 </template>
 

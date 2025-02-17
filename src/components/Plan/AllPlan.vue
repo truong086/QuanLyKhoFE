@@ -1,46 +1,45 @@
 <template>
   <div class="container">
     <div class="button-group">
-      <button class="all" @click="showData('all', 'all')">All Plan</button>
+      <button class="all" @click="showData('all', 'all')">所有計劃</button>
       <button class="lichsu" @click="showData('lichsu', 'lichsu')">
-        History
+        歷史
       </button>
       <button class="NoReceiver" @click="showData('NoReceiver', 'NoReceiver')">
-        Plan No recipient yet
+        尚未指定接收者的計劃
       </button>
     </div>
     <div class="p-4 bg-white shadow-lg rounded-xl w-full max-w-md mx-auto">
-    <label class="block text-lg font-semibold text-gray-700 mb-2">Chọn khoảng thời gian:</label>
+      <label class="block text-lg font-semibold text-gray-700 mb-2">選擇時間範圍：</label>
 
-    <div class="flex flex-col gap-4" style="display: flex;">
-      <div>
-        <label class="text-gray-600 text-sm">Từ ngày:</label>
-        <input 
-          type="datetime-local" 
-          v-model="datetimePlan.datefrom"
-          class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-      </div>
+      <div class="flex flex-col gap-4" style="display: flex;">
+        <div>
+          <label class="text-gray-600 text-sm">從日期：</label>
+          <input 
+            type="datetime-local" 
+            v-model="datetimePlan.datefrom"
+            class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
 
-      <div>
-        <label class="text-gray-600 text-sm">Đến ngày:</label>
-        <input 
-          type="datetime-local" 
-          v-model="datetimePlan.dateto"
-          class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
+        <div>
+          <label class="text-gray-600 text-sm">到日期：</label>
+          <input 
+            type="datetime-local" 
+            v-model="datetimePlan.dateto"
+            class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+        
+        <button 
+          @click="submitDate"
+          class="bg-blue-600 text-white font-semibold py-2 rounded-lg hover:bg-blue-700 transition duration-300"
+        >
+          提交
+        </button>
       </div>
-      
-      <button 
-        @click="submitDate"
-        class="bg-blue-600 text-white font-semibold py-2 rounded-lg hover:bg-blue-700 transition duration-300"
-      >
-        Gửi
-      </button>
     </div>
-  </div>
     <div style="height: auto" class="result">
-      <!-- New Frame Below Product - First Warehouse -->
       <div v-for="(item, index) in currentPlanData" :key="index">
         <div
           class="warehouse-frame"
@@ -48,23 +47,23 @@
           style="background-color: rgba(11, 176, 217, 0.2)"
         >
           <div class="warehouse-info" style="z-index: 1000">
-            <h2 style="font-weight: bold">Plan Name: {{ item.title }}</h2>
+            <h2 style="font-weight: bold">計劃名稱：{{ item.title }}</h2>
             <p>
-              Location Old: {{ item.warehouseOld }} => {{ item.floorOld }} =>
+              舊位置：{{ item.warehouseOld }} => {{ item.floorOld }} =>
               {{ item.areaOld }} => {{ item.shelfOld }} => {{ item.localtionOld }}
             </p>
             <p style="font-size: 20px">⏬</p>
             <p>
-              Location New: {{ item.warehouse }} => {{ item.floor }} =>
+              新位置：{{ item.warehouse }} => {{ item.floor }} =>
               {{ item.area }} => {{ item.shelf }} => {{ item.localtionNew }}
             </p>
-            <h5>Account Create: {{ item.account_creatPlan }}</h5>
+            <h5>創建帳戶：{{ item.account_creatPlan }}</h5>
             <h5>
-              Status:
+              狀態：
               <a style="font-weight: bold; color: red">{{ item.status }}</a>
             </h5>
             <h5>
-              Receiver:
+              接收者：
               <a style="font-weight: bold; color: violet">{{
                 item.receiver_name
               }}</a>
@@ -76,7 +75,7 @@
               />
             </h5>
             <h5>
-              Thời gian update gần nhất:
+              最近更新時間：
               <a style="font-weight: bold; color: violet">{{
                 formatDateTime(item.updatedAt)
               }}</a>
@@ -84,39 +83,40 @@
           </div>
           <div>
             <button
-            v-if="item.isConfirmation"
-            class="btn btn-location"
-            style="margin-left: 50px; background-color: rgba(11, 176, 217, 0.8)"
-            @click="NextMap(item.id)"
-          >
-            Chi tiết
-          </button>
-          <button
-            v-else
-            class="btn btn-location"
-            style="margin-left: 50px; background-color: yellow; color: black"
-            @click="NextMap(item.id)"
-          >
-            Chi tiết
-          </button>
+              v-if="item.isConfirmation"
+              class="btn btn-location"
+              style="margin-left: 50px; background-color: rgba(11, 176, 217, 0.8)"
+              @click="NextMap(item.id)"
+            >
+              詳情
+            </button>
+            <button
+              v-else
+              class="btn btn-location"
+              style="margin-left: 50px; background-color: yellow; color: black"
+              @click="NextMap(item.id)"
+            >
+              詳情
+            </button>
 
             <button
-            class="btn btn-location"
-            style=" background-color: green; color: white; margin: 15px 0;"
-            @click="Update(item.id)"
-          >
-            Update
-          </button>
+              class="btn btn-location"
+              style=" background-color: green; color: white; margin: 15px 0;"
+              @click="Update(item.id)"
+            >
+              更新
+            </button>
 
-          <button
-            class="btn btn-location"
-            style=" background-color: red; color: black"
-            @click="Delete(item.id)"
-          >
-            Delete
-          </button>
+            <button
+              class="btn btn-location"
+              style=" background-color: red; color: black"
+              @click="Delete(item.id)"
+            >
+              刪除
+            </button>
           </div>
         </div>
+
         <div
           class="warehouse-frame"
           v-else-if="item.isConfirmation && item.status === 'done'"
@@ -127,23 +127,23 @@
           "
         >
           <div class="warehouse-info" style="z-index: 1000">
-            <h2 style="font-weight: bold">Plan Name: {{ item.title }}</h2>
+            <h2 style="font-weight: bold">計劃名稱：{{ item.title }}</h2>
             <p>
-              Location Old: {{ item.warehouseOld }} => {{ item.floorOld }} =>
+              舊位置：{{ item.warehouseOld }} => {{ item.floorOld }} =>
               {{ item.areaOld }} => {{ item.shelfOld }} => {{ item.localtionOld }}
             </p>
             <p style="font-size: 20px">⏬</p>
             <p>
-              Location New: {{ item.warehouse }} => {{ item.floor }} =>
+              新位置：{{ item.warehouse }} => {{ item.floor }} =>
               {{ item.area }} => {{ item.shelf }} => {{ item.localtionNew }}
             </p>
-            <h5>Account Create: {{ item.account_creatPlan }}</h5>
+            <h5>創建帳戶：{{ item.account_creatPlan }}</h5>
             <h5>
-              Status:
+              狀態：
               <a style="font-weight: bold; color: red">{{ item.status }}</a>
             </h5>
             <h5>
-              Receiver:
+              接收者：
               <a style="font-weight: bold; color: violet">{{
                 item.receiver_name
               }}</a>
@@ -155,7 +155,7 @@
               />
             </h5>
             <h5>
-              Thời gian update gần nhất:
+              最近更新時間：
               <a style="font-weight: bold; color: violet">{{
                 formatDateTime(item.updatedAt)
               }}</a>
@@ -167,7 +167,7 @@
             style="margin-left: 50px"
             @click="NextMap(item.id)"
           >
-            Chi tiết
+            詳情
           </button>
           <button
             v-else
@@ -175,32 +175,33 @@
             style="margin-left: 50px; background-color: yellow; color: black"
             @click="NextMap(item.id)"
           >
-            Chi tiết
+            詳情
           </button>
         </div>
+
         <div
           class="warehouse-frame"
           v-else
           style="background-color: rgba(247, 231, 5, 0.2);"
         >
           <div class="warehouse-info" style="z-index: 1000; width: 1000px;">
-            <h2 style="font-weight: bold">Plan Name: {{ item.title }}</h2>
+            <h2 style="font-weight: bold">計劃名稱：{{ item.title }}</h2>
             <p>
-              Location Old: {{ item.warehouseOld }} => {{ item.floorOld }} =>
+              舊位置：{{ item.warehouseOld }} => {{ item.floorOld }} =>
               {{ item.areaOld }} => {{ item.shelfOld }} => {{ item.localtionOld }}
             </p>
             <p style="font-size: 20px">⏬</p>
             <p>
-              Location New: {{ item.warehouse }} => {{ item.floor }} =>
+              新位置：{{ item.warehouse }} => {{ item.floor }} =>
               {{ item.area }} => {{ item.shelf }} => {{ item.localtionNew }}
             </p>
-            <h5>Account Create: {{ item.account_creatPlan }}</h5>
+            <h5>創建帳戶：{{ item.account_creatPlan }}</h5>
             <h5>
-              Status:
+              狀態：
               <a style="font-weight: bold; color: red">{{ item.status }}</a>
             </h5>
             <h5>
-              Receiver:
+              接收者：
               <a style="font-weight: bold; color: violet">{{
                 item.receiver_name
               }}</a>
@@ -212,46 +213,46 @@
               />
             </h5>
             <h5>
-              Thời gian update gần nhất:
+              最近更新時間：
               <a style="font-weight: bold; color: violet">{{
                 formatDateTime(item.updatedAt).includes("01/01/1 08:06")
-                  ? "Chưa Update"
+                  ? "尚未更新"
                   : formatDateTime(item.updatedAt)
               }}</a>
             </h5>
           </div>
           <div>
             <button
-            v-if="item.isConfirmation"
-            class="btn btn-location"
-            @click="NextMap(item.id)"
-          >
-            Chi tiết
-          </button>
-          <button
-            v-else
-            class="btn btn-location"
-            style="background-color: yellow; color: black"
-            @click="NextMap(item.id)"
-          >
-            Chi tiết
-          </button>
+              v-if="item.isConfirmation"
+              class="btn btn-location"
+              @click="NextMap(item.id)"
+            >
+              詳情
+            </button>
+            <button
+              v-else
+              class="btn btn-location"
+              style="background-color: yellow; color: black"
+              @click="NextMap(item.id)"
+            >
+              詳情
+            </button>
 
             <button
-            class="btn btn-location"
-            style=" background-color: green; color: white; margin: 15px 0;"
-            @click="Update(item.id)"
-          >
-            Update
-          </button>
+              class="btn btn-location"
+              style=" background-color: green; color: white; margin: 15px 0;"
+              @click="Update(item.id)"
+            >
+              更新
+            </button>
 
-          <button
-            class="btn btn-location"
-            style=" background-color: red; color: black"
-            @click="Delete(item.id)"
-          >
-            Delete
-          </button>
+            <button
+              class="btn btn-location"
+              style=" background-color: red; color: black"
+              @click="Delete(item.id)"
+            >
+              刪除
+            </button>
           </div>
         </div>
       </div>
@@ -265,12 +266,12 @@
     ></PagesTotal>
   </div>
 
-  <!-- Hiển thị màn hình loading -->
   <div v-if="isLoading" class="loading-overlay">
     <div class="spinner"></div>
-    <p>Đang tải...</p>
+    <p>加載中...</p>
   </div>
 </template>
+
 
 <script setup>
 import { useCounterStore } from "../../store";

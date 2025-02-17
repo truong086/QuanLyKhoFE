@@ -48,7 +48,9 @@ const i18n = createI18n({
         cancel: 'Cancel',
         quantity: 'Quantity',
         settings: 'Settings',
-        logout: 'Logout'
+        logout: 'Logout',
+        searchproduct: 'Search Product',
+        searchproductlocation: 'Search Product Location',
       },
       vi: {
         dashboard: 'Bảng điều khiển',
@@ -58,7 +60,7 @@ const i18n = createI18n({
         plan: 'Kế hoạch',
         productwarehouse: 'Sản phẩm trong kho',
         product: 'Sản phẩm',
-        status: 'Trang thái',
+        status: 'Trạng thái',
         table: 'Bảng',
         planof: 'Kế hoạch của',
         statistics: 'Thống kê',
@@ -77,7 +79,9 @@ const i18n = createI18n({
         cancel: 'Hủy',
         quantity: 'Số lượng',
         settings: 'Cài đặt',
-        logout: 'Đăng xuất'
+        logout: 'Đăng xuất',
+        searchproduct: 'Tìm kiếm sản phẩm',
+        searchproductlocation: 'Tìm kiếm vị trí sản phẩm',
       },
       zh: {
         dashboard: '儀表盤',
@@ -106,7 +110,9 @@ const i18n = createI18n({
         cancel: '取消',
         quantity: '數量',
         settings: '設置',
-        logout: '登出'
+        logout: '登出',
+        searchproduct: '搜索產品',
+        searchproductlocation: '搜索產品位置',
       }
     }
 })

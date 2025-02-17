@@ -2,14 +2,14 @@
   <div class="container">
     <!-- Title và nhập số lượng -->
     <div class="title-container">
-      <h2 class="title">Area From</h2>
+      <h2 class="title">區域來源</h2>
       <div class="quantity-input">
-        <label for="quantity">Total Location:</label>
+        <label for="quantity">總位置數量：</label>
         <input
           type="number"
           min="1"
           class="form-input"
-          placeholder="Enter quantity"
+          placeholder="輸入數量"
           v-model="AddDataArea.quantity"
         />
       </div>
@@ -32,34 +32,34 @@
         :class="{ 'drag-over': isDragOver }"
         @click="triggerFileInput"
       >
-        <p>Kéo thả tệp tại đây</p>
+        <p>拖放檔案於此處</p>
       </div>
       <!-- Hiển thị ảnh khi chọn -->
       <div v-if="imagePreview" class="image-preview">
-        <img :src="imagePreview" alt="Image preview" />
+        <img :src="imagePreview" alt="圖片預覽" />
       </div>
     </div>
 
     <div class="form-group">
-      <label for="quantity">Name:</label>
+      <label for="quantity">名稱：</label>
       <input
         type="text"
         class="form-input"
-        placeholder="Name Warehourse..."
+        placeholder="倉庫名稱..."
         v-model="AddDataArea.name"
       />
     </div>
     <div class="form-group">
-      <label for="quantity">Max quantity Location:</label>
+      <label for="quantity">最大位置數量：</label>
       <input
         type="number"
         class="form-input"
-        placeholder="Max quantity Location..."
+        placeholder="最大位置數量..."
         v-model="AddDataArea.max"
       />
     </div>
     <div class="form-group">
-      <label for="quantity">Exception position:</label>
+      <label for="quantity">例外位置：</label>
       <button
         @click="AddException"
         style="
@@ -79,12 +79,12 @@
           :key="index"
           style="margin: 15px 0"
         >
-          <h3>Location Exception {{ index + 1 }}</h3>
+          <h3>位置例外 {{ index + 1 }}</h3>
           <input
             v-model="item.location"
             type="number"
             class="form-input"
-            placeholder="Location..."
+            placeholder="位置..."
             min="1"
           />
           <input
@@ -92,7 +92,7 @@
             v-model="item.quantity"
             type="number"
             class="form-input"
-            placeholder="Max Quantity..."
+            placeholder="最大數量..."
             min="1"
           />
         </div>
@@ -100,9 +100,9 @@
     </div>
     
     <div class="form-group">
-      <label for="region">Line:</label>
+      <label for="region">樓層：</label>
       <select class="form-select" v-model="currentFloor">
-        <option value="" disabled>Line</option>
+        <option value="" disabled>樓層</option>
         <option
           v-for="(item, index) in floorData"
           :key="index"
@@ -114,25 +114,26 @@
     </div>
 
     <div class="form-group">
-      <label for="comments">Notes:</label>
+      <label for="comments">備註：</label>
       <textarea
         class="form-textarea"
-        placeholder="enter notes here..."
+        placeholder="在此處輸入備註..."
       ></textarea>
     </div>
 
     <div class="form-group">
-      <button v-if="route.query.id" class="btn" @click="UpdateData">Update Data</button>
-      <button v-else class="btn" @click="AddData">Add Data</button>
+      <button v-if="route.query.id" class="btn" @click="UpdateData">更新資料</button>
+      <button v-else class="btn" @click="AddData">新增資料</button>
     </div>
   </div>
 
   <!-- Hiển thị màn hình loading -->
   <div v-if="isLoading" class="loading-overlay">
     <div class="spinner"></div>
-    <p>Đang tải...</p>
+    <p>正在載入...</p>
   </div>
 </template>
+
 
 <script setup>
 import axios from "axios";

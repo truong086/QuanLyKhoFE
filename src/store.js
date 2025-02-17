@@ -177,5 +177,7 @@ export const useCounterStore = defineStore('counter', {
       localStorage.clear()
     }
   },
+  
   persist: true,
+  
 });

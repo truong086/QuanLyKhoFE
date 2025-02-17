@@ -2,15 +2,15 @@
   <div class="container">
     <!-- Title và nhập số lượng -->
     <div class="title-container">
-      <h2 class="title">Form</h2>
+      <h2 class="title">表單</h2>
       <div class="quantity-input">
-        <label for="quantity">Quantity:</label>
+        <label for="quantity">數量：</label>
         <input
           v-model="addDataWarehourse.Numberoffloors"
           type="number"
           min="1"
           class="form-input"
-          placeholder="Enter quantity"
+          placeholder="輸入數量"
         />
       </div>
     </div>
@@ -32,42 +32,42 @@
         :class="{ 'drag-over': isDragOver }"
         @click="triggerFileInput"
       >
-        <p>Kéo thả tệp tại đây</p>
+        <p>拖放檔案於此處</p>
       </div>
       <!-- Hiển thị ảnh khi chọn -->
       <div v-if="imagePreview" class="image-preview">
-        <img :src="imagePreview" alt="Image preview" />
+        <img :src="imagePreview" alt="圖片預覽" />
       </div>
     </div>
 
     <div class="form-group">
-      <label for="quantity">Name:</label>
+      <label for="quantity">名稱：</label>
       <input
         v-model="addDataWarehourse.name"
         type="text"
         class="form-input"
-        placeholder="Name Warehourse..."
+        placeholder="倉庫名稱..."
       />
     </div>
 
     <div class="form-group">
-      <label for="quantity">ID:</label>
+      <label for="quantity">ID：</label>
       <input
         v-model="addDataWarehourse.code"
         type="text"
         class="form-input"
-        placeholder="Name Warehourse..."
+        placeholder="倉庫ID..."
       />
     </div>
     <!-- Các mục chọn miền, tỉnh, huyện, xã, và ghi chú không thay đổi -->
     <div class="form-group">
-      <label for="region">Miền:</label>
+      <label for="region">區域：</label>
       <select
         v-model="selectedRegion"
         @change="onRegionChange"
         class="form-select"
       >
-        <option value="" disabled selected>Miền</option>
+        <option value="" disabled selected>區域</option>
         <option v-for="region in regions" :key="region.id" :value="region.id">
           {{ region.name }}
         </option>
@@ -75,13 +75,13 @@
     </div>
 
     <div v-if="provinces.length > 0" class="form-group">
-      <label for="province">Tỉnh:</label>
+      <label for="province">省：</label>
       <select
         v-model="selectedProvince"
         @change="onProvinceChange"
         class="form-select"
       >
-        <option value="" disabled selected>Tình:</option>
+        <option value="" disabled selected>省</option>
         <option
           v-for="province in provinces"
           :key="province.id"
@@ -93,13 +93,13 @@
     </div>
 
     <div v-if="districts.length > 0" class="form-group">
-      <label for="district">Huyện:</label>
+      <label for="district">區：</label>
       <select
         v-model="selectedDistrict"
         @change="onDistrictChange"
         class="form-select"
       >
-        <option value="" disabled selected>Huyện</option>
+        <option value="" disabled selected>區</option>
         <option
           v-for="district in districts"
           :key="district.id"
@@ -111,9 +111,9 @@
     </div>
 
     <div v-if="wards.length > 0" class="form-group">
-      <label for="ward">Xã:</label>
+      <label for="ward">鄉：</label>
       <select v-model="selectedWard" class="form-select">
-        <option value="" disabled selected>Xã</option>
+        <option value="" disabled selected>鄉</option>
         <option v-for="ward in wards" :key="ward.id" :value="ward.id">
           {{ ward.name }}
         </option>
@@ -121,28 +121,29 @@
     </div>
 
     <div class="form-group">
-      <label for="comments">Notes:</label>
+      <label for="comments">備註：</label>
       <textarea
         v-model="addDataWarehourse.address"
         class="form-textarea"
-        placeholder="enter notes here..."
+        placeholder="在此處輸入備註..."
       ></textarea>
     </div>
 
     <div class="form-group">
       <button v-if="route.query.id" class="btn" @click="UpdateData">
-        Update Data
+        更新資料
       </button>
-      <button v-else class="btn" @click="AddData">Add Data</button>
+      <button v-else class="btn" @click="AddData">新增資料</button>
     </div>
   </div>
 
   <!-- Hiển thị màn hình loading -->
   <div v-if="isLoading" class="loading-overlay">
     <div class="spinner"></div>
-    <p>Đang tải...</p>
+    <p>正在載入...</p>
   </div>
 </template>
+
 
 <script setup>
 import axios from "axios";

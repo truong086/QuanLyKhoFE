@@ -66,20 +66,20 @@
     <div class="container">
     <!-- Form Kho cũ -->
     <div class="form-section">
-      <h2 class="title">Warehourse old</h2>
+      <h2 class="title">舊倉庫</h2>
 
       <!-- Kho Select -->
       <div class="form-group">
-        <label for="region">Warehourse:</label>
+        <label for="region">倉庫:</label>
         <select class="form-select" v-model="currentWarehouse" @change="SearchWarehourse('old')">
-          <option value="" disabled selected>Chọn kho</option>
+          <option value="" disabled selected>選擇倉庫</option>
           <option v-for="(item, index) in warehouseData" :key="index" :value="item">{{ item.name }}</option>
         </select>
       </div>
 
       <!-- Tầng Select -->
       <div class="form-group">
-        <label for="province">Floor:</label>
+        <label for="province">樓層:</label>
         <select class="form-select" v-model="currentFloor" @change="SearchFloor('old')">
           <option v-for="(item, index) in currentFloorData" :key="index" :value="item">{{item.name}}</option>
         </select>
@@ -87,27 +87,27 @@
 
       <!-- Khu Select -->
       <div class="form-group">
-        <label for="district">Area:</label>
+        <label for="district">區域:</label>
         <select class="form-select" v-model="DataOneArea" @change="searchArea('old')">
-          <option value="" disabled selected>Chọn khu</option>
+          <option value="" disabled selected>選擇區域 </option>
           <option v-for="(item, index) in currentAreaData" :key="index" :value="item">{{ item.name }}</option>
         </select>
       </div>
 
       <!-- Keej Select -->
       <div class="form-group">
-        <label for="district">Shelf:</label>
+        <label for="district">架子:</label>
         <select class="form-select" v-model="shelfCurrentOld" @change="searchShelf('old')">
-          <option value="" disabled selected>Chọn khu</option>
+          <option value="" disabled selected>選擇區域</option>
           <option v-for="(item, index) in shelfOld" :key="index" :value="item">{{ item.name }}</option>
         </select>
       </div>
 
       <!-- Vị trí Select -->
       <div class="form-group">
-        <label for="ward">Location:</label>
+        <label for="ward">位置:</label>
         <div class="dropdown-container">
-          <button class="form-select">Chọn vị trí</button>
+          <button class="form-select">選擇位置</button>
 
           <div class="ward-dropdown">
             <div class="ward-grid">
@@ -213,24 +213,24 @@
 
     <!-- Swap Button -->
     <button class="swap-button" @click="toggleKhoMoi">
-      <i class="fas fa-exchange-alt"></i> Swap Warehourse New
+      <i class="fas fa-exchange-alt"></i>轉移到新倉庫
     </button>
 
     <!-- Form Kho mới -->
     <div class="form-section" v-if="isKhoMoiVisible">
-      <h2 class="title">Warehourse New</h2>
+      <h2 class="title">新倉庫 </h2>
 
       <div class="form-group">
-        <label for="region">Warehourse:</label>
+        <label for="region">倉庫 :</label>
         <select class="form-select" v-model="currentWarehouseNew" @change="SearchWarehourse('new')">
-          <option value="" disabled selected>Chọn kho</option>
+          <option value="" disabled selected>選擇倉庫</option>
           <option v-for="(item, index) in warehouseDataNew" :key="index" :value="item">{{ item.name }}</option>
         </select>
       </div>
 
       <!-- Tầng Select -->
       <div class="form-group">
-        <label for="province">Floor:</label>
+        <label for="province">樓層:</label>
         <select class="form-select" v-model="currentFloorNew" @change="SearchFloor('new')">
           <option v-for="(item, index) in currentFloorDataNew" :key="index" :value="item">{{item.name}}</option>
         </select>
@@ -238,27 +238,27 @@
 
       <!-- Khu Select -->
       <div class="form-group">
-        <label for="district">Area:</label>
+        <label for="district">區域:</label>
         <select class="form-select" v-model="DataOneAreaNew" @change="searchArea('new')">
-          <option value="" disabled selected>Chọn khu</option>
+          <option value="" disabled selected>選擇區域</option>
           <option v-for="(item, index) in currentAreaDataNew" :key="index" :value="item">{{ item.name }}</option>
         </select>
       </div>
 
        <!-- Khu Select -->
        <div class="form-group">
-        <label for="district">Shelf:</label>
+        <label for="district">架子:</label>
         <select class="form-select" v-model="shelfCurrentNew" @change="searchShelf('new')">
-          <option value="" disabled selected>Chọn khu</option>
+          <option value="" disabled selected>選擇區域</option>
           <option v-for="(item, index) in shelfNew" :key="index" :value="item">{{ item.name }}</option>
         </select>
       </div>
 
       <!-- Vị trí Select -->
       <div class="form-group">
-        <label for="ward">Location:</label>
+        <label for="ward">位置:</label>
         <div class="dropdown-container">
-          <button class="form-select">Chọn vị trí</button>
+          <button class="form-select">選擇位置</button>
 
           <div class="ward-dropdown">
             <div class="ward-grid">
@@ -400,20 +400,21 @@
             </div>
           </div>
           <div class="frame-info">
-            <div class="info-line"><span class="info-title">Location:</span> {{ item?.location }}</div>
-            <div class="info-line"><span class="info-title">Quantity:</span> {{ item?.quantity }}</div>
-            <div class="info-line"><span class="info-title">inventory:</span> {{ item?.inventory }}</div>
-            <div class="info-line"><span class="info-title">price:</span> {{ item?.price }}</div>
-            <div class="info-line"><span class="info-title">supplier:</span> {{ item?.supplier }}</div>
-            <div class="info-line"><span class="info-title">supplier Image:</span> <img :src="item?.supplier_image" width="50px" alt=""></div>
-            <div class="info-line"><span class="info-title">category Image:</span> <img :src="item?.category_image" width="50px" alt=""></div>
-            <div class="info-line"><span class="info-title">category:</span> {{ item?.category }}</div>
-            <div class="info-line"><span class="info-title">account Name:</span> {{ item?.account_name }}</div>
-            <div class="info-line"><span class="info-title">account Image:</span> <img :src="item.account_image" width="50px" alt=""></div>
-            <div class="info-line"><span class="info-title">Type:</span> {{ item?.type }}</div>
-            <button @click="closeFrame" class="close-btn">Đóng</button>
-            <!-- <button @click="closeFrame" v-if="item.id_plan == 0" class="close-btn">Swap</button> -->
-          </div>
+  <div class="info-line"><span class="info-title">位置:</span> {{ item?.location }}</div>
+  <div class="info-line"><span class="info-title">數量:</span> {{ item?.quantity }}</div>
+  <div class="info-line"><span class="info-title">庫存:</span> {{ item?.inventory }}</div>
+  <div class="info-line"><span class="info-title">價格:</span> {{ item?.price }}</div>
+  <div class="info-line"><span class="info-title">供應商:</span> {{ item?.supplier }}</div>
+  <div class="info-line"><span class="info-title">供應商圖片:</span> <img :src="item?.supplier_image" width="50px" alt=""></div>
+  <div class="info-line"><span class="info-title">類別圖片:</span> <img :src="item?.category_image" width="50px" alt=""></div>
+  <div class="info-line"><span class="info-title">類別:</span> {{ item?.category }}</div>
+  <div class="info-line"><span class="info-title">帳號名稱:</span> {{ item?.account_name }}</div>
+  <div class="info-line"><span class="info-title">帳號圖片:</span> <img :src="item.account_image" width="50px" alt=""></div>
+  <div class="info-line"><span class="info-title">類型:</span> {{ item?.type }}</div>
+  <button @click="closeFrame" class="close-btn">關閉</button>
+  <!-- <button @click="closeFrame" v-if="item.id_plan == 0" class="close-btn">交換</button> -->
+</div>
+
         </div>
       </div>
     </div>
@@ -424,7 +425,7 @@
   <!-- Hiển thị màn hình loading -->
   <div v-if="isLoading" class="loading-overlay">
       <div class="spinner"></div>
-      <p>Đang tải...</p>
+      <p>Loading...</p>
   </div>
 </template>
 <script setup>

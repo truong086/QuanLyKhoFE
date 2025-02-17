@@ -1,13 +1,13 @@
 <template>
 <main>
-  <h6>{{ filteredProducts.length }} results</h6>
+  <h6>{{ filteredProducts.length }} 結果</h6>
   <div>
     <input type="text" v-model="valueE" style="padding: 5px 0; outline: none; border-radius: 5px;">
-    <button class="btn" style="border: 1px solid green; margin: 0 15px;" @click="searchData">Search</button>
+    <button class="btn" style="border: 1px solid green; margin: 0 15px;" @click="searchData">搜尋</button>
   </div>
   <p v-if="activeFilters.length">
     <small class="text-muted"
-      >Filtered by {{ activeFilters.join(", ") }}</small
+      >篩選依據{{ activeFilters.join(", ") }}</small
     >
   </p>
   <div class="product-grid">
@@ -18,27 +18,27 @@
         <h5 class="card-title">{{ product.title }}</h5>
        <div style="margin-left: 20px;">
         <p class="card-text">
-          <span>Price: ${{ product.price.toFixed(2) }}</span>
+          <span>價格: ${{ product.price.toFixed(2) }}</span>
           <br />
         </p>
         <p class="card-text">
-          <span>DonViTinh: {{ product.donViTinh }}</span>
+          <span>計量單位: {{ product.donViTinh }}</span>
           <br />
         </p>
         <p class="card-text">
-          <span>Suppliers: {{ product.supplierName }}</span>
+          <span>供應商: {{ product.supplierName }}</span>
           <br />
           <img :src="product.supplierImage" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
         </p>
        </div>
         <div style="margin: 0 20px;">
           <p class="card-text">
-          <span>Quantity: {{ product.quantity }}</span>
+          <span>數量: {{ product.quantity }}</span>
           <br />
         </p>
           
         <p class="card-text">
-          <span style="color: violet;">Category: {{ product.categoryName }}
+          <span style="color: violet;">類別: {{ product.categoryName }}
             <img style="width: 30px; height: 30px; border-radius: 50%;" :src="product.categoryImage" alt="">
           </span>
         </p>
@@ -49,7 +49,7 @@
         </p>
         </div>
         <div>
-          <h5>Location:</h5>
+          <h5>位置:</h5>
           <div v-for="(itemLocation, indexLocation) in product.listAreaOfproducts" :key="indexLocation">
             <p class="card-text">
               <img :src="itemLocation.warehouse_image" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
@@ -71,7 +71,7 @@
         
        
       </div>
-      <a class="btn btn-primary" @click="Next(product.id)" href="#">Chi tiết</a>
+      <a class="btn btn-primary" @click="Next(product.id)" href="#">詳細資料</a>
     </div>
   </div>
 </div>
@@ -88,8 +88,8 @@
 <footer>
   <p>
     <small class="text-muted"
-      >{{ products.length }} total /
-      {{ filteredProducts.length }} shown</small
+      >{{ products.length }} 總計 /
+      {{ filteredProducts.length }} 顯示</small
     >
   </p>
 </footer>
@@ -97,7 +97,7 @@
 <!-- Hiển thị màn hình loading -->
 <div v-if="isLoading" class="loading-overlay">
 <div class="spinner"></div>
-<p>Đang tải...</p>
+<p>Loading...</p>
 </div>
 </template>
 

@@ -146,136 +146,137 @@ const findAllSupplierProduct = async () => {
 
 <template>
   <div>
-    <h2>Inventory statistics</h2>
+    <h2>庫存統計</h2>
     <SalesChartPage2 :products="store.getDataTotalProduct" :colorData="color1" :text="text1"/>
-    <h2>Quantity of goods shipped</h2>
+    <h2>已發貨商品數量</h2>
     <SalesChartPage2 :products="store.getDataTotalProductByCustomer" :colorData="color2" :text="text1"/>
-    <h2>Monthly Statistics</h2>
+    <h2>每月統計</h2>
     <SalesChartAccount :salesData="store.getStatistic" :text="type" :backgroudColorData="backColor"/>
-    <h2>Top buyers</h2>
+    <h2>最頂級買家</h2>
     <SalesChartAccount :salesData="store.getdataTotalProductDelivenote" :text="typeSuplier" :backgroudColorData="backColor2"/>
-    <h2>Monthly Statistics Import From table</h2>
+    <h2>從表格進口的每月統計</h2>
     <div>
       <table class="table">
         <thead>
           <tr>
-            <th>Month</th>
-            <th>Product</th>
-            <th>Total</th>
+            <th>月份</th>
+            <th>商品</th>
+            <th>總數</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(item, index) in dataproductImportFrom" :key="index">
-            <td>Month: {{ item.month }}</td>
+            <td>月份: {{ item.month }}</td>
             <td v-if="item.data">
               <div v-for="(itemP, indexP) in item.data" :key="indexP">
-                <h3>Product name: {{ itemP.title }}</h3>
+                <h3>商品名稱: {{ itemP.title }}</h3>
                 <div v-if="itemP.image" style="margin-bottom: 20px;">
                   <img v-for="(imageItem, indexItem) in itemP.image" :key="indexItem" :src="imageItem" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
                 </div>
-                <p style="color: red; font-weight: bold;">Total product: {{ itemP.totalProduct }}</p>
+                <p style="color: red; font-weight: bold;">總商品數: {{ itemP.totalProduct }}</p>
               </div>
             </td>
-            <td>Total: {{ item.total }}</td>
+            <td>總數: {{ item.total }}</td>
           </tr>
         </tbody>
       </table>
     </div>
-    </div>
-    <h2>Most Supplier</h2>
+    <h2>最主要的供應商</h2>
     <SalesChartPage :products="store.getdataTotalProductSupplier" :colorData="color3" :text="text1"/>
-    <h2>Top Exporter</h2>
+    <h2>最頂級出口商</h2>
     <SalesChartPage :products="store.getDataAccountByProduct" :colorData="color4" :text="text1"/>
-    <h2>Export products by month of the year</h2>
+    <h2>每月出口商品統計</h2>
     <div>
       <table class="table">
         <thead>
           <tr>
-            <th>Month</th>
-            <th>Product</th>
-            <th>Total</th>
+            <th>月份</th>
+            <th>商品</th>
+            <th>總數</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(item, index) in dataMonthTable" :key="index">
-            <td>Month: {{ item.month }}</td>
+            <td>月份: {{ item.month }}</td>
             <td v-if="item.producSalesData">
               <div v-for="(itemP, indexP) in item.producSalesData" :key="indexP">
-                <h3>Product name: {{ itemP.productName }}</h3>
+                <h3>商品名稱: {{ itemP.productName }}</h3>
                 <div v-if="itemP.images" style="margin-bottom: 20px;">
                   <img v-for="(imageItem, indexItem) in itemP.images" :key="indexItem" :src="imageItem" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
                 </div>
-                <p style="color: red; font-weight: bold;">Total product: {{ itemP.quantity }}</p>
+                <p style="color: red; font-weight: bold;">總商品數: {{ itemP.quantity }}</p>
               </div>
             </td>
-            <td>Total: {{ item.totalQuantitySold }}</td>
+            <td>總數: {{ item.totalQuantitySold }}</td>
           </tr>
         </tbody>
       </table>
     </div>
-    <h2>Customer By Product table</h2>
+    <h2>按商品的顧客表格</h2>
     <div>
       <table class="table">
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Product</th>
-            <th>Total</th>
+            <th>名稱</th>
+            <th>電子郵件</th>
+            <th>商品</th>
+            <th>總數</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(item, index) in dataproductByCustomer" :key="index">
-            <td>Name: {{ item.customer_name }}</td>
-            <td>Email: {{ item.customer_email }}</td>
+            <td>名稱: {{ item.customer_name }}</td>
+            <td>電子郵件: {{ item.customer_email }}</td>
             <td v-if="item.producSalesData">
               <div v-for="(itemP, indexP) in item.producSalesData" :key="indexP">
-                <h3>Product name: {{ itemP.productName }}</h3>
+                <h3>商品名稱: {{ itemP.productName }}</h3>
                 <div v-if="itemP.images" style="margin-bottom: 20px;">
                   <img v-for="(imageItem, indexItem) in itemP.images" :key="indexItem" :src="imageItem" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
                 </div>
-                <p style="color: red; font-weight: bold;">Total product: {{ itemP.quantity }}</p>
+                <p style="color: red; font-weight: bold;">總商品數: {{ itemP.quantity }}</p>
               </div>
             </td>
-            <td>Total: {{ item.total }}</td>
+            <td>總數: {{ item.total }}</td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <h2>Supplier of Product table</h2>
+    <h2>產品供應商表格</h2>
     <div>
       <table class="table">
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Address</th>
-            <th>Image</th>
-            <th>Product</th>
-            <th>Total</th>
+            <th>名稱</th>
+            <th>地址</th>
+            <th>圖片</th>
+            <th>商品</th>
+            <th>總數</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(item, index) in dataproductSupplier" :key="index">
-            <td>Name: {{ item.name }}</td>
-            <td>Address: {{ item.address }}</td>
+            <td>名稱: {{ item.name }}</td>
+            <td>地址: {{ item.address }}</td>
             <td><img v-if="item.image" :src="item.image" style="width: 30px; height: 30px; border-radius: 50%;" alt=""></td>
             <td v-if="item.data">
               <div v-for="(itemP, indexP) in item.data" :key="indexP">
-                <h3>Product name: {{ itemP.title }}</h3>
-                <p>Price: {{ itemP.price }}</p>
+                <h3>商品名稱: {{ itemP.title }}</h3>
+                <p>價格: {{ itemP.price }}</p>
                 <div v-if="itemP.image" style="margin-bottom: 20px;">
                   <img v-for="(imageItem, indexItem) in itemP.image" :key="indexItem" :src="imageItem" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
                 </div>
-                <p style="color: red; font-weight: bold;">Total product: {{ itemP.quantity }}</p>
+                <p style="color: red; font-weight: bold;">總商品數: {{ itemP.quantity }}</p>
               </div>
             </td>
-            <td>Total: {{ item.total }}</td>
+            <td>總數: {{ item.total }}</td>
           </tr>
         </tbody>
       </table>
     </div>
+  </div>
 </template>
+
 
 <style scoped>
 .table {

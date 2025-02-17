@@ -2,7 +2,7 @@
     <div class="pagination-container">
         <!-- Lựa chọn kích thước trang -->
         <div class="page-size-section">
-            <label for="pageSize" class="page-size-label">Page size:</label>
+            <label for="pageSize" class="page-size-label">頁面大小:</label>
             <select v-model="pageSize" @change="updatePageSize" class="page-size-select">
                 <option v-for="item in pageSizeList" :key="item" :value="item">{{ item }}</option>
             </select>
@@ -16,7 +16,7 @@
                 :disabled="page === 1" 
                 class="nav-button"
             >
-            Previous page
+            上一頁
             </button>
 
             <!-- Chọn dãy số trang -->
@@ -37,7 +37,7 @@
                 :disabled="page === totalPage" 
                 class="nav-button"
             >
-            Next page
+            下一頁
             </button>
         </div>
     </div>

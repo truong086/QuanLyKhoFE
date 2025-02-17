@@ -12,7 +12,7 @@
           </select>
           <select v-model="selectedZone" class="form-select" @change="searchArea">
             <option v-for="zone in zones" :key="zone" :value="zone.id">{{ zone.name }}</option>
-          </select>
+          </select> 
           <select v-model="selectedRack" class="form-select" @change="searchShelf">
             <option v-for="rack in racks" :key="rack" :value="rack.id">{{ rack.name }}</option>
           </select>

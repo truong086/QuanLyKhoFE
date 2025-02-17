@@ -2,10 +2,10 @@
   <div class="wrapper"> 
     <div class="inner">
       <form>
-        <h3>RegisterPage</h3>
+        <h3>註冊頁面</h3>
 
         <div class="form-wrapper">
-          <label for="username" class="label-input">Username</label>
+          <label for="username" class="label-input">用戶名</label>
           <input
             type="text"
             class="form-control"
@@ -15,7 +15,7 @@
         </div>
 
         <div class="form-wrapper">
-          <label for="password" class="label-input">Password</label>
+          <label for="password" class="label-input">密碼</label>
           <input
             type="password"
             class="form-control"
@@ -27,7 +27,7 @@
         <!-- Image Upload -->
         <div class="image-upload-container">
           <label class="image-upload">
-            <span>Click to upload your profile picture</span>
+            <span>點擊上傳您的頭像</span>
             <input
               type="file"
               accept="image/*"
@@ -40,7 +40,7 @@
         <div class="preview-container" id="image-preview"></div>
 
         <div class="form-wrapper">
-          <label for="email" class="label-input">Email</label>
+          <label for="email" class="label-input"> 電子郵件</label>
           <input
             type="email"
             class="form-control"
@@ -50,7 +50,7 @@
         </div>
 
         <div class="form-wrapper">
-          <label for="phone" class="label-input">Phone</label>
+          <label for="phone" class="label-input">電話號碼</label>
           <input
             type="text"
             class="form-control"
@@ -60,7 +60,7 @@
         </div>
 
         <div class="form-wrapper">
-          <label for="address" class="label-input">Address</label>
+          <label for="address" class="label-input">地址</label>
           <input
             type="text"
             class="form-control"
@@ -69,7 +69,7 @@
           />
         </div>
 
-        <button type="button" @click="dangKyAccount">Register</button>
+        <button type="button" @click="dangKyAccount">註冊</button>
       </form>
       <div class="image-holder"></div>
     </div>
@@ -78,7 +78,7 @@
   <!-- Hiển thị màn hình loading -->
   <div v-if="isLoading" class="loading-overlay">
     <div class="spinner"></div>
-    <p>Đang tải...</p>
+    <p>Loading...</p>
   </div>
 </template>
 

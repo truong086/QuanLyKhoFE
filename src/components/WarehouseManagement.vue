@@ -10,14 +10,14 @@
           style="width: 1000px;"
         >
           <div class="shipment-info">
-            <p><strong>Title:</strong> {{ shipment.plan_tile }}</p>
-            <p style="font-weight: bold;"><strong>Location Old:</strong> </p>
+            <p><strong>標題:</strong> {{ shipment.plan_tile }}</p>
+            <p style="font-weight: bold;"><strong>舊位置:</strong> </p>
             <p>{{ shipment.warehourseOld }} -> {{ shipment.floorOld }} -> {{ shipment.areaOld }} -> {{ shipment.shelfOld }} -> {{ shipment.locationOld }}</p>
-            <p>Code Location Old: {{ shipment.codeLocationOld }}</p>
-            <p style="font-weight: bold;"><strong>Location New:</strong></p>
+            <p>舊位置代碼: {{ shipment.codeLocationOld }}</p>
+            <p style="font-weight: bold;"><strong>新位置:</strong></p>
             <p>{{ shipment.warehourseNew }} -> {{ shipment.floorNew }} -> {{ shipment.areaNew }} -> {{ shipment.shelfNew }} -> {{ shipment.locationNew }}</p>
-            <p>Code Location New: {{ shipment.codeLocationNew }}</p>
-            <h3>Status: <a style="font-size: 15px; color: red;"><strong>{{ shipment.statusPlan }}</strong></a></h3> 
+            <p>新位置代碼: {{ shipment.codeLocationNew }}</p>
+            <h3>狀態: <a style="font-size: 15px; color: red;"><strong>{{ shipment.statusPlan }}</strong></a></h3> 
             <div class="actions">
               <!-- <button class="main-btn" @click="toggleStatusMenu(index)">
                 +
@@ -35,7 +35,7 @@
                   class="status-input"
                 />
                 <label class="cursor-pointer border-2 border-dashed border-gray-400 p-6 rounded-lg bg-gray-100 hover:bg-gray-200">
-                  <span class="text-gray-700 font-medium">Chọn ảnh</span>
+                  <span class="text-gray-700 font-medium">選擇圖片</span>
                   <input type="file" multiple accept="image/*" class="hidden" @change="handleFileUpload" />
                 </label>
                 <div v-if="images.length" class="grid grid-cols-3 gap-4 mt-4">
@@ -48,10 +48,10 @@
                   </div>
                 </div>
                 <button class="sub-btn" @click="addStatus(shipment.id, shipment.id_status)">
-                  Add Status
+                  新增狀態
                 </button>
                 <button class="sub-btn" @click="showList(shipment.id)">
-                  List Icon
+                  清單圖示
                 </button>
                 <div v-if="iconListVisible[shipment.id]" >
                   <div v-if="iconCurrent != null && iconCurrent != ''">
@@ -92,7 +92,7 @@
                 class="delivery-man-img"
                 style="width: 50px; height: 50px; border-radius: 50%;"
               />
-              <p><strong>Account Name:</strong> {{ shipment.account_name }}</p>
+              <p><strong>帳戶名稱:</strong> {{ shipment.account_name }}</p>
             </div>
           </div>
         </div>
@@ -105,8 +105,8 @@
         @pageSizeChange="changeReload"
       ></PagesTotal>
       <div class="total-price-container">
-        <h3>Total Price</h3>
-        <p><strong>Total:</strong> {{ totalPrice }}</p>
+        <h3>總價格</h3>
+        <p><strong>總計:</strong> {{ totalPrice }}</p>
       </div>
     </div>
     <!-- Popup hiển thị ảnh lớn -->
@@ -118,7 +118,7 @@
   <!-- Hiển thị màn hình loading -->
   <div v-if="isLoading" class="loading-overlay">
       <div class="spinner"></div>
-      <p>Đang tải...</p>
+      <p>Loading...</p>
     </div>
 </template>
 
