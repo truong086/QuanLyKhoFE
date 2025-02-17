@@ -439,7 +439,7 @@ const isLoading = ref(false);
 const isFormVisible = ref(false)
 const page = ref(1)
   const totalPage = ref(0)
-  const pageSize = ref(2)
+  const pageSize = ref(30)
   const dataShelfLocation = ref({})
 
 const { proxy } = getCurrentInstance();
