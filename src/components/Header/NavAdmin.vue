@@ -18,11 +18,11 @@
                                     class="fa fa-user-circle-o"></i>
                                     <span class="hide-menu">{{ t('profile') }}</span></a>
                         </li>
-                        <li v-on:click="SwapBackGroupColor('b3')" v-if="store.getRole(0).includes('Admin')" class="b3"> <router-link class="waves-effect waves-dark" to="/Plan" aria-expanded="false"><i
+                        <li v-on:click="SwapBackGroupColor('b3')" v-if="store.getRole(0) === 'Admin'" class="b3"> <router-link class="waves-effect waves-dark" to="/Plan" aria-expanded="false"><i
                                     class="fa fa-calendar"></i>
                                     <span class="hide-menu">{{ t('showplan') }}</span></router-link>
                         </li>
-                        <li class="b4" v-if="store.getRole(0).includes('Admin')" v-on:click="SwapBackGroupColor('b4')"> 
+                        <li class="b4" v-if="store.getRole(0) === 'Admin'" v-on:click="SwapBackGroupColor('b4')"> 
                         <router-link to="/planPage" class="waves-effect waves-dark" aria-expanded="false">
                           <i
                             class="fa fa-smile-o"></i><span class="hide-menu">{{ t('plan') }}</span>
@@ -51,7 +51,7 @@
                             <span class="hide-menu">{{ t('status') }}</span>
                         </router-link>
                         </li>
-                        <li class="b8" v-on:click="SwapBackGroupColor('b8')" v-if="store.getRole(0).includes('Admin')">
+                        <li class="b8" v-on:click="SwapBackGroupColor('b8')" v-if="store.getRole(0) === 'Admin'">
                         <router-link to="/tablepage" class="waves-effect waves-dark" aria-expanded="false">
                             <i class="fa fa-table"></i>
                             <span class="hide-menu">{{ t('table') }}</span>

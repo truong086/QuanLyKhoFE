@@ -173,6 +173,7 @@ export const useCounterStore = defineStore('counter', {
       this.floorId = item
     },
     clearStore(){
+      this.role = []
       this.$reset
       localStorage.clear()
     }

@@ -124,8 +124,8 @@ const app = createApp(App);
 // Tạo instance Pinia
 const pinia = createPinia();
 app.use(pinia);
-app.config.globalProperties.hostname = "http://52.184.83.97:5000"
-// app.config.globalProperties.hostname = "https://localhost:44376"
+// app.config.globalProperties.hostname = "http://52.184.83.97:5000"
+app.config.globalProperties.hostname = "https://localhost:44376"
 
 app.use(VueMap, {
     load: {

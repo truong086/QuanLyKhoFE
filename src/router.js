@@ -44,16 +44,25 @@ const routes = [
     path: "/AllCategory",
     name: "AllCategory",
     component: AllCategory,
+    meta: {
+      requiresAuth: true, roleAdmin: ['Admin', 'User']
+    }
   },
   {
     path: "/DetailsPage",
     name: "DetailsPage",
     component: DetailsPage,
+    meta: {
+      requiresAuth: true, roleAdmin: ['Admin', 'User']
+    }
   },
   {
     path: "/tablepage",
     name: "tablepage",
     component: TablePage,
+    meta: {
+      requiresAuth: true, roleAdmin: ['Admin', 'User']
+    }
   },
   {
     path: "/test/Ware",
@@ -89,6 +98,7 @@ const routes = [
         "/AdminTemplatePage/js/perfect-scrollbar.jquery.min.js",
         "/AdminTemplatePage/js/waves.js",
       ],
+      roleAdmin: ['Admin', 'User']
     },
     children: [
       {
@@ -130,16 +140,25 @@ const routes = [
         path: "/planPage",
         name: "PlanPage",
         component: planPageData,
+        meta: {
+          requiresAuth: true, roleAdmin: ['Admin']
+        }
       },
       {
         path: "/ImportExportForm",
         name: "ImportExportForm",
         component: ImportExportForm,
+        meta: {
+          requiresAuth: true, roleAdmin: ['Admin']
+        }
       },
       {
         path: "PlanOfAccount",
         name: "planOfAccount",
         component: PlanOfAccountPage,
+        meta: {
+          requiresAuth: true, roleAdmin: ['Admin', 'User']
+        }
       },
       {
         path: "Productwarehouse",
@@ -327,7 +346,7 @@ router.beforeEach((to, from, next) => {
   const auth = to.meta.requiresAuth;
   const roles = to.meta.roleAdmin;
   const token = counter.getToken;
-  const role = counter.getRole(0);
+  const role = counter.getRole(0) || '';
 
   if (checkPaths) {
     next();
