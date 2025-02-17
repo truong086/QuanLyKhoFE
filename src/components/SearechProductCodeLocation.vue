@@ -18,38 +18,38 @@
             <h5 class="card-title">{{ product.title }}</h5>
            <div style="margin-left: 20px;">
             <p class="card-text">
-              <span>Price: ${{ product.price.toFixed(2) }}</span>
+              <span>價格: ${{ product.price.toFixed(2) }}</span>
               <br />
             </p>
             <p class="card-text">
-              <span>DonViTinh: {{ product.donViTinh }}</span>
+              <span>計量單位: {{ product.donViTinh }}</span>
               <br />
             </p>
             <p class="card-text">
-              <span>Suppliers: {{ product.supplierName }}</span>
+              <span>供應商: {{ product.supplierName }}</span>
               <br />
               <img :src="product.supplierImage" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
             </p>
            </div>
             <div style="margin: 0 20px;">
               <p class="card-text">
-              <span>Quantity: {{ product.quantity }}</span>
+              <span>數量: {{ product.quantity }}</span>
               <br />
             </p>
               
             <p class="card-text">
-              <span style="color: violet;">Category: {{ product.categoryName }}
+              <span style="color: violet;">類別: {{ product.categoryName }}
                 <img style="width: 30px; height: 30px; border-radius: 50%;" :src="product.categoryImage" alt="">
               </span>
             </p>
     
             <p class="card-text" style="color: red; font-weight: bold;">
-              <span style="color: red;">Code: {{ product.code }}
+              <span style="color: red;">代碼: {{ product.code }}
               </span>
             </p>
             </div>
             <div>
-              <h5>Location:</h5>
+              <h5>位置:</h5>
               <p class="card-text">
                   <img :src="product.warehouse_image" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
                   {{ product.warehouse_name }} => 
@@ -69,7 +69,7 @@
             
            
           </div>
-          <a class="btn btn-primary" @click="Next(product.id)" href="#">Chi tiết</a>
+          <a class="btn btn-primary" @click="Next(product.id)" href="#">詳細信息</a>
         </div>
       </div>
     </div>

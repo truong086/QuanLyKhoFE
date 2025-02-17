@@ -8,7 +8,7 @@
       <div class="product-detail">
         <div
           class="card"
-          v-if="data.isConfirmation && data.status !== 'done'"
+          v-if="data.isConfirmation && data.status !== '完成的'"
           style="background-color: rgba(11, 176, 217, 0.1); border-radius: 15px"
         >
           <div class="card-body">
@@ -133,7 +133,7 @@
 
         <div
           class="card"
-          v-else-if="data.isConfirmation && data.status === 'done'"
+          v-else-if="data.isConfirmation && data.status === '完成的'"
           style="background: rgba(52, 199, 62, 0.1); border-radius: 15px"
         >
           <div class="card-body">

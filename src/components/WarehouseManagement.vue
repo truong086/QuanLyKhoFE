@@ -157,7 +157,7 @@ const updateStats = ref({
   'fas fa-shipping-fast'
  ])
 const newStatus = ref({}); // Object lưu trạng thái mới cho mỗi lô hàng
-const statusDataItem = ref(['Đã nhận', 'Đang vận chuyển', 'DONE'])
+const statusDataItem = ref(['已收到', '在途中', '完成的'])
 // const selectStatus = ref(null)
 const store = useCounterStore()
 onMounted(() => {

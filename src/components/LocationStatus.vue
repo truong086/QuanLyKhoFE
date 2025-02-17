@@ -1,7 +1,7 @@
 <template>
   <div class="container mt-4">
     <div class="header">
-      <label for="floorSelect" class="form-label">Chọn tầng:</label>
+      <label for="floorSelect" class="form-label"> 選擇樓層:</label>
       <select
         id="floorSelect"
         v-model="selectedFloor"
@@ -92,10 +92,10 @@
               </div>
             </div>
             <div class="frame-details">
-              <p><strong>Sản phẩm:</strong> {{ item.name }}</p>
-              <h3>Detatils</h3>
+              <p><strong>產品:</strong> {{ item.name }}</p>
+              <h3>細節</h3>
               <p>
-                <strong>Category:</strong> {{ item.category }}
+                <strong>類別:</strong> {{ item.category }}
                 <img
                   :src="item.category_image"
                   style="width: 30px; height: 30px; border-radius: 50%"
@@ -103,18 +103,18 @@
                 />
               </p>
               <p>
-                <strong>Supplier:</strong> {{ item.supplier }}
+                <strong>供應商:</strong> {{ item.supplier }}
                 <img
                   :src="item.supplier_image"
                   style="width: 30px; height: 30px; border-radius: 50%"
                   alt="Product Image"
                 />
               </p>
-              <p><strong>Price:</strong> {{ item.price }}</p>
-              <p><strong>inventory:</strong> {{ item.inventory }}</p>
-              <p><strong>Quantity Location:</strong> {{ item.quantity }}</p>
-              <p><strong>Location:</strong> {{ item.location }}</p>
-              <p><strong>Code:</strong> {{ item.code }}</p>
+              <p><strong>價格:</strong> {{ item.price }}</p>
+              <p><strong>庫存:</strong> {{ item.inventory }}</p>
+              <p><strong>數量位置:</strong> {{ item.quantity }}</p>
+              <p><strong>位置:</strong> {{ item.location }}</p>
+              <p><strong>代碼:</strong> {{ item.code }}</p>
             </div>
           </div>
         </div>
@@ -122,7 +122,7 @@
 
         <div class="frame-buttons">
           <button class="close-button" @click="frameVisible = false">
-            Đóng
+            關閉按鈕
           </button>
         </div>
       </div>
@@ -149,10 +149,10 @@
             </div>
           </div>
           <div class="frame-details">
-            <p><strong>Sản phẩm:</strong> {{ item.name }}</p>
-            <h3>Detatils</h3>
+            <p><strong>產品:</strong> {{ item.name }}</p>
+            <h3>細節</h3>
             <p>
-              <strong>Category:</strong> {{ item.category }}
+              <strong>類別:</strong> {{ item.category }}
               <img
                 :src="item.category_image"
                 style="width: 30px; height: 30px; border-radius: 50%"
@@ -160,25 +160,25 @@
               />
             </p>
             <p>
-              <strong>Supplier:</strong> {{ item.supplier }}
+              <strong>供應商:</strong> {{ item.supplier }}
               <img
                 :src="item.supplier_image"
                 style="width: 30px; height: 30px; border-radius: 50%"
                 alt="Product Image"
               />
             </p>
-            <p><strong>Price:</strong> {{ item.price }}</p>
-            <p><strong>inventory:</strong> {{ item.inventory }}</p>
-            <p><strong>Quantity Location:</strong> {{ item.quantity }}</p>
-            <p><strong>Location:</strong> {{ item.location }}</p>
-            <p><strong>Code:</strong> {{ item.code }}</p>
+            <p><strong>價格:</strong> {{ item.price }}</p>
+            <p><strong>庫存:</strong> {{ item.inventory }}</p>
+            <p><strong>數量位置:</strong> {{ item.quantity }}</p>
+            <p><strong>位置:</strong> {{ item.location }}</p>
+            <p><strong>代碼:</strong> {{ item.code }}</p>
           </div>
         </div>
         
         </div>
         <div class="frame-buttons">
           <button class="close-button" @click="rowDetailVisible = false">
-            Đóng
+            關閉按鈕
           </button>
         </div>
         

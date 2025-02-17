@@ -43,7 +43,7 @@
       <div v-for="(item, index) in currentPlanData" :key="index">
         <div
           class="warehouse-frame"
-          v-if="item.isConfirmation && item.status !== 'done'"
+          v-if="item.isConfirmation && item.status !== '完成的'"
           style="background-color: rgba(11, 176, 217, 0.2)"
         >
           <div class="warehouse-info" style="z-index: 1000">
@@ -119,7 +119,7 @@
 
         <div
           class="warehouse-frame"
-          v-else-if="item.isConfirmation && item.status === 'done'"
+          v-else-if="item.isConfirmation && item.status === '完成的'"
           :style="
             item.isConfirmation
               ? 'background: rgba(52, 199, 62, 0.2); '
@@ -471,6 +471,8 @@ const showData = (data, type) => {
   document.querySelector("." + data).style.color = "white";
   isButton.value = data;
   typePlan.value = type;
+
+  console.log(typePlan.value)
 
   findAllData(valueE.value, page.value);
 };

@@ -147,17 +147,17 @@
     <div class="container">
       <!-- Form Kho cũ -->
       <div class="form-section">
-        <h2 class="title">Warehourse old</h2>
+        <h2 class="title">舊倉庫</h2>
 
         <!-- Kho Select -->
         <div class="form-group">
-          <label for="region">Warehourse:</label>
+          <label for="region">倉庫:</label>
           <select
             class="form-select"
             v-model="currentWarehouse"
             @change="SearchWarehourse('old')"
           >
-            <option value="" disabled selected>Chọn kho</option>
+            <option value="" disabled selected>選擇倉庫</option>
             <option
               v-for="(item, index) in warehouseData"
               :key="index"
@@ -170,7 +170,7 @@
 
         <!-- Tầng Select -->
         <div class="form-group">
-          <label for="province">Floor:</label>
+          <label for="province">樓層:</label>
           <select
             class="form-select"
             v-model="currentFloor"
@@ -188,13 +188,13 @@
 
         <!-- Khu Select -->
         <div class="form-group">
-          <label for="district">Area:</label>
+          <label for="district">區域:</label>
           <select
             class="form-select"
             v-model="DataOneArea"
             @change="searchArea('old')"
           >
-            <option value="" disabled selected>Chọn khu</option>
+            <option value="" disabled selected>選擇區域</option>
             <option
               v-for="(item, index) in currentAreaData"
               :key="index"
@@ -207,13 +207,13 @@
 
         <!-- Keej Select -->
         <div class="form-group">
-          <label for="district">Shelf:</label>
+          <label for="district">貨架:</label>
           <select
             class="form-select"
             v-model="shelfCurrentOld"
             @change="searchShelf('old')"
           >
-            <option value="" disabled selected>Chọn khu</option>
+            <option value="" disabled selected>選擇區域</option>
             <option
               v-for="(item, index) in shelfOld"
               :key="index"
@@ -226,9 +226,9 @@
 
         <!-- Vị trí Select -->
         <div class="form-group">
-          <label for="ward">Location:</label>
+          <label for="ward">位置:</label>
           <div class="dropdown-container">
-            <button class="form-select">Chọn vị trí</button>
+            <button class="form-select">選擇位置</button>
 
             <div class="ward-dropdown">
               <div class="ward-grid" v-if="quantityLocation !== null">
@@ -250,7 +250,7 @@
                         font-size: 10px;
                       "
                     >
-                      Plan:
+                    計劃:
                       {{
                         checkLocationPlan(
                           quantityLocation.productInPlans,
@@ -531,21 +531,21 @@
 
       <!-- Swap Button -->
       <button class="swap-button" @click="toggleKhoMoi">
-        <i class="fas fa-exchange-alt"></i> Swap Warehourse New
+        <i class="fas fa-exchange-alt"></i> 轉移到新倉庫
       </button>
 
       <!-- Form Kho mới -->
       <div class="form-section" v-if="isKhoMoiVisible">
-        <h2 class="title">Warehourse New</h2>
+        <h2 class="title">新倉庫</h2>
 
         <div class="form-group">
-          <label for="region">Warehourse:</label>
+          <label for="region">倉庫:</label>
           <select
             class="form-select"
             v-model="currentWarehouseNew"
             @change="SearchWarehourse('new')"
           >
-            <option value="" disabled selected>Chọn kho</option>
+            <option value="" disabled selected>選擇倉庫</option>
             <option
               v-for="(item, index) in warehouseDataNew"
               :key="index"
@@ -558,7 +558,7 @@
 
         <!-- Tầng Select -->
         <div class="form-group">
-          <label for="province">Floor:</label>
+          <label for="province">樓層:</label>
           <select
             class="form-select"
             v-model="currentFloorNew"
@@ -576,13 +576,13 @@
 
         <!-- Khu Select -->
         <div class="form-group">
-          <label for="district">Area:</label>
+          <label for="district">區域:</label>
           <select
             class="form-select"
             v-model="DataOneAreaNew"
             @change="searchArea('new')"
           >
-            <option value="" disabled selected>Chọn khu</option>
+            <option value="" disabled selected>選區</option>
             <option
               v-for="(item, index) in currentAreaDataNew"
               :key="index"
@@ -595,13 +595,13 @@
 
         <!-- Khu Select -->
         <div class="form-group">
-          <label for="district">Shelf:</label>
+          <label for="district">架子:</label>
           <select
             class="form-select"
             v-model="shelfCurrentNew"
             @change="searchShelf('new')"
           >
-            <option value="" disabled selected>Chọn khu</option>
+            <option value="" disabled selected>選區</option>
             <option
               v-for="(item, index) in shelfNew"
               :key="index"
@@ -614,9 +614,9 @@
 
         <!-- Vị trí Select -->
         <div class="form-group">
-          <label for="ward">Location:</label>
+          <label for="ward">位置:</label>
           <div class="dropdown-container">
-            <button class="form-select">Chọn vị trí</button>
+            <button class="form-select">選擇位置</button>
 
             <div class="ward-dropdown">
               <div class="ward-grid" v-if="quantityLocationNew !== null">
@@ -914,20 +914,20 @@
 
         <!-- Quantity and Comments -->
         <div class="form-group">
-          <label for="quantity">Title:</label>
+          <label for="quantity">標題:</label>
           <input
             type="text"
             min="1"
             class="form-input"
-            placeholder="Nhập số lượng"
+            placeholder="輸入數量"
             v-model="planNew.title"
           />
         </div>
         <div class="form-group">
-          <label for="comments">Desctiption:</label>
+          <label for="comments">描述:</label>
           <textarea
             class="form-textarea"
-            placeholder="Nhập ghi chú..."
+            placeholder="輸入描述..."
             v-model="planNew.description"
           ></textarea>
         </div>
@@ -937,10 +937,10 @@
             class="save-button"
             v-on:click="updatePlan"
           >
-            Update Plan
+          更新計劃 
           </button>
           <button v-else class="save-button" v-on:click="addPlan">
-            Add Plan
+            新增計劃
           </button>
         </div>
       </div>
@@ -951,16 +951,16 @@
           class="frame-content"
           :style="{ maxWidth: widthDom + 'px', justifyContent: 'flex-start' }"
         >
-          <button @click="closeFrame" class="close-btn">Đóng</button>
+          <button @click="closeFrame" class="close-btn">關閉按鈕</button>
           <button @click="updateData" v-if="isSwap" class="close-btn">
-            Swap
+            交換
           </button>
           <button
             @click="updateDataLocationNew"
             v-if="isSwapNew"
             class="close-btn"
           >
-            Swap Location New
+          轉移到新倉庫
           </button>
           <div
             class="frame-item"
@@ -990,41 +990,41 @@
             </div>
             <div class="frame-info">
               <div class="info-line">
-                <span class="info-title">Location:</span> {{ item?.location }}
+                <span class="info-title">位置:</span> {{ item?.location }}
               </div>
               <div class="info-line">
-                <span class="info-title">Quantity:</span> {{ item?.quantity }}
+                <span class="info-title">數量:</span> {{ item?.quantity }}
               </div>
               <div class="info-line">
-                <span class="info-title">inventory:</span> {{ item?.inventory }}
+                <span class="info-title">庫存:</span> {{ item?.inventory }}
               </div>
               <div class="info-line">
-                <span class="info-title">price:</span> {{ item?.price }}
+                <span class="info-title">價格:</span> {{ item?.price }}
               </div>
               <div class="info-line">
-                <span class="info-title">supplier:</span> {{ item?.supplier }}
+                <span class="info-title">供應商:</span> {{ item?.supplier }}
               </div>
               <div class="info-line">
-                <span class="info-title">supplier Image:</span>
+                <span class="info-title">供應商圖片:</span>
                 <img :src="item?.supplier_image" width="50px" alt="" />
               </div>
               <div class="info-line">
-                <span class="info-title">category Image:</span>
+                <span class="info-title">類別圖片:</span>
                 <img :src="item?.category_image" width="50px" alt="" />
               </div>
               <div class="info-line">
-                <span class="info-title">category:</span> {{ item?.category }}
+                <span class="info-title">類別:</span> {{ item?.category }}
               </div>
               <div class="info-line">
-                <span class="info-title">account Name:</span>
+                <span class="info-title">帳戶名稱:</span>
                 {{ item?.account_name }}
               </div>
               <div class="info-line">
-                <span class="info-title">account Image:</span>
+                <span class="info-title"> 帳戶圖片:</span>
                 <img :src="item.account_image" width="50px" alt="" />
               </div>
               <div class="info-line">
-                <span class="info-title">Type:</span> {{ item?.type }}
+                <span class="info-title">類型:</span> {{ item?.type }}
               </div>
               <!-- <button @click="closeFrame" v-if="item.id_plan == 0" class="close-btn">Swap</button> -->
             </div>
@@ -1037,9 +1037,10 @@
   <!-- Hiển thị màn hình loading -->
   <div v-if="isLoading" class="loading-overlay">
     <div class="spinner"></div>
-    <p>Đang tải...</p>
+    <p>Loading...</p>
   </div>
 </template>
+
 <script setup>
 import { useCounterStore } from "../store";
 import { ref, getCurrentInstance, onMounted, nextTick } from "vue";
@@ -1351,7 +1352,7 @@ const openFrame = (id, location, list, listPlan, type, classData) => {
 
       checkListTotal.forEach((element) => {
         if (element.location === location) {
-          let dataItem = { ...element, type: "Sản phẩm đang ở kho" };
+          let dataItem = { ...element, type: " 產品在倉庫中" };
           frameData.value.push(dataItem);
         }
       });
@@ -1360,7 +1361,7 @@ const openFrame = (id, location, list, listPlan, type, classData) => {
   if (listPlan.length > 0) {
     listPlan.forEach((element) => {
       if (element.location === location) {
-        let dataItem = { ...element, type: "Sản phẩm chuẩn bị chuyển đến" };
+        let dataItem = { ...element, type: "產品準備運送到" };
         frameData.value.push(dataItem);
       }
     });

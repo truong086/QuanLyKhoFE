@@ -1,126 +1,126 @@
 <template>
-    <div class="page-container">
-      <!-- Header -->
-      <header class="header">
-        <!-- Select Boxes -->
-        <div class="select-container">
-          <select v-model="selectedWarehouse" class="form-select" @change="searchWarehouse">
-            <option v-for="warehouse in warehouses" :key="warehouse" :value="warehouse.id">{{ warehouse.name }}</option>
-          </select>
-          <select v-model="selectedFloor" class="form-select" @change="searchFloor">
-            <option v-for="floor in floors" :key="floor" :value="floor.id">{{ floor.name }}</option>
-          </select>
-          <select v-model="selectedZone" class="form-select" @change="searchArea">
-            <option v-for="zone in zones" :key="zone" :value="zone.id">{{ zone.name }}</option>
-          </select> 
-          <select v-model="selectedRack" class="form-select" @change="searchShelf">
-            <option v-for="rack in racks" :key="rack" :value="rack.id">{{ rack.name }}</option>
+  <div class="page-container">
+    <!-- Header -->
+    <header class="header">
+      <!-- Select Boxes -->
+      <div class="select-container">
+        <select v-model="selectedWarehouse" class="form-select" @change="searchWarehouse">
+          <option v-for="warehouse in warehouses" :key="warehouse" :value="warehouse.id">{{ warehouse.name }}</option>
+        </select>
+        <select v-model="selectedFloor" class="form-select" @change="searchFloor">
+          <option v-for="floor in floors" :key="floor" :value="floor.id">{{ floor.name }}</option>
+        </select>
+        <select v-model="selectedZone" class="form-select" @change="searchArea">
+          <option v-for="zone in zones" :key="zone" :value="zone.id">{{ zone.name }}</option>
+        </select> 
+        <select v-model="selectedRack" class="form-select" @change="searchShelf">
+          <option v-for="rack in racks" :key="rack" :value="rack.id">{{ rack.name }}</option>
+        </select>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- Navbar -->
+      <nav class="navbar">
+        <!-- Search Input -->
+      <div class="search-container">
+        <input type="text" v-model="searchQuery" class="search-input" placeholder="Tìm kiếm sản phẩm..." />
+        <button @click="handleSearch" class="search-button">
+          🔍
+        </button>
+      </div>
+
+        <!-- Nhà cung cấp -->
+        <div class="supplier-select">
+          <label for="supplier" class="select-label">選擇供應商</label>
+          <select v-model="selectedSupplier" id="supplier" class="form-select" @change="searchSupplier">
+            <option v-for="supplier in suppliers" :key="supplier" :value="supplier.id">{{ supplier.name }}</option>
           </select>
         </div>
-      </header>
-  
-      <!-- Main Content -->
-      <div class="main-content">
-        <!-- Navbar -->
-        <nav class="navbar">
-          <!-- Search Input -->
-        <div class="search-container">
-          <input type="text" v-model="searchQuery" class="search-input" placeholder="Tìm kiếm sản phẩm..." />
-          <button @click="handleSearch" class="search-button">
-            🔍
-          </button>
+        <!-- category -->
+        <div class="supplier-select">
+          <label for="supplier" class="select-label">類別</label>
+          <select v-model="selectCategory" id="supplier" class="form-select" @change="searchCategory">
+            <option v-for="item in category" :key="item" :value="item.id">{{ item.name }}</option>
+          </select>
         </div>
-
-          <!-- Nhà cung cấp -->
-          <div class="supplier-select">
-            <label for="supplier" class="select-label">Chọn Nhà Cung Cấp</label>
-            <select v-model="selectedSupplier" id="supplier" class="form-select" @change="searchSupplier">
-              <option v-for="supplier in suppliers" :key="supplier" :value="supplier.id">{{ supplier.name }}</option>
-            </select>
-          </div>
-          <!-- category -->
-          <div class="supplier-select">
-            <label for="supplier" class="select-label">Category</label>
-            <select v-model="selectCategory" id="supplier" class="form-select" @change="searchCategory">
-              <option v-for="item in category" :key="item" :value="item.id">{{ item.name }}</option>
-            </select>
-          </div>
-          <!-- Input giá -->
-          <div class="price-input">
-            <label for="price" class="input-label">Nhập Giá</label>
-            <input type="number" id="price" v-model="price" class="form-input" placeholder="Nhập giá">
-            <button @click="submitPrice" class="btn-ok">OK</button>
-          </div>
-          <!-- Mức giá tìm kiếm -->
-          <!-- <div class="price-search">
-            <label for="priceRange" class="select-label">Mức Giá</label>
-            <div class="price-range">
-              <div v-for="(range, index) in priceRanges" :key="index" class="price-item" @click="selectedPriceRange = range">
-                {{ range }}
-              </div>
+        <!-- Input giá -->
+        <div class="price-input">
+          <label for="price" class="input-label">輸入價格</label>
+          <input type="number" id="price" v-model="price" class="form-input" placeholder="Nhập giá">
+          <button @click="submitPrice" class="btn-ok">OK</button>
+        </div>
+        <!-- Mức giá tìm kiếm -->
+        <!-- <div class="price-search">
+          <label for="priceRange" class="select-label">Mức Giá</label>
+          <div class="price-range">
+            <div v-for="(range, index) in priceRanges" :key="index" class="price-item" @click="selectedPriceRange = range">
+              {{ range }}
             </div>
-          </div> -->
-          <!-- Nút OK ở cuối navbar -->
-          <div class="navbar-footer">
-            <button @click="handleNavbarOk" class="btn-ok">Xác Nhận</button>
           </div>
-        </nav>
-  
-        <!-- Content -->
-        <div class="content">
-          <h2>List Product</h2>
-  
-          <!-- Loop through the products and display each one -->
-          <div v-for="(product, index) in products" :key="index" class="product-frame">
-            <img :src="product.images[0]" alt="Product Image" class="product-image" />
-            <div style="margin: 0 15px;">
-              <p>Location: </p>
-              <div v-for="(item, indexProduct) in product.listAreaOfproducts" :key="indexProduct">
-                <p>
-                  <img :src="item.warehouse_image" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
-                  {{ item.warehouse_name }}
-                  => 
-                  <img :src="item.floor_image" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
-                  {{ item.floor_name }} =>
+        </div> -->
+        <!-- Nút OK ở cuối navbar -->
+        <div class="navbar-footer">
+          <button @click="handleNavbarOk" class="btn-ok">確認</button>
+        </div>
+      </nav>
 
-                  <img :src="item.area_image" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
-                  {{ item.area_name }} => 
+      <!-- Content -->
+      <div class="content">
+        <h2>產品清單</h2>
 
-                  <img :src="item.shelf_image" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
-                  {{ item.shelf_name }} => 
-                  {{ item.location }} ({{ item.code }})
-                </p>
+        <!-- Loop through the products and display each one -->
+        <div v-for="(product, index) in products" :key="index" class="product-frame">
+          <img :src="product.images[0]" alt="Product Image" class="product-image" />
+          <div style="margin: 0 15px;">
+            <p>Location: </p>
+            <div v-for="(item, indexProduct) in product.listAreaOfproducts" :key="indexProduct">
+              <p>
+                <img :src="item.warehouse_image" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
+                {{ item.warehouse_name }}
+                => 
+                <img :src="item.floor_image" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
+                {{ item.floor_name }} =>
 
-                <p class="product-quantity">Category: {{ product.categoryName }}
-                  <img :src="product.categoryImage" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
-                </p>
+                <img :src="item.area_image" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
+                {{ item.area_name }} => 
 
-                <p class="product-quantity">Supplier: {{ product.supplierName }}
-                  <img :src="product.supplierImage" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
-                </p>
-              </div>
-              
+                <img :src="item.shelf_image" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
+                {{ item.shelf_name }} => 
+                {{ item.location }} ({{ item.code }})
+              </p>
+
+              <p class="product-quantity">類別: {{ product.categoryName }}
+                <img :src="product.categoryImage" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
+              </p>
+
+              <p class="product-quantity">供應商: {{ product.supplierName }}
+                <img :src="product.supplierImage" style="width: 30px; height: 30px; border-radius: 50%;" alt="">
+              </p>
             </div>
-            <div class="product-info">
-              <h3 class="product-name">{{ product.title }}</h3>
-              <p class="product-price">Price: {{ product.price }}k</p>
-              <p class="product-quantity">Quantity: {{ product.quantity }}</p>
-              <p class="product-quantity">Unit of measure: {{ product.donViTinh }}</p>
-            </div>
-            <div>
-              <button class="btn" style="border: 1px solid green;" @click="nextDetails(product.id)">Details</button>
-            </div>
+            
+          </div>
+          <div class="product-info">
+            <h3 class="product-name">{{ product.title }}</h3>
+            <p class="product-price">價格: {{ product.price }}k</p>
+            <p class="product-quantity"> 數量: {{ product.quantity }}</p>
+            <p class="product-quantity"> 計量單位: {{ product.donViTinh }}</p>
+          </div>
+          <div>
+            <button class="btn" style="border: 1px solid green;" @click="nextDetails(product.id)"> 詳細資料</button>
           </div>
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- Hiển thị màn hình loading -->
-    <div v-if="isLoading" class="loading-overlay">
-      <div class="spinner"></div>
-      <p>Loading...</p>
-    </div>
-  </template>
+  <!-- Hiển thị màn hình loading -->
+  <div v-if="isLoading" class="loading-overlay">
+    <div class="spinner"></div>
+    <p>Loading...</p>
+  </div>
+</template>
   
   <script setup>
 import { useCounterStore } from "../store";
