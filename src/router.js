@@ -33,6 +33,7 @@ import AddLinePage from "./components/AddLine.vue";
 import AddDataAreasPage from "./components/AddDataAreas.vue";
 import AddDataFloorPage from "./components/AddDataFloor.vue";
 import SearechProductCodeLocationPage from "./components/SearechProductCodeLocation.vue";
+import excelProductLocationPage from "./components/excelProductLocation.vue";
 
 import { useCounterStore } from "./store";
 // import { path } from "ramda";
@@ -94,6 +95,11 @@ const routes = [
         path: "/AddDataAreasPage",
         name: "addDataAreasPage",
         component: AddDataAreasPage,
+      },
+      {
+        path: "/excelProductLocationPage",
+        name: "ExcelProductLocationPage",
+        component: excelProductLocationPage,
       },
       {
         path: "/SearechProductCodeLocationPage",

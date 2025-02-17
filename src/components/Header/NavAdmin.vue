@@ -83,6 +83,13 @@
                             <span class="hide-menu">{{ t('searchproductlocation') }}</span>
                         </router-link>
                         </li>
+
+                        <li class="b13" v-on:click="SwapBackGroupColor('b13')">
+                          <router-link to="/excelProductLocationPage" class="waves-effect waves-dark" aria-expanded="false">
+                            <i class="fa fa-search" aria-hidden="true"></i>
+                            <span class="hide-menu">{{ t('Dowload Excel Product Location') }}</span>
+                        </router-link>
+                        </li>
                         <!----<li> <a class="waves-effect waves-dark" href="pages-error-404.html" aria-expanded="false"><i
                                     class="fa fa-question-circle"></i><span class="hide-menu">404</span></a>
                         </li> ---->

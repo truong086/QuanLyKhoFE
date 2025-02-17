@@ -12,7 +12,7 @@
 
             <div class="page-wrapper">
                 <router-view></router-view>
-                <footerPage></footerPage>
+                <!-- <footerPage></footerPage> -->
             </div>
         </div>
     </div>
@@ -22,7 +22,7 @@
 <script setup>
 import headerPage from '../Header/HeaderAdmin.vue';
 import navPage from '../Header/NavAdmin.vue';
-import footerPage from '../Foodter/foodterAdmin.vue';
+// import footerPage from '../Foodter/foodterAdmin.vue';
 </script>
 
 <style scoped>
