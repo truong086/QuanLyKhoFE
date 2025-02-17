@@ -1252,7 +1252,7 @@ const addPlan = async () => {
   );
   if (res.data.success) {
     Toast.success("Add Success !!!");
-    router.push("LocationStatus");
+    router.push("Plan");
   } else {
     Toast.info(res.data.error);
   }
