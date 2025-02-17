@@ -42,6 +42,11 @@
             <img style="width: 30px; height: 30px; border-radius: 50%;" :src="product.categoryImage" alt="">
           </span>
         </p>
+
+        <p class="card-text" style="color: red; font-weight: bold;">
+          <span style="color: red;">Code: {{ product.code }}
+          </span>
+        </p>
         </div>
         <div>
           <h5>Location:</h5>
@@ -138,6 +143,7 @@ search === ""
       getToken()
     );
 
+    console.log(res)
 if (res.data.success) {
 page.value = res.data.content.page;
 totalPage.value = res.data.content.totalPages;

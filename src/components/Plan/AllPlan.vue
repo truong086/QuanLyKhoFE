@@ -312,6 +312,10 @@ const submitDate = async () => {
   datetimePlan.value.datefrom = new Date(datetimePlan.value.datefrom).toISOString();
   datetimePlan.value.dateto = new Date(datetimePlan.value.dateto).toISOString();
 
+  isLoading.value = true;
+  document.body.classList.add("loading"); // Add Lớp "loading"
+  document.body.style.overflow = "hidden";
+
   try {
     const response = await axios.post(hostName + "/api/Plan/ExportToExcel", datetimePlan.value, {
       headers: {
@@ -334,6 +338,13 @@ const submitDate = async () => {
   } catch (error) {
     console.error("Lỗi gửi dữ liệu:", error);
   }
+
+  datetimePlan.value.datefrom = ""
+  datetimePlan.value.dateto = ""
+
+  isLoading.value = false;
+  document.body.classList.remove("loading");
+  document.body.style.overflow = "auto";
 };
 watch(page.value, (newPage) => {
   findAllData(valueE.value, newPage);

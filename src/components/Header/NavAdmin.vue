@@ -76,6 +76,13 @@
                             <span class="hide-menu">{{ t('Search Product') }}</span>
                         </router-link>
                         </li>
+
+                        <li class="b12" v-on:click="SwapBackGroupColor('b12')">
+                          <router-link to="/SearechProductCodeLocationPage" class="waves-effect waves-dark" aria-expanded="false">
+                            <i class="fa fa-search" aria-hidden="true"></i>
+                            <span class="hide-menu">{{ t('Search Product Location') }}</span>
+                        </router-link>
+                        </li>
                         <!----<li> <a class="waves-effect waves-dark" href="pages-error-404.html" aria-expanded="false"><i
                                     class="fa fa-question-circle"></i><span class="hide-menu">404</span></a>
                         </li> ---->

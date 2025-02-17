@@ -49,6 +49,10 @@
                 alt=""
               />
             </p>
+
+            <p style="font-weight: bold; color: red;">
+              Code: {{ product.code }}
+            </p>
             <p>Description: {{ product.description }}</p>
             <h5>History Product Location: </h5>
             <div v-for="(itemhistory, indexhistory) in product.historyProductLocations" :key="indexhistory">

@@ -55,7 +55,8 @@
             </h5>
             <p class="card-text">Price: {{ item.price?.toFixed(2) }}</p>
             <p class="card-text">Unit of measure: {{ item.inventory }}</p>
-            <p style="font-weight: bold; color: blue;" class="card-text">Code: {{ item.code }}</p>
+            <p style="font-weight: bold; color: blue;" class="card-text">Code Location: {{ item.code }}</p>
+            <p style="font-weight: bold; color: blue;" class="card-text">Code Product: {{ item.codeproduct }}</p>
           </div>
           <div>
             <p>
